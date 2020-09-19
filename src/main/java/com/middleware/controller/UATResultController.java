@@ -13,7 +13,7 @@ import com.middleware.entity.paymenttransaction;
 import com.middleware.service.PaymentTransactionService;
 
 @RestController
-@RequestMapping("payment")
+@RequestMapping("mpu")
 public class UATResultController {
 	@Autowired
 	private PaymentTransactionService paymnentService;
@@ -36,7 +36,7 @@ public class UATResultController {
 //}
 	
 
-	@RequestMapping(value = "/mpu/frontEndRedirect", method = RequestMethod.POST)
+	@RequestMapping(value = "/frontEndRedirect", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
 	public Result getFrontEndURL(
@@ -75,7 +75,7 @@ public class UATResultController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/mpu/backEndRedirect", method = RequestMethod.POST)
+	@RequestMapping(value = "/backEndRedirect", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
 	public Result getBackEndURL(
