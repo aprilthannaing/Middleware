@@ -62,6 +62,12 @@ public class paymenttransaction extends AbstractEntity implements Serializable {
 	
 	@Column(name = "t3")
 	private String t3 = "";
+	///
+	@Column(name = "currencyCode")
+	private String currencyCode = "";
+	
+	@Column(name = "link")
+	private String link = "";
 
 	public long getTranID() {
 		return tranID;
@@ -207,6 +213,22 @@ public class paymenttransaction extends AbstractEntity implements Serializable {
 
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 
 }

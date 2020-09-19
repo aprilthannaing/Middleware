@@ -8,6 +8,9 @@ public class Result {
 	
 	@JsonView(Views.Thin.class)
 	String code;
+	
+	@JsonView(Views.Thin.class)
+	String result;
 
 	public String getDescription() {
 		return description;
@@ -23,6 +26,14 @@ public class Result {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
 	}
 	
 	
