@@ -65,7 +65,7 @@ public class PaymentController {
 	@JsonView(Views.Summary.class)
 	public JSONObject getPayment(@RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
-		String secretKey = "T3HJEW4ZIM1YT11ZOZN0CMNIHKEDQDFI";
+		String secretKey = "7M8N3SLQ8QILSN6DOZIN1NBOVWMMGIVA";
 		String merchantId = json.get("merchantId") != null ? json.get("merchantId").toString() : "";
 		String invoiceNo = json.get("invoiceNo") != null ? json.get("invoiceNo").toString() : "";
 		String currencyCode = json.get("currencyCode") != null ? json.get("currencyCode").toString() : "";

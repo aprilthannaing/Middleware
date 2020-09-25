@@ -10,7 +10,7 @@ public class Result {
 	String code;
 	
 	@JsonView(Views.Thin.class)
-	String result;
+	String result = "";
 
 	public String getDescription() {
 		return description;
