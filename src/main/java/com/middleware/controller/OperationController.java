@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.middleware.entity.CBPaytransaction;
 import com.middleware.entity.Result;
 import com.middleware.entity.Views;
-import com.middleware.entity.CBPaytransaction;
 import com.middleware.entity.paymenttransaction;
 import com.middleware.service.CBPaymentTransactionService;
 import com.middleware.service.PaymentTransactionService;
@@ -24,7 +24,7 @@ public class OperationController {
 	private PaymentTransactionService paymnentService;
 	
 	@Autowired
-	private CBPaymentTransactionService cbpaymnentService;
+	private CBPaymentTransactionService cbpaymentService; 
 	
 	@RequestMapping(value = "saveTransaction", method = RequestMethod.POST)
 	@ResponseBody
@@ -43,14 +43,13 @@ public class OperationController {
 	@RequestMapping(value = "saveCBPaytransaction", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public Result saveCBPaytransaction(@RequestBody JSONObject json)throws Exception {
+	public Result saveCBPaytransaction(@RequestBody CBPaytransaction json)throws Exception {
 		Result result = new Result();
-		CBPaytransaction paymentdata = new CBPaytransaction();
-		paymentdata.setCode(json.get("code").toString());
-		paymentdata.setRefNo(json.get("refNo").toString());
-		paymentdata.setTransExpiredTime(json.get("transExpiredTime").toString());
-		paymentdata.setTransRef(json.get("transRef").toString());
-		result  = cbpaymnentService.savecbpayment(paymentdata);
+		CBPaytransaction cbpaydata = cbpaymentService.checkTransRef(json.getTransRef());
+		if(cbpaydata != null) {
+			cbpaydata.setTransStatus(json.getTransStatus());
+			result  = cbpaymentService.savecbpayment(cbpaydata);
+		}else result  = cbpaymentService.savecbpayment(json);
 		return result;
 	}
 }

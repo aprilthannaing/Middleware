@@ -15,52 +15,58 @@ public class CBPaytransaction extends AbstractEntity implements Serializable{
 	private long tranID;
 	
 	@Column(name = "reqId")
-	private String reqId;
+	private String reqId = "";
+	
+	@Column(name = "merId")
+	private String merId = "";
 	
 	@Column(name = "subMerId")
-	private String subMerId;
+	private String subMerId = "";
 
 	@Column(name = "terminalId")
-	private String terminalId;
+	private String terminalId = "";
 	
 	@Column(name = "transAmount")
-	private String transAmount;
+	private String transAmount = "";
 	
 	@Column(name = "transCurrency")
-	private String transCurrency;
+	private String transCurrency = "";
 	
 	@Column(name = "ref1")
-	private String ref1;
+	private String ref1 = "";
 	
 	@Column(name = "ref2")
-	private String ref2;
+	private String ref2 = "";
 	
 	@Column(name = "merDqrCode")
-	private String merDqrCode;
+	private String merDqrCode = "";
 	
 	@Column(name = "transExpiredTime")
-	private String transExpiredTime;
+	private String transExpiredTime = "";
 	
 	@Column(name = "refNo")
-	private String refNo;
+	private String refNo = "";
 	
 	@Column(name = "transRef")
-	private String transRef;
+	private String transRef = "";
 	
 	@Column(name = "transStatus")
-	private String transStatus;
+	private String transStatus = "";
 	
 	@Column(name = "code")
-	private String code;
+	private String code = "";
+	
+	@Column(name = "msg")
+	private String msg = "";
 	
 	@Column(name = "t1")
-	private String t1;
+	private String t1 = "";
 	
 	@Column(name = "t2")
-	private String t2;
+	private String t2 = "";
 	
 	@Column(name = "t3")
-	private String t3;
+	private String t3 = "";
 
 	public long getTranID() {
 		return tranID;
@@ -76,6 +82,14 @@ public class CBPaytransaction extends AbstractEntity implements Serializable{
 
 	public void setReqId(String reqId) {
 		this.reqId = reqId;
+	}
+
+	public String getMerId() {
+		return merId;
+	}
+
+	public void setMerId(String merId) {
+		this.merId = merId;
 	}
 
 	public String getSubMerId() {
@@ -196,6 +210,14 @@ public class CBPaytransaction extends AbstractEntity implements Serializable{
 
 	public void setT3(String t3) {
 		this.t3 = t3;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 	
 }

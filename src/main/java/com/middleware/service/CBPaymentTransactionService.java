@@ -5,4 +5,5 @@ import com.middleware.entity.Result;
 
 public interface CBPaymentTransactionService {
 	public Result savecbpayment(CBPaytransaction data);
+	public CBPaytransaction checkTransRef(String transRef);
 }
