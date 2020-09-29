@@ -16,13 +16,14 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.annotation.Transactional;
 import com.mchange.rmi.ServiceUnavailableException;
 import com.middleware.dao.AbstractDao;
+
 @Transactional
-public abstract class AbstractDaoImpl <E, I extends Serializable> implements AbstractDao<E, I> {
+public abstract class AbstractDaoImpl<E, I extends Serializable> implements AbstractDao<E, I> {
 	private Class<E> entityClass;
 
 	@Autowired
 	private EntityManager entityManager;
-	
+
 	private static Logger logger = Logger.getLogger(AbstractDaoImpl.class);
 
 	protected AbstractDaoImpl(Class<E> entityClass) {
@@ -98,7 +99,8 @@ public abstract class AbstractDaoImpl <E, I extends Serializable> implements Abs
 	@Override
 	public List<String> findByDateRange(String queryString, String startDate, String endDate) {
 		List<String> entityList;
-		Query query = entityManager.createQuery(queryString).setParameter("dataInput1", startDate).setParameter("dataInput2", endDate);
+		Query query = entityManager.createQuery(queryString).setParameter("dataInput1", startDate)
+				.setParameter("dataInput2", endDate);
 		entityList = query.getResultList();
 		for (String entity : entityList)
 			Hibernate.initialize(entity);
@@ -123,10 +125,10 @@ public abstract class AbstractDaoImpl <E, I extends Serializable> implements Abs
 
 	@Override
 	public List<E> getList(String queryString) {
-		List<E> list  = new ArrayList<E>();
+		List<E> list = new ArrayList<E>();
 		try {
-		Query query = entityManager.createQuery(queryString);
-		list = query.getResultList();
+			Query query = entityManager.createQuery(queryString);
+			list = query.getResultList();
 		} catch (NoResultException nre) {
 
 		}
@@ -188,6 +190,7 @@ public abstract class AbstractDaoImpl <E, I extends Serializable> implements Abs
 		}
 		return id;
 	}
+
 	public double findDouble(String queryString) {
 		double id = 0;
 		try {
@@ -212,5 +215,5 @@ public abstract class AbstractDaoImpl <E, I extends Serializable> implements Abs
 		} catch (Exception exception) {
 			logger.error(exception);
 		}
-	}
+	}	
 }

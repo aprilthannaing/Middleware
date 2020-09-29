@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.entity.Payment;
 import com.middleware.entity.Views;
+import org.apache.commons.codec.binary.Base64;
 
 @RestController
 @RequestMapping("api")
@@ -38,8 +39,9 @@ public class PaymentController {
 	@GetMapping("/greeting")
 	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 			Model model) {
-		model.addAttribute("name", name);
-		return "greeting";
+		byte[] encodedBytes = Base64.encodeBase64("merchant.CB0000000342:a3102e136bdc8eb7d986804dfa533e02".getBytes());
+		System.out.println("encodedBytes " + new String(encodedBytes));
+		return new String(encodedBytes);
 	}
 
 	public static String hmacSha1(String value, String key) {

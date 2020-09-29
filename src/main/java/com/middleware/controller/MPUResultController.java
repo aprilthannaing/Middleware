@@ -1,5 +1,6 @@
 package com.middleware.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,9 +15,11 @@ import com.middleware.service.PaymentTransactionService;
 
 @RestController
 @RequestMapping("mpu")
-public class UATResultController {
+public class MPUResultController {
 	@Autowired
 	private PaymentTransactionService paymnentService;
+	
+	private static Logger logger = Logger.getLogger(MPUResultController.class);
 	
 //{
 //"merchantID":"206104000003467",
@@ -39,7 +42,7 @@ public class UATResultController {
 	@RequestMapping(value = "/frontEndRedirect", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public Result getFrontEndURL(
+	public void getFrontEndURL(
 			@RequestParam("merchantID") String merchantID, 
 			@RequestParam("respCode") String respCode,
 			@RequestParam("pan") String pan,
@@ -55,30 +58,29 @@ public class UATResultController {
 			@RequestParam("userDefined3") String userDefined3,
 			@RequestParam("categoryCode") String categoryCode,
 			@RequestParam("hashValue") String hashValue) throws Exception {
-		Result result = new Result();
-		paymenttransaction paymentdata = new paymenttransaction();
-		paymentdata.setMerchantID(merchantID);
-		paymentdata.setRespCode(respCode);
-		paymentdata.setPan(pan);
-		paymentdata.setAmount(amount);
-		paymentdata.setInvoiceNo(invoiceNo);
-		paymentdata.setTranRef(tranRef);
-		paymentdata.setApprovalCode(approvalCode);
-		paymentdata.setDateTime(dateTime);
-		paymentdata.setStatus(status);
-		paymentdata.setFailReason(failReason);
-		paymentdata.setUserDefined1(userDefined1);
-		paymentdata.setUserDefined2(userDefined2);
-		paymentdata.setUserDefined3(userDefined3);
-		paymentdata.setCategoryCode(categoryCode);
-		result  = paymnentService.savepayment(paymentdata);
-		return result;
+		
+		logger.info(" Calling Front End Redirect ...........");
+		logger.info(" merchantID " + merchantID);
+		logger.info(" respCode " + respCode);
+		logger.info(" pan " + pan);
+		logger.info(" invoiceNo " + invoiceNo);
+		logger.info(" tranRef " + tranRef);
+		logger.info(" dateTime " + dateTime);
+		logger.info(" status " + status);
+		logger.info(" failReason " + failReason);
+		logger.info(" userDefined1 " + userDefined1);
+		logger.info(" userDefined2 " + userDefined2);
+		logger.info(" userDefined3 " + userDefined3);
+		logger.info(" categoryCode " + categoryCode);
+		logger.info(" hashValue " + hashValue);
+	
+
 	}
 	
 	@RequestMapping(value = "/backEndRedirect", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public Result getBackEndURL(
+	public void getBackEndURL(
 			@RequestParam("merchantID") String merchantID, 
 			@RequestParam("respCode") String respCode,
 			@RequestParam("pan") String pan,
@@ -94,23 +96,40 @@ public class UATResultController {
 			@RequestParam("userDefined3") String userDefined3,
 			@RequestParam("categoryCode") String categoryCode,
 			@RequestParam("hashValue") String hashValue) throws Exception {
-		Result result = new Result();
-		paymenttransaction paymentdata = new paymenttransaction();
-		paymentdata.setMerchantID(merchantID);
-		paymentdata.setRespCode(respCode);
-		paymentdata.setPan(pan);
-		paymentdata.setAmount(amount);
-		paymentdata.setInvoiceNo(invoiceNo);
-		paymentdata.setTranRef(tranRef);
-		paymentdata.setApprovalCode(approvalCode);
-		paymentdata.setDateTime(dateTime);
-		paymentdata.setStatus(status);
-		paymentdata.setFailReason(failReason);
-		paymentdata.setUserDefined1(userDefined1);
-		paymentdata.setUserDefined2(userDefined2);
-		paymentdata.setUserDefined3(userDefined3);
-		paymentdata.setCategoryCode(categoryCode);
-		result  = paymnentService.savepayment(paymentdata);
-		return result;
+		
+		logger.info(" Calling Back End Redirect ...........");
+		logger.info(" merchantID " + merchantID);
+		logger.info(" respCode " + respCode);
+		logger.info(" pan " + pan);
+		logger.info(" invoiceNo " + invoiceNo);
+		logger.info(" tranRef " + tranRef);
+		logger.info(" dateTime " + dateTime);
+		logger.info(" status " + status);
+		logger.info(" failReason " + failReason);
+		logger.info(" userDefined1 " + userDefined1);
+		logger.info(" userDefined2 " + userDefined2);
+		logger.info(" userDefined3 " + userDefined3);
+		logger.info(" categoryCode " + categoryCode);
+		logger.info(" hashValue " + hashValue);
+
+
+//		Result result = new Result();
+//		paymenttransaction paymentdata = new paymenttransaction();
+//		paymentdata.setMerchantID(merchantID);
+//		paymentdata.setRespCode(respCode);
+//		paymentdata.setPan(pan);
+//		paymentdata.setAmount(amount);
+//		paymentdata.setInvoiceNo(invoiceNo);
+//		paymentdata.setTranRef(tranRef);
+//		paymentdata.setApprovalCode(approvalCode);
+//		paymentdata.setDateTime(dateTime);
+//		paymentdata.setStatus(status);
+//		paymentdata.setFailReason(failReason);
+//		paymentdata.setUserDefined1(userDefined1);
+//		paymentdata.setUserDefined2(userDefined2);
+//		paymentdata.setUserDefined3(userDefined3);
+//		paymentdata.setCategoryCode(categoryCode);
+//		result  = paymnentService.savepayment(paymentdata);
+//		return result;
 	}
 }
