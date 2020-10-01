@@ -7,8 +7,6 @@ import com.mchange.rmi.ServiceUnavailableException;
 
 public interface AbstractDao<E, I extends Serializable> {
 
-	public List<E> getAll(String queryString);
-
 	public List<Object> findByQueryString(String queryString);
 
 	public List<String> findByQuery(String queryString);
@@ -36,14 +34,17 @@ public interface AbstractDao<E, I extends Serializable> {
 	public String validpwd(String queryString);
 
 	public boolean saveUpdate(E e) throws ServiceUnavailableException;
-	
+
 	public List<E> findDatabyQueryString(String queryString, long dataInput);
-	
+
 	public int findCountByQueryString(String queryString);
-	
+
 	public long findLong(String queryString);
-	
+
 	public void delete(E e) throws ServiceUnavailableException;
-	
+
 	public double findDouble(String queryString);
+
+	public List<E> getEntitiesByQuery(String queryString);
+
 }

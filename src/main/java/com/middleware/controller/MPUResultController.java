@@ -73,6 +73,8 @@ public class MPUResultController {
 		logger.info(" userDefined3 " + userDefined3);
 		logger.info(" categoryCode " + categoryCode);
 		logger.info(" hashValue " + hashValue);
+		logger.info(" amount " + amount);
+
 	
 
 	}

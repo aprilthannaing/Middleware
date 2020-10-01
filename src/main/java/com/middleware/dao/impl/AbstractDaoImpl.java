@@ -30,7 +30,7 @@ public abstract class AbstractDaoImpl<E, I extends Serializable> implements Abst
 		this.entityClass = entityClass;
 	}
 
-	public List<E> getAll(String queryString) {
+	public List<E> getEntitiesByQuery(String queryString) {
 		List<E> entityList;
 		Query query = entityManager.createQuery(queryString);
 		entityList = query.getResultList();

@@ -1,20 +1,13 @@
 package com.middleware.controller;
 
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import javax.naming.ServiceUnavailableException;
 
 import org.apache.log4j.Logger;
->>>>>>> Stashed changes
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,12 +15,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.entity.CBPaytransaction;
 import com.middleware.entity.Result;
 import com.middleware.entity.SystemConstant;
+import com.middleware.entity.User;
 import com.middleware.entity.Views;
 import com.middleware.entity.Visa;
 import com.middleware.entity.VisaTransaction;
 import com.middleware.entity.paymenttransaction;
 import com.middleware.service.CBPaymentTransactionService;
 import com.middleware.service.PaymentTransactionService;
+import com.middleware.service.UserService;
 import com.middleware.service.VisaService;
 import com.middleware.service.VisaTransactionService;
 
@@ -37,36 +32,9 @@ public class OperationController {
 
 	@Autowired
 	private PaymentTransactionService paymnentService;
-	
+
 	@Autowired
-	private CBPaymentTransactionService cbpaymentService; 
-	
-	@RequestMapping(value = "saveTransaction", method = RequestMethod.POST)
-	@ResponseBody
-	@JsonView(Views.Summary.class)
-	public Result saveTransaction(@RequestBody JSONObject json)throws Exception {
-		Result result = new Result();
-		paymenttransaction paymentdata = new paymenttransaction();
-		paymentdata.setMerchantID(json.get("merchantID").toString());
-		paymentdata.setAmount(json.get("amount").toString());
-		paymentdata.setInvoiceNo(json.get("invoiceNo").toString());
-		paymentdata.setLink(json.get("link").toString());//mpu link
-		result  = paymnentService.savepayment(paymentdata);
-		return result;
-	}
-	
-	@RequestMapping(value = "saveCBPaytransaction", method = RequestMethod.POST)
-	@ResponseBody
-	@JsonView(Views.Summary.class)
-	public Result saveCBPaytransaction(@RequestBody CBPaytransaction json)throws Exception {
-		Result result = new Result();
-		CBPaytransaction cbpaydata = cbpaymentService.checkTransRef(json.getTransRef());
-		if(cbpaydata != null) {
-			cbpaydata.setTransStatus(json.getTransStatus());
-			result  = cbpaymentService.savecbpayment(cbpaydata);
-		}else result  = cbpaymentService.savecbpayment(json);
-		return result;
-	}
+	private CBPaymentTransactionService cbpaymentService;
 
 	@Autowired
 	private VisaService visaService;
@@ -74,27 +42,58 @@ public class OperationController {
 	@Autowired
 	private VisaTransactionService visaTransactionService;
 
+	@Autowired
+	private UserService userService;
+
 	private static Logger logger = Logger.getLogger(OperationController.class);
 
 	@RequestMapping(value = "saveTransaction", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public Result saveTransaction(@RequestParam("merchantID") String merchantID, @RequestParam("amount") String amount,
-			@RequestParam("invoiceNo") String invoiceNo, @RequestParam("link") String link) throws Exception {
+	public Result saveTransaction(@RequestBody JSONObject json) throws Exception {
 		Result result = new Result();
 		paymenttransaction paymentdata = new paymenttransaction();
-		paymentdata.setMerchantID(merchantID);
-		paymentdata.setAmount(amount);
-		paymentdata.setInvoiceNo(invoiceNo);
-		paymentdata.setLink(link);// mpu link
+		paymentdata.setMerchantID(json.get("merchantID").toString());
+		paymentdata.setAmount(json.get("amount").toString());
+		paymentdata.setInvoiceNo(json.get("invoiceNo").toString());
+		paymentdata.setLink(json.get("link").toString());// mpu link
 		result = paymnentService.savepayment(paymentdata);
 		return result;
+	}
+
+	@RequestMapping(value = "saveCBPaytransaction", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Summary.class)
+	public Result saveCBPaytransaction(@RequestBody CBPaytransaction json) throws Exception {
+		Result result = new Result();
+		CBPaytransaction cbpaydata = cbpaymentService.checkTransRef(json.getTransRef());
+		if (cbpaydata != null) {
+			cbpaydata.setTransStatus(json.getTransStatus());
+			result = cbpaymentService.savecbpayment(cbpaydata);
+		} else
+			result = cbpaymentService.savecbpayment(json);
+		return result;
+	}
+
+	private User createNewUser(JSONObject json) {
+
+		User user = new User();
+		user.setId(SystemConstant.BOID_REQUIRED);
+		user.setName(json.get("userName").toString());
+		user.setEmail(json.get("email").toString());
+		user.setPhoneNo(json.get("phoneNo").toString());
+		user.setPaymentdescription(json.get("Paymentdescription").toString());
+
+		return user;
 	}
 
 	@RequestMapping(value = "saveVisa", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
 	public String saveVisa(@RequestBody JSONObject json) throws ServiceUnavailableException {
+
+		User user = createNewUser(json);
+		userService.save(user);
 
 		VisaTransaction visaTransaction = new VisaTransaction();
 		visaTransaction.setId(SystemConstant.BOID_REQUIRED);
@@ -141,8 +140,8 @@ public class OperationController {
 		visa.setTotalCapturedAmount(json.get("totalCapturedAmount").toString());
 		visa.setTotalRefundedAmount(json.get("totalRefundedAmount").toString());
 		visa.setVisaTransaction(visaTransaction);
+		visa.setUser(user);
 		visaService.save(visa);
 		return "Saved successfully";
->>>>>>> Stashed changes
 	}
 }

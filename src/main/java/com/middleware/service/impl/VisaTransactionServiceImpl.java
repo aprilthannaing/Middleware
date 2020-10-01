@@ -21,12 +21,10 @@ public class VisaTransactionServiceImpl implements VisaTransactionService {
 	
 	@Transactional(readOnly = false)
 	public void save(VisaTransaction visaTransaction) throws ServiceUnavailableException {
-		logger.info("visaTransaction id !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + visaTransaction.getId());
 
 		if (visaTransaction.isBoIdRequired(visaTransaction.getId())) {
 			visaTransaction.setId(getId());
 		}
-		logger.info("visa id !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + visaTransaction.getId());
 		visaTransactionDao.save(visaTransaction);
 	}
 

@@ -12,71 +12,85 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import javax.persistence.CascadeType;
+
 @Entity
 @Table(name = "visa")
-public class Visa extends AbstractEntity implements Serializable  {
-	
+public class Visa extends AbstractEntity implements Serializable {
+
 	@Id
 	@Column(name = "Id", unique = true, nullable = false)
 	private long Id;
-	
+
 	private String interactionOperation;
-	
+
 	private String merchantId;
-	
+
 	private String merchantCategoryCode;
-	
+
 	private long orderId;
-	
+
 	private long amount;
-	
+
 	private String currency;
-	
+
 	private String description;
-	
+
 	private String creationTime;
-	
+
 	private String customerName;
-	
+
 	private String customerOrderDate;
-	
+
 	private String deviceType;
-	
+
 	private String ipAddress;
-	
+
 	private String result;
-	
+
 	private String brand;
-	
+
 	private String expiryMonth;
-	
+
 	private String expiryYear;
-	
+
 	private String fundingMethod;
-	
+
 	private String issuer;
-	
+
 	private String nameOnCard;
-	
+
 	private String number;
-	
+
 	private String scheme;
-	
+
 	private String storedOnFile;
-	
+
 	private String type;
-	
+
 	private String status;
-	
+
 	private String totalAuthorizedAmount;
-	
+
 	private String totalCapturedAmount;
-	
+
 	private String totalRefundedAmount;
-	
-	@OneToOne(fetch = FetchType.LAZY)
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "visaTransactionId")
 	private VisaTransaction visaTransaction;
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "userId")
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public long getId() {
 		return Id;
@@ -308,5 +322,5 @@ public class Visa extends AbstractEntity implements Serializable  {
 
 	public void setVisaTransaction(VisaTransaction visaTransaction) {
 		this.visaTransaction = visaTransaction;
-	}	
+	}
 }
