@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "visaTransaction")
 public class VisaTransaction extends AbstractEntity implements Serializable {
@@ -15,40 +17,58 @@ public class VisaTransaction extends AbstractEntity implements Serializable {
 	@Column(name = "Id", unique = true, nullable = false)
 	private long Id;
 	
+	@JsonView(Views.Thin.class)
 	private String secureId;
 	
+	@JsonView(Views.Thin.class)
 	private String authenticationToken;
 	
+	@JsonView(Views.Thin.class)
 	private String xid;
 	
+	@JsonView(Views.Thin.class)
 	private String gatewayEntryPoint;
 	
+	@JsonView(Views.Thin.class)
 	private String acquirerMessage;
 	
+	@JsonView(Views.Thin.class)
 	private String gatewayCode;
 	
+	@JsonView(Views.Thin.class)
 	private String batch;
 	
+	@JsonView(Views.Thin.class)
 	private double amount;
 	
+	@JsonView(Views.Thin.class)
 	private String authorizationCode;
 	
+	@JsonView(Views.Thin.class)
 	private String currency;
 	
+	@JsonView(Views.Thin.class)
 	private String transactionId;
 	
+	@JsonView(Views.Thin.class)
 	private String frequency;
 	
+	@JsonView(Views.Thin.class)
 	private String receipt;
 	
+	@JsonView(Views.Thin.class)
 	private String source;
 	
+	@JsonView(Views.Thin.class)
 	private String taxAmount;
 	
+	@JsonView(Views.Thin.class)
 	private String terminal;
 	
+	@JsonView(Views.Thin.class)
 	private String type;
 	
+	@JsonView(Views.Thin.class)
 	private int version;
 
 	public long getId() {

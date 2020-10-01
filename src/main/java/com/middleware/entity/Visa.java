@@ -1,9 +1,8 @@
 package com.middleware.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import javax.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "visa")
@@ -22,66 +21,95 @@ public class Visa extends AbstractEntity implements Serializable {
 	@Column(name = "Id", unique = true, nullable = false)
 	private long Id;
 
+	@JsonView(Views.Thin.class)
 	private String interactionOperation;
 
+	@JsonView(Views.Thin.class)
 	private String merchantId;
 
+	@JsonView(Views.Thin.class)
 	private String merchantCategoryCode;
 
+	@JsonView(Views.Thin.class)
 	private long orderId;
 
+	@JsonView(Views.Thin.class)
 	private long amount;
 
+	@JsonView(Views.Thin.class)
 	private String currency;
-
+	
+	@JsonView(Views.Thin.class)
 	private String description;
 
+	@JsonView(Views.Thin.class)
 	private String creationTime;
 
+	@JsonView(Views.Thin.class)
 	private String customerName;
 
+	@JsonView(Views.Thin.class)
 	private String customerOrderDate;
 
+	@JsonView(Views.Thin.class)
 	private String deviceType;
 
+	@JsonView(Views.Thin.class)
 	private String ipAddress;
 
+	@JsonView(Views.Thin.class)
 	private String result;
 
+	@JsonView(Views.Thin.class)
 	private String brand;
 
+	@JsonView(Views.Thin.class)
 	private String expiryMonth;
 
+	@JsonView(Views.Thin.class)
 	private String expiryYear;
 
+	@JsonView(Views.Thin.class)
 	private String fundingMethod;
 
+	@JsonView(Views.Thin.class)
 	private String issuer;
 
+	@JsonView(Views.Thin.class)
 	private String nameOnCard;
 
+	@JsonView(Views.Thin.class)
 	private String number;
 
+	@JsonView(Views.Thin.class)
 	private String scheme;
 
+	@JsonView(Views.Thin.class)
 	private String storedOnFile;
 
+	@JsonView(Views.Thin.class)
 	private String type;
 
+	@JsonView(Views.Thin.class)
 	private String status;
 
+	@JsonView(Views.Thin.class)
 	private String totalAuthorizedAmount;
 
+	@JsonView(Views.Thin.class)
 	private String totalCapturedAmount;
 
+	@JsonView(Views.Thin.class)
 	private String totalRefundedAmount;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonView(Views.Thin.class)
 	@JoinColumn(name = "visaTransactionId")
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private VisaTransaction visaTransaction;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonView(Views.Thin.class)
 	@JoinColumn(name = "userId")
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private User user;
 
 	public User getUser() {

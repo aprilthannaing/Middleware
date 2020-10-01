@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "user")
 public class User extends AbstractEntity implements Serializable {
@@ -15,12 +17,16 @@ public class User extends AbstractEntity implements Serializable {
 	@Column(name = "Id", unique = true, nullable = false)
 	private long Id;
 
+	@JsonView(Views.Thin.class)
 	private String name;
 
+	@JsonView(Views.Thin.class)
 	private String email;
 
+	@JsonView(Views.Thin.class)
 	private String phoneNo;
 
+	@JsonView(Views.Thin.class)
 	private String paymentdescription;
 
 	public long getId() {
