@@ -20,7 +20,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
 	
 	private static Logger logger = Logger.getLogger(PaymentTransactionServiceImpl.class);
 	
-	public Result savepayment(paymenttransaction data) {
+	public Result saveMPUPayment(paymenttransaction data) {
 		Result res = new Result();
 		try {
 			if (data.isBoIdRequired(data.getTranID()))

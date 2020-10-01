@@ -58,7 +58,6 @@ public class MPUResultController {
 			@RequestParam("userDefined3") String userDefined3,
 			@RequestParam("categoryCode") String categoryCode,
 			@RequestParam("hashValue") String hashValue) throws Exception {
-		
 		logger.info(" Calling Front End Redirect ...........");
 		logger.info(" merchantID " + merchantID);
 		logger.info(" respCode " + respCode);
@@ -74,9 +73,24 @@ public class MPUResultController {
 		logger.info(" categoryCode " + categoryCode);
 		logger.info(" hashValue " + hashValue);
 		logger.info(" amount " + amount);
-
-	
-
+		Result result = new Result();
+		paymenttransaction paymentdata = new paymenttransaction();
+		paymentdata.setMerchantID(merchantID);
+		paymentdata.setRespCode(respCode);
+		paymentdata.setPan(pan);
+		paymentdata.setAmount(amount);
+		paymentdata.setInvoiceNo(invoiceNo);
+		paymentdata.setTranRef(tranRef);
+		paymentdata.setApprovalCode(approvalCode);
+		paymentdata.setDateTime(dateTime);
+		paymentdata.setStatus(status);
+		paymentdata.setFailReason(failReason);
+		paymentdata.setUserDefined1(userDefined1);
+		paymentdata.setUserDefined2(userDefined2);
+		paymentdata.setUserDefined3(userDefined3);
+		paymentdata.setCategoryCode(categoryCode);
+		result  = paymnentService.saveMPUPayment(paymentdata);
+		logger.info("FrontEndURL Save Data :" + result.getDescription());
 	}
 	
 	@RequestMapping(value = "/backEndRedirect", method = RequestMethod.POST)
@@ -98,7 +112,6 @@ public class MPUResultController {
 			@RequestParam("userDefined3") String userDefined3,
 			@RequestParam("categoryCode") String categoryCode,
 			@RequestParam("hashValue") String hashValue) throws Exception {
-		
 		logger.info(" Calling Back End Redirect ...........");
 		logger.info(" merchantID " + merchantID);
 		logger.info(" respCode " + respCode);
@@ -113,25 +126,23 @@ public class MPUResultController {
 		logger.info(" userDefined3 " + userDefined3);
 		logger.info(" categoryCode " + categoryCode);
 		logger.info(" hashValue " + hashValue);
-
-
-//		Result result = new Result();
-//		paymenttransaction paymentdata = new paymenttransaction();
-//		paymentdata.setMerchantID(merchantID);
-//		paymentdata.setRespCode(respCode);
-//		paymentdata.setPan(pan);
-//		paymentdata.setAmount(amount);
-//		paymentdata.setInvoiceNo(invoiceNo);
-//		paymentdata.setTranRef(tranRef);
-//		paymentdata.setApprovalCode(approvalCode);
-//		paymentdata.setDateTime(dateTime);
-//		paymentdata.setStatus(status);
-//		paymentdata.setFailReason(failReason);
-//		paymentdata.setUserDefined1(userDefined1);
-//		paymentdata.setUserDefined2(userDefined2);
-//		paymentdata.setUserDefined3(userDefined3);
-//		paymentdata.setCategoryCode(categoryCode);
-//		result  = paymnentService.savepayment(paymentdata);
-//		return result;
+		Result result = new Result();
+		paymenttransaction paymentdata = new paymenttransaction();
+		paymentdata.setMerchantID(merchantID);
+		paymentdata.setRespCode(respCode);
+		paymentdata.setPan(pan);
+		paymentdata.setAmount(amount);
+		paymentdata.setInvoiceNo(invoiceNo);
+		paymentdata.setTranRef(tranRef);
+		paymentdata.setApprovalCode(approvalCode);
+		paymentdata.setDateTime(dateTime);
+		paymentdata.setStatus(status);
+		paymentdata.setFailReason(failReason);
+		paymentdata.setUserDefined1(userDefined1);
+		paymentdata.setUserDefined2(userDefined2);
+		paymentdata.setUserDefined3(userDefined3);
+		paymentdata.setCategoryCode(categoryCode);
+		result  = paymnentService.saveMPUPayment(paymentdata);
+		logger.info("BackEndURL Save Data :" + result.getDescription());
 	}
 }

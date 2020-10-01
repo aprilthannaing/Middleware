@@ -50,14 +50,15 @@ public class OperationController {
 	@RequestMapping(value = "saveTransaction", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public Result saveTransaction(@RequestBody JSONObject json) throws Exception {
+	public Result saveMPUPayment(@RequestBody JSONObject json)throws Exception {
 		Result result = new Result();
 		paymenttransaction paymentdata = new paymenttransaction();
 		paymentdata.setMerchantID(json.get("merchantID").toString());
 		paymentdata.setAmount(json.get("amount").toString());
 		paymentdata.setInvoiceNo(json.get("invoiceNo").toString());
 		paymentdata.setLink(json.get("link").toString());// mpu link
-		result = paymnentService.savepayment(paymentdata);
+		paymentdata.setLink(json.get("link").toString());//mpu link
+		result  = paymnentService.saveMPUPayment(paymentdata);
 		return result;
 	}
 
