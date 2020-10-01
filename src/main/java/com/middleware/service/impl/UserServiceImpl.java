@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.middleware.dao.UserDao;
+import com.middleware.entity.Result;
 import com.middleware.entity.User;
+import com.middleware.entity.paymenttransaction;
 import com.middleware.service.UserService;
 
 @Service("userService")
@@ -34,6 +36,28 @@ public class UserServiceImpl implements UserService {
 	public long countUser() {
 		String query = "select count(*) from User";
 		return userDao.findLongByQueryString(query).get(0);
+	}
+	
+	public Result acceptUser(User user) {
+		Result res = new Result();
+			if (user.isBoIdRequired(user.getId()))
+				user.setId(getId());
+			boolean correct;
+			try {
+				correct = userDao.checkSaveOrUpdate(user);
+				if (correct) {
+					res.setCode("0000");
+					res.setDescription("Successfully");
+					res.setResult( "localhost:4200/home/" + user.getId()+"");
+				}else {
+					res.setCode("0012");
+					res.setDescription("Fail");
+				}
+			} catch (com.mchange.rmi.ServiceUnavailableException e) {
+				e.printStackTrace();
+			}
+
+		return res;
 	}
 
 }
