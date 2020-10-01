@@ -64,3 +64,51 @@ CREATE TABLE `VisaTransaction` (
   `terminal` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `version` int DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  
+  CREATE TABLE `cbpaytransaction` (
+  `tranID` bigint NOT NULL,
+  `reqId` varchar(32) NOT NULL,
+  `merId` varchar(16) NOT NULL,
+  `subMerId` varchar(16) NOT NULL,
+  `terminalId` varchar(8) NOT NULL,
+  `transAmount` varchar(13) NOT NULL,
+  `transCurrency` varchar(3) NOT NULL,
+  `ref1` varchar(25) NOT NULL,
+  `ref2` varchar(25) NOT NULL,
+  `merDqrCode` varchar(512) NOT NULL,
+  `transExpiredTime` varchar(19) NOT NULL,
+  `refNo` varchar(16) NOT NULL,
+  `transRef` varchar(16) NOT NULL,
+  `transStatus` varchar(1) NOT NULL,
+  `code` varchar(45) NOT NULL,
+  `msg` varchar(255) NOT NULL,
+  `t1` varchar(45) NOT NULL,
+  `t2` varchar(45) NOT NULL,
+  `t3` varchar(45) NOT NULL,
+  PRIMARY KEY (`tranID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `paymenttransaction` (
+  `tranID` bigint NOT NULL,
+  `merchantID` varchar(15) NOT NULL,
+  `respCode` varchar(2) NOT NULL,
+  `pan` varchar(16) NOT NULL,
+  `amount` varchar(12) NOT NULL,
+  `invoiceNo` varchar(20) NOT NULL,
+  `tranRef` varchar(28) NOT NULL,
+  `approvalCode` varchar(6) NOT NULL,
+  `dateTime` varchar(14) NOT NULL,
+  `status` varchar(2) NOT NULL,
+  `failReason` varchar(100) NOT NULL,
+  `categoryCode` varchar(20) NOT NULL,
+  `currencyCode` varchar(3) NOT NULL,
+  `userDefined1` varchar(150) NOT NULL,
+  `userDefined2` varchar(150) NOT NULL,
+  `userDefined3` varchar(150) NOT NULL,
+  `link` varchar(225) NOT NULL,
+  `t1` varchar(45) NOT NULL,
+  `t2` varchar(45) NOT NULL,
+  `t3` varchar(45) NOT NULL,
+  PRIMARY KEY (`tranID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
