@@ -28,6 +28,12 @@ public class User extends AbstractEntity implements Serializable {
 
 	@JsonView(Views.Thin.class)
 	private String paymentdescription;
+	
+	@JsonView(Views.Thin.class)
+	private String amount;
+	
+	@JsonView(Views.Thin.class)
+	private String currency;
 
 	public long getId() {
 		return Id;
@@ -68,4 +74,21 @@ public class User extends AbstractEntity implements Serializable {
 	public void setPaymentdescription(String paymentdescription) {
 		this.paymentdescription = paymentdescription;
 	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	
 }

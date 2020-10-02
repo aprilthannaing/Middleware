@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -29,7 +30,22 @@ public class UserDataController {
 		userdata.setEmail(json.get("email").toString());
 		userdata.setPhoneNo(json.get("phoneNo").toString());
 		userdata.setPaymentdescription(json.get("paymentdescription").toString());
+		userdata.setAmount(json.get("amount").toString());
+		userdata.setCurrency(json.get("currency").toString());
 		result  = userDataService.acceptUser(userdata);
 		return result;
+	}
+	@RequestMapping(value = "checking", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Summary.class)
+	public Result checkingUser(@RequestBody JSONObject json)throws Exception {
+		Result res = new Result();
+		String id = json.get("id").toString();
+		User user = userDataService.checkingUser(id);
+		if(user != null) {
+			res.setResult(user.getAmount());
+			res.setCode("0000");
+		}else res.setCode("0001");
+	return res;
 	}
 }

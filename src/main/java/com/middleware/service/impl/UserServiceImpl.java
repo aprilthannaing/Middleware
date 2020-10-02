@@ -1,16 +1,16 @@
 package com.middleware.service.impl;
 
+import java.util.List;
+
 import javax.naming.ServiceUnavailableException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.middleware.dao.UserDao;
 import com.middleware.entity.Result;
 import com.middleware.entity.User;
-import com.middleware.entity.paymenttransaction;
 import com.middleware.service.UserService;
 
 @Service("userService")
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		Result res = new Result();
 			if (user.isBoIdRequired(user.getId()))
 				user.setId(getId());
-			boolean correct;
+			boolean correct = false;
 			try {
 				correct = userDao.checkSaveOrUpdate(user);
 				if (correct) {
@@ -58,6 +58,16 @@ public class UserServiceImpl implements UserService {
 			}
 
 		return res;
+	}
+	
+	public User checkingUser(String id) {
+		User resUser = new User();
+		String query = "from User where id=" + id;
+		List<User> userList = userDao.getEntitiesByQuery(query);
+		if(userList.size() > 0) {
+			resUser = userList.get(0);
+		}
+		return resUser;
 	}
 
 }

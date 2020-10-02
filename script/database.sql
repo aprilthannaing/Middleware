@@ -1,11 +1,13 @@
-CREATE TABLE `User` (  
-  id bigint(20) primary key not null auto_increment,
+CREATE TABLE `user` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `phoneNo` varchar(50) DEFAULT NULL, 
-  `paymentdescription` varchar(500) DEFAULT NULL 
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-  
+  `phoneNo` varchar(50) DEFAULT NULL,
+  `paymentdescription` varchar(500) DEFAULT NULL,
+  `amount` varchar(13) DEFAULT NULL,
+  `currency` varchar(3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000001 DEFAULT CHARSET=utf8;
   
   CREATE TABLE `visa` (
  id bigint(20) primary key not null auto_increment,

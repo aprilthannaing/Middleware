@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class Result {
 	@JsonView(Views.Thin.class)
-	String description;
+	private String description;
 	
 	@JsonView(Views.Thin.class)
-	String code;
+	private String code;
 	
 	@JsonView(Views.Thin.class)
-	String result = "";
-
+	private String result = "";
+	
 	public String getDescription() {
 		return description;
 	}
@@ -35,6 +35,5 @@ public class Result {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	
-	
+
 }

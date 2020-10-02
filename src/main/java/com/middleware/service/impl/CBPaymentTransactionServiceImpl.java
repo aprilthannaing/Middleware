@@ -56,4 +56,12 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 				return null;
 			return mobileUserList.get(0);
 		}
+		
+		public CBPaytransaction checkTranID(long tranid) {
+			String query = "from CBPaytransaction where tranID=" + tranid;
+			List<CBPaytransaction> mobileUserList = cbpaymentDao.getEntitiesByQuery(query);
+			if (CollectionUtils.isEmpty(mobileUserList))
+				return null;
+			return mobileUserList.get(0);
+		}
 }
