@@ -69,7 +69,7 @@ public class SessionServiceImpl implements SessionService {
 
     public Session checkingSession(String id) {
 	Session session = new Session();
-	String query = "from User where id=" + id;
+	String query = "from Session where sessionId ='" + id + "'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (userList.size() > 0) {
 	    session = userList.get(0);

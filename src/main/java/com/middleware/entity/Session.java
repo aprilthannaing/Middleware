@@ -54,7 +54,6 @@ public class Session extends AbstractEntity implements Serializable {
     private SessionStatus sessionStatus;
     
     @JsonView(Views.Thin.class)
-    @Enumerated(EnumType.STRING)
     private String sessionId;
 
     public String getPaymentId() {
@@ -71,14 +70,6 @@ public class Session extends AbstractEntity implements Serializable {
 
     public void setUserId(String userId) {
 	this.userId = userId;
-    }
-
-    public long getId() {
-	return Id;
-    }
-
-    public void setId(long id) {
-	Id = id;
     }
 
     public String getName() {
@@ -159,6 +150,14 @@ public class Session extends AbstractEntity implements Serializable {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public long getId() {
+		return Id;
+	}
+
+	public void setId(long id) {
+		Id = id;
 	}
 
 }
