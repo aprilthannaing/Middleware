@@ -66,7 +66,7 @@ public class WipoDataController {
     @ResponseBody
     @JsonView(Views.Summary.class)
     public String valueHash(@RequestBody JSONObject json) throws Exception {
-    	String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";//wipouser,123
+    	String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";//wipouser,123//SHA1
     	String paymentId 			= json.get("paymentId").toString();
     	String name 				= json.get("name").toString();
     	String email				= json.get("email").toString();
@@ -101,14 +101,14 @@ public class WipoDataController {
     @ResponseBody
     @JsonView(Views.Summary.class)
     public Result checkingUser(@RequestBody JSONObject json) throws Exception {
-	Result res = new Result();
-	String id = json.get("id").toString();
-	Session session = sessionService.checkingSession(id);
-	if (session != null) {
-	    res.setResult(session.getAmount());
-	    res.setCode("0000");
-	} else
-	    res.setCode("0001");
+		Result res = new Result();
+		String id = json.get("id").toString();
+		Session session = sessionService.checkingSession(id);
+		if (session != null) {
+		    res.setResult(session.getAmount());
+		    res.setCode("0000");
+		} else
+		    res.setCode("0001");
 	return res;
     }
 }

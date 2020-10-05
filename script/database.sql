@@ -1,19 +1,20 @@
 
-CREATE TABLE `Session` (  
-  id bigint(20) primary key not null auto_increment,
+CREATE TABLE `session` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `userId` varchar(255) DEFAULT NULL,
   `paymentId` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `phoneNo` varchar(50) DEFAULT NULL, 
-  `amount` varchar(50) DEFAULT NULL, 
-  `currency` varchar(50) DEFAULT NULL, 
+  `phoneNo` varchar(50) DEFAULT NULL,
+  `amount` varchar(50) DEFAULT NULL,
+  `currency` varchar(50) DEFAULT NULL,
   `paymentdescription` varchar(500) DEFAULT NULL,
   `startDate` varchar(50) DEFAULT NULL,
   `endDate` varchar(50) DEFAULT NULL,
-  `sessionStatus` ENUM('ACTIVE', 'INACTIVE') NOT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-  
+  `sessionId` varchar(32) NOT NULL,
+  `sessionStatus` enum('ACTIVE','INACTIVE') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000006 DEFAULT CHARSET=utf8;
   
   CREATE TABLE `visa` (
   id bigint(20) primary key not null auto_increment,
