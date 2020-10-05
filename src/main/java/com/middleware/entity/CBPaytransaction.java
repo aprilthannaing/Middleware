@@ -2,71 +2,90 @@ package com.middleware.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
-@Table(name = "cbpaytransaction")
-public class CBPaytransaction extends AbstractEntity implements Serializable{
+@Table(name = "cbPayTransaction")
+public class CBPayTransaction extends AbstractEntity implements Serializable {
 	@Id
 	@Column(name = "tranID", unique = true, nullable = false)
 	private long tranID;
-	
+
 	@Column(name = "reqId")
 	private String reqId = "";
-	
+
 	@Column(name = "merId")
 	private String merId = "";
-	
+
 	@Column(name = "subMerId")
 	private String subMerId = "";
 
 	@Column(name = "terminalId")
 	private String terminalId = "";
-	
+
 	@Column(name = "transAmount")
 	private String transAmount = "";
-	
+
 	@Column(name = "transCurrency")
 	private String transCurrency = "";
-	
+
 	@Column(name = "ref1")
 	private String ref1 = "";
-	
+
 	@Column(name = "ref2")
 	private String ref2 = "";
-	
+
 	@Column(name = "merDqrCode")
 	private String merDqrCode = "";
-	
+
 	@Column(name = "transExpiredTime")
 	private String transExpiredTime = "";
-	
+
 	@Column(name = "refNo")
 	private String refNo = "";
-	
+
 	@Column(name = "transRef")
 	private String transRef = "";
-	
+
 	@Column(name = "transStatus")
 	private String transStatus = "";
-	
+
 	@Column(name = "code")
 	private String code = "";
-	
+
 	@Column(name = "msg")
 	private String msg = "";
-	
+
 	@Column(name = "t1")
 	private String t1 = "";
-	
+
 	@Column(name = "t2")
 	private String t2 = "";
-	
+
 	@Column(name = "t3")
 	private String t3 = "";
+
+	@JsonView(Views.Thin.class)
+	@JoinColumn(name = "userId")
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Session session;
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
 
 	public long getTranID() {
 		return tranID;
@@ -219,5 +238,5 @@ public class CBPaytransaction extends AbstractEntity implements Serializable{
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
+
 }

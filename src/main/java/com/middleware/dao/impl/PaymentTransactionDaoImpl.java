@@ -3,12 +3,12 @@ package com.middleware.dao.impl;
 import org.springframework.stereotype.Repository;
 
 import com.middleware.dao.PaymentTransactionDao;
-import com.middleware.entity.paymenttransaction;
+import com.middleware.entity.MPUPaymentTransaction;
 
 @Repository
-public class PaymentTransactionDaoImpl extends AbstractDaoImpl<paymenttransaction, String> implements PaymentTransactionDao{
+public class PaymentTransactionDaoImpl extends AbstractDaoImpl<MPUPaymentTransaction, String> implements PaymentTransactionDao{
 	
 	protected PaymentTransactionDaoImpl() {
-		super(paymenttransaction.class);
+		super(MPUPaymentTransaction.class);
 	}
 }

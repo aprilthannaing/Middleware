@@ -38,7 +38,7 @@ public class Visa extends AbstractEntity implements Serializable {
 
 	@JsonView(Views.Thin.class)
 	private String currency;
-	
+
 	@JsonView(Views.Thin.class)
 	private String description;
 
@@ -110,14 +110,14 @@ public class Visa extends AbstractEntity implements Serializable {
 	@JsonView(Views.Thin.class)
 	@JoinColumn(name = "userId")
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private User user;
+	private Session session;
 
-	public User getUser() {
-		return user;
+	public Session getSession() {
+		return session;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setSession(Session session) {
+		this.session = session;
 	}
 
 	public long getId() {

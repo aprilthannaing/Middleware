@@ -1,7 +1,7 @@
 package com.middleware.dao;
 
-import com.middleware.entity.paymenttransaction;
+import com.middleware.entity.MPUPaymentTransaction;
 
-public interface PaymentTransactionDao extends AbstractDao<paymenttransaction, String> {
+public interface PaymentTransactionDao extends AbstractDao<MPUPaymentTransaction, String> {
 
 }

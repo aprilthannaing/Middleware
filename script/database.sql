@@ -1,18 +1,24 @@
-CREATE TABLE `user` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+
+CREATE TABLE `Session` (  
+  id bigint(20) primary key not null auto_increment,
+  `userId` varchar(255) DEFAULT NULL,
+  `paymentId` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `phoneNo` varchar(50) DEFAULT NULL,
+  `phoneNo` varchar(50) DEFAULT NULL, 
+  `amount` varchar(50) DEFAULT NULL, 
+  `currency` varchar(50) DEFAULT NULL, 
   `paymentdescription` varchar(500) DEFAULT NULL,
-  `amount` varchar(13) DEFAULT NULL,
-  `currency` varchar(3) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000001 DEFAULT CHARSET=utf8;
+  `startDate` varchar(50) DEFAULT NULL,
+  `endDate` varchar(50) DEFAULT NULL,
+  `sessionStatus` ENUM('ACTIVE', 'INACTIVE') NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  
   
   CREATE TABLE `visa` (
- id bigint(20) primary key not null auto_increment,
+  id bigint(20) primary key not null auto_increment,
   `visaTransactionId` bigint(20) DEFAULT NULL,
-  `userId` bigint(20) DEFAULT NULL,
+  `sessionId` bigint(20) DEFAULT NULL,
   `amount` bigint(20) DEFAULT NULL,
   `interactionOperation` varchar(30) DEFAULT NULL,
   `merchantId` varchar(255) DEFAULT NULL,
@@ -45,7 +51,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 CREATE TABLE `VisaTransaction` (  
   id bigint(20) primary key not null auto_increment,
   `secureId` varchar(50) DEFAULT NULL,
@@ -67,8 +72,9 @@ CREATE TABLE `VisaTransaction` (
   `type` varchar(255) DEFAULT NULL,
   `version` int DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
   
-  CREATE TABLE `cbpaytransaction` (
+  CREATE TABLE `cbPayTransaction` (
   `tranID` bigint NOT NULL,
+  `sessionId` bigint(20) DEFAULT NULL,
   `reqId` varchar(32) NOT NULL,
   `merId` varchar(16) NOT NULL,
   `subMerId` varchar(16) NOT NULL,
@@ -91,8 +97,9 @@ CREATE TABLE `VisaTransaction` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `paymenttransaction` (
+CREATE TABLE `mpuPaymentTransaction` (
   `tranID` bigint NOT NULL,
+  `sessionId` bigint(20) DEFAULT NULL,
   `merchantID` varchar(15) NOT NULL,
   `respCode` varchar(2) NOT NULL,
   `pan` varchar(16) NOT NULL,
@@ -112,5 +119,6 @@ CREATE TABLE `paymenttransaction` (
   `t1` varchar(45) NOT NULL,
   `t2` varchar(45) NOT NULL,
   `t3` varchar(45) NOT NULL,
+  `creationDate` varchar(150) NOT NULL,
   PRIMARY KEY (`tranID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
