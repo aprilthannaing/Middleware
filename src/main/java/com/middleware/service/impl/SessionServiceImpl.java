@@ -47,13 +47,15 @@ public class SessionServiceImpl implements SessionService {
 	Result res = new Result();
 	if (session.isBoIdRequired(session.getId()))
 	    session.setId(getId());
-	boolean correct = false;
+		String sessionid = new CommonService().generateSession(session.getId()+"");
+		session.setSessionId(sessionid);
+		boolean correct = false;
 	try {
 	    correct = sessionDao.checkSaveOrUpdate(session);
 	    if (correct) {
 		res.setCode("0000");
 		res.setDescription("Successfully");
-		res.setResult("localhost:4200/home/" + session.getId() + "");
+		res.setResult("localhost:4200/home/" + session.getSessionId() + "");
 	    } else {
 		res.setCode("0012");
 		res.setDescription("Fail");
@@ -71,7 +73,7 @@ public class SessionServiceImpl implements SessionService {
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (userList.size() > 0) {
 	    session = userList.get(0);
-	}
+	}else session = null;
 	return session;
     }
 
