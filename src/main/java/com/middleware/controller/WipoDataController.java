@@ -39,6 +39,7 @@ public class WipoDataController extends AbstractController{
     @ResponseBody
     @JsonView(Views.Summary.class)
     public Result acceptUser(@RequestBody JSONObject json) throws Exception {
+    AES aes = new AES();
 	Result result = new Result();
 	String myCode = valueHash(json);
 	String yourCode = json.get("yourCode").toString();
@@ -46,7 +47,11 @@ public class WipoDataController extends AbstractController{
 		Session wipoData = convertRequest(json);
 		result = sessionService.acceptSession(wipoData);
 		if(result.getCode().equals("0000")) {
-			result.setResult("localhost:4200/home/" + new AES().encrypt(result.getResult() + "", secretKey1));
+			//result.setResult("localhost:4200/home/" + aes.encrypt(result.getResult() + "", secretKey));
+			String encryptValue = aes.encrypt(result.getResult() + "", secretKey);
+			System.out.println("Encryption Value : " + encryptValue);
+			System.out.println("Session Value    : " + result.getResult());
+			System.out.println("Decryption Value : " + aes.decrypt(encryptValue, secretKey));
 		}
 	}else {
 		result.setCode("0001");
