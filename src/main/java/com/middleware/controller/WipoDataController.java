@@ -46,7 +46,7 @@ public class WipoDataController extends AbstractController{
 		Session wipoData = convertRequest(json);
 		result = sessionService.acceptSession(wipoData);
 		if(result.getCode().equals("0000")) {
-			result.setResult("localhost:4200/home/" + new AES().decrypt(result.getResult() + "", secretKey));
+			result.setResult("localhost:4200/home/" + new AES().encrypt(result.getResult() + "", secretKey1));
 		}
 	}else {
 		result.setCode("0001");

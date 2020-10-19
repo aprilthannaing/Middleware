@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Service
 public class AbstractController {
 	public static final String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";//wipouser,123//SHA1
+	public static final String secretKey1 = "7M8N3SLQ8QIKDJOSEPXJKJDFOZIN1NBO";
 	
 	private static Logger logger = Logger.getLogger(AbstractController.class);
 
