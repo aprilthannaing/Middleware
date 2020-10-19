@@ -1,8 +1,12 @@
 package com.middleware.controller;
 
+import java.security.Key;
+import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.middleware.entity.AES;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.entity.SessionStatus;
@@ -25,7 +30,8 @@ import com.middleware.service.SessionService;
 
 @RestController
 @RequestMapping("data")
-public class WipoDataController {
+public class WipoDataController extends AbstractController{
+	private static final String ALGO = "AES/CBC/NoPadding";
     @Autowired
     private SessionService sessionService;
 
@@ -39,6 +45,9 @@ public class WipoDataController {
 	if(myCode.equals(yourCode)) {
 		Session wipoData = convertRequest(json);
 		result = sessionService.acceptSession(wipoData);
+		if(result.getCode().equals("0000")) {
+			result.setResult("localhost:4200/home/" + new AES().decrypt(result.getResult() + "", secretKey));
+		}
 	}else {
 		result.setCode("0001");
 		result.setDescription("please check your Input Value");
@@ -66,7 +75,6 @@ public class WipoDataController {
     @ResponseBody
     @JsonView(Views.Summary.class)
     public String valueHash(@RequestBody JSONObject json) throws Exception {
-    	String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";//wipouser,123//SHA1
     	String paymentId 			= json.get("paymentId").toString();
     	String name 				= json.get("name").toString();
     	String email				= json.get("email").toString();
@@ -111,4 +119,5 @@ public class WipoDataController {
 		    res.setCode("0001");
 	return res;
     }
+    
 }

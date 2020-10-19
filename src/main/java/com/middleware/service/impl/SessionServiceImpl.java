@@ -55,7 +55,8 @@ public class SessionServiceImpl implements SessionService {
 	    if (correct) {
 		res.setCode("0000");
 		res.setDescription("Successfully");
-		res.setResult("localhost:4200/home/" + session.getSessionId() + "");
+		//res.setResult("localhost:4200/home/" + session.getSessionId() + "");
+		res.setResult(session.getSessionId());
 	    } else {
 		res.setCode("0012");
 		res.setDescription("Fail");
