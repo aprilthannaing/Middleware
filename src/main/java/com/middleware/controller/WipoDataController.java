@@ -48,12 +48,11 @@ public class WipoDataController extends AbstractController{
 		Session wipoData = convertRequest(json);
 		result = sessionService.acceptSession(wipoData);
 		if(result.getCode().equals("0000")) {
-			
 			String encryptValue = aes.encrypt(result.getResult() + "", secretKey);
 			System.out.println("Encryption Value : " + encryptValue);
 			System.out.println("Session Value    : " + result.getResult());
 			System.out.println("Decryption Value : " + aes.decrypt(encryptValue, secretKey));
-			result.setResult("localhost:4200/home/" +encryptValue);
+			result.setResult("localhost:4200/home/" + encryptValue);
 		}
 	}else {
 		result.setCode("0001");
@@ -115,15 +114,24 @@ public class WipoDataController extends AbstractController{
     @RequestMapping(value = "check", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
-    public Result checkingUser(@RequestBody JSONObject json) throws Exception {
-		Result res = new Result();
-		String id = json.get("id").toString();
+    public JSONObject checkingUser(@RequestBody JSONObject json) throws Exception {
+    	JSONObject res = new JSONObject();
+		 AES aes = new AES();
+		String reqid = json.get("id").toString();
+		if(reqid.equals("") || reqid.equals(null)) {
+			res.put("code","0001");
+			res.put("Description","SessionId is empty");
+			return res;
+		} 
+		String id = aes.decrypt(reqid, secretKey);
 		Session session = sessionService.checkingSession(id);
 		if (session != null) {
-		    res.setResult(session.getAmount());
-		    res.setCode("0000");
+			res.put("code","0000");
+			res.put("Description","Success");
+			res.put("userObj",session);
 		} else
-		    res.setCode("0001");
+			res.put("code","0001");
+		res.put("Description","User not Found!");
 	return res;
     }
     
