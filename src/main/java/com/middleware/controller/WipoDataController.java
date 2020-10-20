@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.entity.AES;
+import com.middleware.entity.Message;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.entity.SessionStatus;
@@ -47,11 +48,12 @@ public class WipoDataController extends AbstractController{
 		Session wipoData = convertRequest(json);
 		result = sessionService.acceptSession(wipoData);
 		if(result.getCode().equals("0000")) {
-			//result.setResult("localhost:4200/home/" + aes.encrypt(result.getResult() + "", secretKey));
+			
 			String encryptValue = aes.encrypt(result.getResult() + "", secretKey);
 			System.out.println("Encryption Value : " + encryptValue);
 			System.out.println("Session Value    : " + result.getResult());
 			System.out.println("Decryption Value : " + aes.decrypt(encryptValue, secretKey));
+			result.setResult("localhost:4200/home/" +encryptValue);
 		}
 	}else {
 		result.setCode("0001");
@@ -123,6 +125,24 @@ public class WipoDataController extends AbstractController{
 		} else
 		    res.setCode("0001");
 	return res;
+    }
+    
+    @RequestMapping(value = "equalOrNot", method = RequestMethod.POST)
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public Result TestData(@RequestBody String stringToTest) {
+    	Result result = new Result();
+    	result.setResult(new AES().decrypt(stringToTest, secretKey));
+		return result;
+    	
+    }
+    
+    @RequestMapping(value = "Message", method = RequestMethod.POST)
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public String Response(){
+    	String message = getMessageDescription("reqId");
+		return message;
     }
     
 }

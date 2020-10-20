@@ -1,9 +1,15 @@
 package com.middleware.controller;
 
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-
+import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -12,13 +18,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.omg.CORBA.portable.InputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.sun.xml.internal.ws.api.ResourceLoader;
+
+import ch.qos.logback.core.util.FileUtil;
 
 @Service
 public class AbstractController {
 	public static final String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";//wipouser,123//SHA1
-	
 	private static Logger logger = Logger.getLogger(AbstractController.class);
 
 	public String getMyanmarElement(String content, String element, String remover) {
@@ -319,6 +332,38 @@ public class AbstractController {
 		}
 
 		return resultJson;
+	}
+	
+	
+	public static String getMessageDescription(String messageCode) {
+		
+		String retMsgDesc = "";
+		ArrayList<String> arl = new ArrayList<>();
+		Resource resource = new ClassPathResource("cbPay.txt");
+		//InputStream inputStream = (InputStream) resource.getInputStream();
+
+		//arl = readList(, false);
+
+		try {
+				for (int i = 0; i < arl.size(); i++) {
+					if (!arl.get(i).equals("")) {
+	
+						if (!arl.get(i).equals("")) {
+	
+							if (arl.get(i).split(":")[0].equalsIgnoreCase(messageCode)) {
+								System.out.println("msgdesc" + arl.get(i).split(":")[1]);
+								retMsgDesc = arl.get(i).split(":")[1];
+							}
+						}
+	
+					}
+				}
+		    
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return retMsgDesc;
 	}
 }
 
