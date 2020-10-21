@@ -18,7 +18,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,11 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.entity.CBPayTransaction;
+import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.Session;
 import com.middleware.entity.Views;
 import com.middleware.entity.Visa;
 import com.middleware.entity.VisaTransaction;
 import com.middleware.service.CBPaymentTransactionService;
+import com.middleware.service.MPUPaymentTransactionService;
 import com.middleware.service.VisaService;
 
 @RestController
@@ -42,6 +46,9 @@ public class ReportController {
 
     @Autowired
     private CBPaymentTransactionService cbPayTransactionService;
+    
+    @Autowired
+    private MPUPaymentTransactionService mpuPaymentService;
 
     private static Logger logger = Logger.getLogger(ReportController.class);
 
@@ -101,10 +108,10 @@ public class ReportController {
 	cell.setCellValue(value);
     }
 
-    private void writeVisaSheet(XSSFWorkbook workbook) {
+    private void writeVisaSheet(XSSFWorkbook workbook, String startDate, String endDate) {
 	XSSFSheet sheet = workbook.createSheet("Visa");
 	writeTitle(workbook, sheet, "VISA");
-	List<Visa> visaList = visaService.findByDateRange("2020-09-01", "2020-10-01");
+	List<Visa> visaList = visaService.findByDateRange(startDate, endDate);
 
 	int count = 3;
 	for (Visa visa : visaList) {
@@ -112,69 +119,46 @@ public class ReportController {
 		continue;
 
 	    VisaTransaction visaTransaction = visa.getVisaTransaction();
-	    Session user = visa.getSession();
+	    Session session = visa.getSession();
+	    if(session == null)
+		continue;
 
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, visa.getCreationTime(),
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, user.getName(), (short) 13,
-		    IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, user.getEmail(), (short) 13,
-		    IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "D", count,
-		    user.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, visa.getDescription(),
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, visa.getAmount() + "",
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, visa.getCurrency(),
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count,
-		    visaTransaction.getTaxAmount(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count,
-		    visaTransaction.getAcquirerMessage(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, visa.getResult(),
-		    (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, visa.getCreationTime(),(short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13,IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "D", count,session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, visa.getDescription(),(short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, visaTransaction.getAmount() + "",(short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, visa.getCurrency(),	(short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count,visaTransaction.getTaxAmount().isEmpty()? "0" : visaTransaction.getTaxAmount(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count,visaTransaction.getAcquirerMessage(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, visa.getResult(),(short) 13, IndexedColors.BLACK.index);
 	    count++;
 	}
     }
 
-    private void writeCBPaySheet(XSSFWorkbook workbook) {
+    private void writeCBPaySheet(XSSFWorkbook workbook, String startDate, String endDate) {
 	XSSFSheet sheet = workbook.createSheet("CBpay");
 	writeTitle(workbook, sheet, "CB Pay");
-	List<CBPayTransaction> cbPayList = cbPayTransactionService.findByDateRange("2020-09-01", "2020-10-01");
+	List<CBPayTransaction> cbPayList = cbPayTransactionService.findByDateRange(startDate, endDate);
 
 	int count = 3;
 	for (CBPayTransaction cbPay : cbPayList) {
 	    if (cbPay == null)
 		continue;
 
-	    Session user = cbPay.getSession();
+	    Session session = cbPay.getSession();
 
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, cbPay.getTransExpiredTime(),
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, user.getName(), (short) 13,
-		    IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, user.getEmail(), (short) 13,
-		    IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "D", count,
-		    user.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, "0", (short) 13,
-		    IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, cbPay.getTransAmount() + "",
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, cbPay.getTransCurrency(),
-		    (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count, cbPay.getMsg(), (short) 13,
-		    IndexedColors.BLACK.index);
-
-	    logger.info("cbPay.getTransStatus() !!!!!!!!!" + cbPay.getTransStatus());
-
-	    String status = cbPay.getTransStatus() == "E" ? cbPay.getTransStatus() == "P" ? "Pending" : "Expired"
-		    : "Success";
-	    logger.info("status !!!!!!!!!" + status);
-
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, status, (short) 13,
-		    IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, cbPay.getTransExpiredTime(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, cbPay.getTransAmount() + "", (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, cbPay.getTransCurrency(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count, "0", (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count, cbPay.getMsg(), (short) 13,	IndexedColors.BLACK.index);
+	    String status = cbPay.getTransStatus();
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, !status.equals("E") ? !status.equals("P") ?"Success" : "Pending" : "Expired", (short) 13, IndexedColors.BLACK.index);
 	    count++;
 	}
 
@@ -196,26 +180,55 @@ public class ReportController {
  	writeValueinSpecificeCellWithBackGroundColor(workbook, sheet.getSheetName(), "J", 2, " Result ", (short) 13,IndexedColors.BLACK.index);
      }
 
-    private void writeMPUSheet(XSSFWorkbook workbook) {
+    private void writeMPUSheet(XSSFWorkbook workbook, String startDate, String endDate) {
 	XSSFSheet sheet = workbook.createSheet("MPU");
 	writeTitle(workbook, sheet, "MPU");
+	List<MPUPaymentTransaction> mpuTransactionList = mpuPaymentService.findByDateRange(startDate, endDate);
+	
+	int count = 3;
+	for (MPUPaymentTransaction mpuPayment : mpuTransactionList) {
+	    if (mpuPayment == null)
+		continue;
+
+	    Session session = mpuPayment.getSession();
+	    if(session == null)
+		continue;
+
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, mpuPayment.getCreationDate(),   (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13,   IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13,   IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count,   session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, mpuPayment.getAmount()+ "",   (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, "MMK",   (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count, "0", (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, mpuPayment.getFailReason(), (short) 13, IndexedColors.BLACK.index);
+	    count++;
+	}
 
     }
 
-    @RequestMapping(value = "visa", method = RequestMethod.GET)
+    @RequestMapping(value = "payment", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(Views.Summary.class)
-    public void getReport(HttpServletResponse response) throws Exception { // @RequestBody JSONObject json,
+    public String getReport(@RequestBody JSONObject json, HttpServletResponse response) throws Exception {
+	
+	Object start = json.get("startDate");
+	Object end = json.get("endDate");
+	
+	String startDate = start.toString();
+	String endDate = end.toString();
+	
 	XSSFWorkbook workbook = new XSSFWorkbook();
-	writeVisaSheet(workbook);
-	writeCBPaySheet(workbook);
-	writeMPUSheet(workbook);
+	writeVisaSheet(workbook, startDate, endDate);
+	writeCBPaySheet(workbook, startDate, endDate);
+	writeMPUSheet(workbook, startDate, endDate);
 
-	String newFilePath = "C:\\Users\\DELL\\middle-workspace\\Report\\Visa.xlsx";
+	String newFilePath = "C:\\Users\\DELL\\middle-workspace\\Report\\Payment.xlsx";
 	FileOutputStream out = new FileOutputStream(new File(newFilePath));
 	workbook.write(out);
 
 	// workbook.write(response.getOutputStream());
+	return "success";
     }
 
 }

@@ -12,214 +12,214 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "visaTransaction")
 public class VisaTransaction extends AbstractEntity implements Serializable {
-	
-	@Id
-	@Column(name = "Id", unique = true, nullable = false)
-	private long Id;
-	
-	@JsonView(Views.Thin.class)
-	private String secureId;
-	
-	@JsonView(Views.Thin.class)
-	private String authenticationToken;
-	
-	@JsonView(Views.Thin.class)
-	private String xid;
-	
-	@JsonView(Views.Thin.class)
-	private String gatewayEntryPoint;
-	
-	@JsonView(Views.Thin.class)
-	private String acquirerMessage;
-	
-	@JsonView(Views.Thin.class)
-	private String gatewayCode;
-	
-	@JsonView(Views.Thin.class)
-	private String batch;
-	
-	@JsonView(Views.Thin.class)
-	private double amount;
-	
-	@JsonView(Views.Thin.class)
-	private String authorizationCode;
-	
-	@JsonView(Views.Thin.class)
-	private String currency;
-	
-	@JsonView(Views.Thin.class)
-	private String transactionId;
-	
-	@JsonView(Views.Thin.class)
-	private String frequency;
-	
-	@JsonView(Views.Thin.class)
-	private String receipt;
-	
-	@JsonView(Views.Thin.class)
-	private String source;
-	
-	@JsonView(Views.Thin.class)
-	private String taxAmount;
-	
-	@JsonView(Views.Thin.class)
-	private String terminal;
-	
-	@JsonView(Views.Thin.class)
-	private String type;
-	
-	@JsonView(Views.Thin.class)
-	private int version;
 
-	public long getId() {
-		return Id;
-	}
+    @Id
+    @Column(name = "Id", unique = true, nullable = false)
+    private long Id;
 
-	public void setId(long id) {
-		Id = id;
-	}
+    @JsonView(Views.Thin.class)
+    private String secureId;
 
-	public String getSecureId() {
-		return secureId;
-	}
+    @JsonView(Views.Thin.class)
+    private String authenticationToken;
 
-	public void setSecureId(String secureId) {
-		this.secureId = secureId;
-	}
+    @JsonView(Views.Thin.class)
+    private String xid;
 
-	public String getAuthenticationToken() {
-		return authenticationToken;
-	}
+    @JsonView(Views.Thin.class)
+    private String gatewayEntryPoint;
 
-	public void setAuthenticationToken(String authenticationToken) {
-		this.authenticationToken = authenticationToken;
-	}
+    @JsonView(Views.Thin.class)
+    private String acquirerMessage;
 
-	public String getXid() {
-		return xid;
-	}
+    @JsonView(Views.Thin.class)
+    private String gatewayCode;
 
-	public void setXid(String xid) {
-		this.xid = xid;
-	}
+    @JsonView(Views.Thin.class)
+    private String batch;
 
-	public String getGatewayEntryPoint() {
-		return gatewayEntryPoint;
-	}
+    @JsonView(Views.Thin.class)
+    private String amount;
 
-	public void setGatewayEntryPoint(String gatewayEntryPoint) {
-		this.gatewayEntryPoint = gatewayEntryPoint;
-	}
+    @JsonView(Views.Thin.class)
+    private String authorizationCode;
 
-	public String getAcquirerMessage() {
-		return acquirerMessage;
-	}
+    @JsonView(Views.Thin.class)
+    private String currency;
 
-	public void setAcquirerMessage(String acquirerMessage) {
-		this.acquirerMessage = acquirerMessage;
-	}
+    @JsonView(Views.Thin.class)
+    private String transactionId;
 
-	public String getGatewayCode() {
-		return gatewayCode;
-	}
+    @JsonView(Views.Thin.class)
+    private String frequency;
 
-	public void setGatewayCode(String gatewayCode) {
-		this.gatewayCode = gatewayCode;
-	}
+    @JsonView(Views.Thin.class)
+    private String receipt;
 
-	public String getBatch() {
-		return batch;
-	}
+    @JsonView(Views.Thin.class)
+    private String source;
 
-	public void setBatch(String batch) {
-		this.batch = batch;
-	}
+    @JsonView(Views.Thin.class)
+    private String taxAmount;
 
-	public double getAmount() {
-		return amount;
-	}
+    @JsonView(Views.Thin.class)
+    private String terminal;
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+    @JsonView(Views.Thin.class)
+    private String type;
 
-	public String getAuthorizationCode() {
-		return authorizationCode;
-	}
+    @JsonView(Views.Thin.class)
+    private int version;
 
-	public void setAuthorizationCode(String authorizationCode) {
-		this.authorizationCode = authorizationCode;
-	}
+    public long getId() {
+	return Id;
+    }
 
-	public String getCurrency() {
-		return currency;
-	}
+    public void setId(long id) {
+	Id = id;
+    }
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
+    public String getSecureId() {
+	return secureId;
+    }
 
-	public String getTransactionId() {
-		return transactionId;
-	}
+    public void setSecureId(String secureId) {
+	this.secureId = secureId;
+    }
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
+    public String getAuthenticationToken() {
+	return authenticationToken;
+    }
 
-	public String getFrequency() {
-		return frequency;
-	}
+    public void setAuthenticationToken(String authenticationToken) {
+	this.authenticationToken = authenticationToken;
+    }
 
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
+    public String getXid() {
+	return xid;
+    }
 
-	public String getReceipt() {
-		return receipt;
-	}
+    public void setXid(String xid) {
+	this.xid = xid;
+    }
 
-	public void setReceipt(String receipt) {
-		this.receipt = receipt;
-	}
+    public String getGatewayEntryPoint() {
+	return gatewayEntryPoint;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public void setGatewayEntryPoint(String gatewayEntryPoint) {
+	this.gatewayEntryPoint = gatewayEntryPoint;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public String getAcquirerMessage() {
+	return acquirerMessage;
+    }
 
-	public String getTaxAmount() {
-		return taxAmount;
-	}
+    public void setAcquirerMessage(String acquirerMessage) {
+	this.acquirerMessage = acquirerMessage;
+    }
 
-	public void setTaxAmount(String taxAmount) {
-		this.taxAmount = taxAmount;
-	}
+    public String getGatewayCode() {
+	return gatewayCode;
+    }
 
-	public String getTerminal() {
-		return terminal;
-	}
+    public void setGatewayCode(String gatewayCode) {
+	this.gatewayCode = gatewayCode;
+    }
 
-	public void setTerminal(String terminal) {
-		this.terminal = terminal;
-	}
+    public String getBatch() {
+	return batch;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setBatch(String batch) {
+	this.batch = batch;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getAmount() {
+	return amount;
+    }
 
-	public int getVersion() {
-		return version;
-	}
+    public void setAmount(String amount) {
+	this.amount = amount;
+    }
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
+    public String getAuthorizationCode() {
+	return authorizationCode;
+    }
+
+    public void setAuthorizationCode(String authorizationCode) {
+	this.authorizationCode = authorizationCode;
+    }
+
+    public String getCurrency() {
+	return currency;
+    }
+
+    public void setCurrency(String currency) {
+	this.currency = currency;
+    }
+
+    public String getTransactionId() {
+	return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+	this.transactionId = transactionId;
+    }
+
+    public String getFrequency() {
+	return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+	this.frequency = frequency;
+    }
+
+    public String getReceipt() {
+	return receipt;
+    }
+
+    public void setReceipt(String receipt) {
+	this.receipt = receipt;
+    }
+
+    public String getSource() {
+	return source;
+    }
+
+    public void setSource(String source) {
+	this.source = source;
+    }
+
+    public String getTaxAmount() {
+	return taxAmount;
+    }
+
+    public void setTaxAmount(String taxAmount) {
+	this.taxAmount = taxAmount;
+    }
+
+    public String getTerminal() {
+	return terminal;
+    }
+
+    public void setTerminal(String terminal) {
+	this.terminal = terminal;
+    }
+
+    public String getType() {
+	return type;
+    }
+
+    public void setType(String type) {
+	this.type = type;
+    }
+
+    public int getVersion() {
+	return version;
+    }
+
+    public void setVersion(int version) {
+	this.version = version;
+    }
 }

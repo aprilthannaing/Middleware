@@ -2,7 +2,7 @@
 CREATE TABLE `session` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `userId` varchar(255) DEFAULT NULL,
-  `paymentId` varchar(255) DEFAULT NULL,
+  `paymentId` varchar(255) DEFAULT NULL, 
   `name` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phoneNo` varchar(50) DEFAULT NULL,

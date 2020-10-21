@@ -67,7 +67,7 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 	}
 
 	public List<CBPayTransaction> findByDateRange(String startDate, String endDate) {
-		String query = "from CBPaytransaction cb where cb.transExpiredTime between '" + startDate + "' and '" + endDate
+		String query = "from CBPayTransaction cb where cb.transExpiredTime between '" + startDate + "' and '" + endDate
 				+ "'";
 		List<CBPayTransaction> cbPayList = cbpaymentDao.getEntitiesByQuery(query);
 		return cbPayList;

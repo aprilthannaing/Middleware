@@ -1,12 +1,9 @@
 package com.middleware.controller;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,16 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.Result;
+import com.middleware.entity.Session;
 import com.middleware.entity.SystemConstant;
 import com.middleware.entity.Views;
-import com.middleware.service.PaymentTransactionService;
+import com.middleware.service.MPUPaymentTransactionService;
+import com.middleware.service.SessionService;
 
 @RestController
 @RequestMapping("mpu")
 public class MPUResultController {
 
     @Autowired
-    private PaymentTransactionService paymnentService;
+    private MPUPaymentTransactionService paymnentService;
+
+    @Autowired
+    private SessionService sessionService;
 
     private static Logger logger = Logger.getLogger(MPUResultController.class);
 
@@ -88,9 +90,8 @@ public class MPUResultController {
 	    @RequestParam("categoryCode") String categoryCode, @RequestParam("hashValue") String hashValue)
 	    throws Exception {
 
-
 	logger.info(" Calling Back End Redirect ...........");
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	LocalDateTime now = LocalDateTime.now();
 
 	Result result = new Result();
@@ -111,6 +112,10 @@ public class MPUResultController {
 	paymentdata.setUserDefined3(userDefined3);
 	paymentdata.setCategoryCode(categoryCode);
 	paymentdata.setCreationDate(dtf.format(now));
+	Session session = sessionService.findByUserId(userDefined1);
+
+	if (session != null)
+	    paymentdata.setSession(session);
 	result = paymnentService.saveMPUPayment(paymentdata);
 	logger.info("BackEndURL Save Data :" + result.getDescription());
 

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.middleware.dao.SessionDao;
 import com.middleware.entity.Result;
@@ -77,5 +78,20 @@ public class SessionServiceImpl implements SessionService {
 	}else session = null;
 	return session;
     }
-
+    
+    public Session findByUserId(String userId) {
+	String query = "from Session where userId='" + userId + "'";
+	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+	if(CollectionUtils.isEmpty(sessionList))
+	    return null;
+	return sessionList.get(0);	
+    }
+    
+    public Session findBySessionId(String sessionId) {
+	String query = "from Session where Id=" + sessionId;
+	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+	if(CollectionUtils.isEmpty(sessionList))
+	    return null;
+	return sessionList.get(0);	
+    }
 }

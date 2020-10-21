@@ -108,7 +108,7 @@ public class Visa extends AbstractEntity implements Serializable {
 	private VisaTransaction visaTransaction;
 
 	@JsonView(Views.Thin.class)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "sessionId")
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Session session;
 
