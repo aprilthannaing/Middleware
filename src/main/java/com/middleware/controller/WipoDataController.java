@@ -40,8 +40,8 @@ public class WipoDataController extends AbstractController {
     public Result acceptUser(@RequestBody JSONObject json) throws Exception {
 	AES aes = new AES();
 	Result result = new Result();
-	String myCode = valueHash(json);
-	String yourCode = json.get("yourCode").toString();
+	String myCode = valueHash(json);	
+	String yourCode = json.get("hashValue").toString();
 	if (myCode.equals(yourCode)) {
 	    Session wipoData = convertRequest(json);
 	    result = sessionService.acceptSession(wipoData);
