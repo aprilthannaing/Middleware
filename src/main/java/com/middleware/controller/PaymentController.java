@@ -5,9 +5,11 @@ import java.util.Arrays;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,13 +26,18 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.middleware.entity.AES;
 import com.middleware.entity.Payment;
+import com.middleware.entity.Session;
 import com.middleware.entity.Views;
-import org.apache.commons.codec.binary.Base64;
+import com.middleware.service.SessionService;
 
 @RestController
 @RequestMapping("api")
-public class PaymentController {
+public class PaymentController extends AbstractController {
+
+    @Autowired
+    private SessionService sessionService;
 
     private static Logger logger = Logger.getLogger(PaymentController.class);
 
@@ -139,39 +146,54 @@ public class PaymentController {
 	// return paymentRestClient.thirdpartyAPI(payment);
 	return paymentRestClient.getForm(payment);
     }
-    
+
     @RequestMapping(value = "cbtransaction", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
-    public JSONObject generationTransaction() throws Exception {
-	JSONObject resultJson = new JSONObject();
-	HttpHeaders headers = new HttpHeaders();
-	headers.add("Content-Type", "application/json");
-	headers.add("Authen-Token",
-		"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTY3NzU2NzIsIm1lcklkIjoiNTgxNTAwMDAwMDAwMDE3In0.hO4-eWFQHM5STCydXlwr2SjghmFe_4GgmccBq3vJvUY");
-	
-	JSONObject request = new JSONObject();
-	request.put("reqId", "2d21a5715c034efb7e0aa383b885fc7b");
-	request.put("merId", "581500000000017");
-	request.put("subMerId", "0000000001700001");
-	request.put("terminalId", "03000001");
-	request.put("transAmount", "100");
-	request.put("transCurrency", "MMK");
-	request.put("ref1", "95923535341");
-	request.put("ref2", "10043553461");
+    public String generationTransaction(JSONObject json) throws Exception {
+//
+//	String reqid = json.get("id").toString();
+//	if (reqid.equals("") || reqid.equals(null)) {
+//	    resultJson.put("code", "0001");
+//	    resultJson.put("Description", "SessionId is empty");
+//	    return resultJson;
+//	}
+//	String id = AES.decrypt(reqid, secretKey);
+//	Session session = sessionService.checkingSession(id);
+//	logger.info("getAmount from session !!!!!!!!!" + session.getAmount());
+//	logger.info("getAmount from session !!!!!!!!!" + session.getCurrency());
 
-	HttpEntity<String> entityHeader = new HttpEntity<String>(request.toString(), headers);
-	logger.info("Request is: " + entityHeader);
-
-	String url = "https://103.150.78.103:4443/payment-api/v1/qr/generate-transaction.service";
-	logger.info("service url is: " + url);
-
-	UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-	logger.info("calling webservice..." + builder);
-	RestTemplate restTemplate = new RestTemplate();
-	HttpEntity<JSONObject> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST,
-		entityHeader, JSONObject.class);
-	logger.info("response ................" + response.getBody());
-	return resultJson;
+//	HttpHeaders headers = new HttpHeaders();
+//	headers.add("Content-Type", "application/json");
+//	headers.add("Authen-Token",
+//		"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTY3NzU2NzIsIm1lcklkIjoiNTgxNTAwMDAwMDAwMDE3In0.hO4-eWFQHM5STCydXlwr2SjghmFe_4GgmccBq3vJvUY");
+//
+//	JSONObject request = new JSONObject();
+//	request.put("reqId", "2d21a5715c034efb7e0aa383b885fc7b"); //
+//	request.put("merId", "581500000000017"); //
+//	request.put("subMerId", "0000000001700001"); //
+//	request.put("terminalId", "03000001"); //
+//	request.put("transAmount", session.getAmount());
+//	request.put("transCurrency", session.getCurrency());
+//	request.put("ref1", "95923535341"); //
+//	request.put("ref2", "10043553461"); //
+//
+//	HttpEntity<String> entityHeader = new HttpEntity<String>(request.toString(), headers);
+//	logger.info("Request is: " + entityHeader);
+//
+//	String url = "https://103.150.78.103:4443/payment-api/v1/qr/generate-transaction.service";
+//	logger.info("service url is: " + url);
+//
+//	UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+//	logger.info("calling webservice..." + builder);
+//	RestTemplate restTemplate = new RestTemplate();
+//	HttpEntity<JSONObject> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST,
+//		entityHeader, JSONObject.class);
+//	logger.info("response ................" + response.getBody());
+//	JSONObject resultJson = new JSONObject();
+//	resultJson.put("code", "0000");
+//	resultJson.put("merDqrCode", "00020101021250200006cbtest0106cbtest51450006cbtest0131581500000000017000000000170000152045815530310454031005802MM5911CB Test 0016006Hlaing61051105162620111959235353410311100435534610516201021000001946007080300000164210002my0111CB Test 001630424DE");
+//	resultJson.put("transRef", "2010210000019460");
+	return "success";
     }
 }

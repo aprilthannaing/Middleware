@@ -41,22 +41,22 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public String getUserId() {
-       return "USR" + getId();
+	return "USR" + getId();
     }
 
     public Result acceptSession(Session session) {
 	Result res = new Result();
 	if (session.isBoIdRequired(session.getId()))
 	    session.setId(getId());
-		String sessionid = new CommonService().generateSession(session.getId()+"");
-		session.setSessionId(sessionid);
-		boolean correct = false;
+	String sessionid = new CommonService().generateSession(session.getId() + "");
+	session.setSessionId(sessionid);
+	boolean correct = false;
 	try {
 	    correct = sessionDao.checkSaveOrUpdate(session);
 	    if (correct) {
 		res.setCode("0000");
 		res.setDescription("Successfully");
-		//res.setResult("localhost:4200/home/" + session.getSessionId() + "");
+		// res.setResult("localhost:4200/home/" + session.getSessionId() + "");
 		res.setResult(session.getSessionId());
 	    } else {
 		res.setCode("0012");
@@ -70,28 +70,26 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session checkingSession(String id) {
-	Session session = new Session();
 	String query = "from Session where sessionId ='" + id + "'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
-	if (userList.size() > 0) {
-	    session = userList.get(0);
-	}else session = null;
-	return session;
+	if (CollectionUtils.isEmpty(userList))
+	    return null;
+	return userList.get(0);
     }
-    
+
     public Session findByUserId(String userId) {
 	String query = "from Session where userId='" + userId + "'";
 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if(CollectionUtils.isEmpty(sessionList))
+	if (CollectionUtils.isEmpty(sessionList))
 	    return null;
-	return sessionList.get(0);	
+	return sessionList.get(0);
     }
-    
+
     public Session findBySessionId(String sessionId) {
 	String query = "from Session where Id=" + sessionId;
 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if(CollectionUtils.isEmpty(sessionList))
+	if (CollectionUtils.isEmpty(sessionList))
 	    return null;
-	return sessionList.get(0);	
+	return sessionList.get(0);
     }
 }

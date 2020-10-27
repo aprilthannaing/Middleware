@@ -117,15 +117,14 @@ public class WipoDataController extends AbstractController {
     public JSONObject checkingUser(@RequestBody JSONObject json) throws Exception {
 	logger.info("checking data ...................................");
 
-	JSONObject res = new JSONObject();
-	AES aes = new AES();
+	JSONObject res = new JSONObject();	
 	String reqid = json.get("id").toString();
 	if (reqid.equals("") || reqid.equals(null)) {
 	    res.put("code", "0001");
 	    res.put("Description", "SessionId is empty");
 	    return res;
 	}
-	String id = aes.decrypt(reqid, secretKey);
+	String id = AES.decrypt(reqid, secretKey);
 	Session session = sessionService.checkingSession(id);
 	if (session != null) {
 	    res.put("code", "0000");
