@@ -73,9 +73,15 @@ public class CBPayTransaction extends AbstractEntity implements Serializable {
 
 	@Column(name = "t3")
 	private String t3 = "";
+	
+	@Column(name = "checkedDateTime")
+	private String checkedDateTime = "";
+	
+	@Column(name = "createdDateTime")
+	private String createdDateTime = "";
 
 	@JsonView(Views.Thin.class)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "sessionId")
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Session session;
 
@@ -237,6 +243,22 @@ public class CBPayTransaction extends AbstractEntity implements Serializable {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public String getCheckedDateTime() {
+		return checkedDateTime;
+	}
+
+	public void setCheckedDateTime(String checkedDateTime) {
+		this.checkedDateTime = checkedDateTime;
+	}
+
+	public String getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+	public void setCreatedDateTime(String createdDateTime) {
+		this.createdDateTime = createdDateTime;
 	}
 
 }

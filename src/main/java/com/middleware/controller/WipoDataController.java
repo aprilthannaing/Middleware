@@ -131,9 +131,10 @@ public class WipoDataController extends AbstractController {
 	    res.put("code", "0000");
 	    res.put("Description", "Success");
 	    res.put("userObj", session);
-	} else
+	} else {
 	    res.put("code", "0001");
-	res.put("Description", "User not Found!");
+		res.put("Description", "User not Found!");
+	}
 	return res;
     }
 

@@ -51,8 +51,8 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 	}
 
 	public CBPayTransaction checkTransRef(String transRef) {
-		String query = "from CBPaytransaction where transRef=" + transRef;
-		List<CBPayTransaction> mobileUserList = cbpaymentDao.getEntitiesByQuery(query);
+		String query = "select cbpay from CBPaytransaction cbpay where transRef=" + transRef;
+		List<CBPayTransaction> mobileUserList = cbpaymentDao.byQuery(query);
 		if (CollectionUtils.isEmpty(mobileUserList))
 			return null;
 		return mobileUserList.get(0);
