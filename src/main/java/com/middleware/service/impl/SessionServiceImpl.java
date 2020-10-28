@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import com.middleware.dao.SessionDao;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.service.GeneralService;
 import com.middleware.service.SessionService;
+import com.middleware.entity.SessionStatus;
 
 @Service("sessionService")
 public class SessionServiceImpl implements SessionService {
@@ -73,7 +73,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session checkingSession(String id) {
-	String query = "from Session where sessionId ='" + id + "'";
+	String query = "from Session where sessionId ='" + id + "' and sessionStatus='"+ SessionStatus.ACTIVE +"'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(userList))
 	    return null;
