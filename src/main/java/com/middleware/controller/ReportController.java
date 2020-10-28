@@ -124,14 +124,14 @@ public class ReportController {
 		continue;
 
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, visa.getCreationTime(),(short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13,IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "D", count,session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getPayerPhone(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getPayerEmail(), (short) 13,IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "D", count, session.getPaymentNote(), (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, visa.getDescription(),(short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, visaTransaction.getAmount() + "",(short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, visa.getCurrency(),	(short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count,visaTransaction.getTaxAmount().isEmpty()? "0" : visaTransaction.getTaxAmount(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count,visaTransaction.getAcquirerMessage(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count, visaTransaction.getTaxAmount().isEmpty()? "0" : visaTransaction.getTaxAmount(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "I", count, visaTransaction.getAcquirerMessage(), (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "J", count, visa.getResult(),(short) 13, IndexedColors.BLACK.index);
 	    count++;
 	}
@@ -150,9 +150,9 @@ public class ReportController {
 	    Session session = cbPay.getSession();
 
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, cbPay.getTransExpiredTime(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getPayerPhone(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getPayerEmail(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, session.getPaymentNote(), (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, cbPay.getTransAmount() + "", (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, cbPay.getTransCurrency(), (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count, "0", (short) 13, IndexedColors.BLACK.index);
@@ -195,9 +195,9 @@ public class ReportController {
 		continue;
 
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count, mpuPayment.getCreationDate(),   (short) 13, IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getName(), (short) 13,   IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getEmail(), (short) 13,   IndexedColors.BLACK.index);
-	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count,   session.getPaymentdescription(), (short) 13, IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getPayerPhone(), (short) 13,   IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getPayerEmail(), (short) 13,   IndexedColors.BLACK.index);
+	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "E", count, session.getPaymentNote(), (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "F", count, mpuPayment.getAmount()+ "",   (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "G", count, "MMK",   (short) 13, IndexedColors.BLACK.index);
 	    writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "H", count, "0", (short) 13, IndexedColors.BLACK.index);

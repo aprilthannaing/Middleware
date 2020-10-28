@@ -1,20 +1,24 @@
 
 CREATE TABLE `session` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `userId` varchar(255) DEFAULT NULL,
-  `paymentId` varchar(255) DEFAULT NULL, 
-  `name` varchar(50) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phoneNo` varchar(50) DEFAULT NULL,
-  `amount` varchar(50) DEFAULT NULL,
-  `currency` varchar(50) DEFAULT NULL,
-  `paymentdescription` varchar(500) DEFAULT NULL,
-  `startDate` varchar(50) DEFAULT NULL,
-  `endDate` varchar(50) DEFAULT NULL,
-  `sessionId` varchar(32) NOT NULL,
-  `sessionStatus` enum('ACTIVE','INACTIVE') NOT NULL,
+ `id` bigint(20) NOT NULL auto_increment,
+ `transactionId`varchar(150) DEFAULT NULL,
+ `bankIdentifier` varchar(255) DEFAULT NULL,
+ `currencyType` varchar(150) DEFAULT NULL,
+ `totalAmount` varchar(255) DEFAULT NULL,
+ `amount1` varchar(255) DEFAULT NULL,
+ `amount2` varchar(255) DEFAULT NULL,
+ `amountDescription1` varchar(255) DEFAULT NULL,
+ `amountDescription2` varchar(255) DEFAULT NULL,
+ `paymentReference` varchar(255) DEFAULT NULL,
+ `paymentNote`varchar(255) DEFAULT NULL,
+ `payerEmail` varchar(100) DEFAULT NULL,
+ `payerPhone` varchar(100) DEFAULT NULL,
+ `startDate` varchar(50) DEFAULT NULL,
+ `endDate` varchar(50) DEFAULT NULL,
+ `sessionId` varchar(32) NOT NULL,
+ `sessionStatus` enum('ACTIVE','INACTIVE') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000006 DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
   
   CREATE TABLE `visa` (
   id bigint(20) primary key not null auto_increment,

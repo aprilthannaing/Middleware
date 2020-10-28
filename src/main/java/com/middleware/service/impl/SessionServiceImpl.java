@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import com.middleware.dao.SessionDao;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
+import com.middleware.service.GeneralService;
 import com.middleware.service.SessionService;
 
 @Service("sessionService")
@@ -20,6 +21,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Autowired
     private SessionDao sessionDao;
+
+    @Autowired
+    private GeneralService generalService;
 
     private Logger logger = Logger.getLogger(SessionServiceImpl.class);
 
@@ -48,7 +52,7 @@ public class SessionServiceImpl implements SessionService {
 	Result res = new Result();
 	if (session.isBoIdRequired(session.getId()))
 	    session.setId(getId());
-	String sessionid = new CommonService().generateSession(session.getId() + "");
+	String sessionid = generalService.generateSession(session.getId());
 	session.setSessionId(sessionid);
 	boolean correct = false;
 	try {
@@ -56,7 +60,6 @@ public class SessionServiceImpl implements SessionService {
 	    if (correct) {
 		res.setCode("0000");
 		res.setDescription("Successfully");
-		// res.setResult("localhost:4200/home/" + session.getSessionId() + "");
 		res.setResult(session.getSessionId());
 	    } else {
 		res.setCode("0012");

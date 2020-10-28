@@ -1,54 +1,61 @@
 package com.middleware.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class Transaction {
 
-	private String bankIdentifier;
+    @JsonView(Views.Thin.class)
+    private String bankIdentifier;
 
-	private String amount;
+    @JsonView(Views.Thin.class)
+    private String amount;
 
-	private String paymentReference;
+    @JsonView(Views.Thin.class)
+    private String paymentReference;
 
-	private long tokenId;
+    @JsonView(Views.Thin.class)
+    private String tokenId;
 
-	private String transactionDate;
+    @JsonView(Views.Thin.class)
+    private String transactionDate;
 
-	public String getBankIdentifier() {
-		return bankIdentifier;
-	}
+    public String getBankIdentifier() {
+	return bankIdentifier;
+    }
 
-	public void setBankIdentifier(String bankIdentifier) {
-		this.bankIdentifier = bankIdentifier;
-	}
+    public void setBankIdentifier(String bankIdentifier) {
+	this.bankIdentifier = bankIdentifier;
+    }
 
-	public String getAmount() {
-		return amount;
-	}
+    public String getAmount() {
+	return amount;
+    }
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
+    public void setAmount(String amount) {
+	this.amount = amount;
+    }
 
-	public String getPaymentReference() {
-		return paymentReference;
-	}
+    public String getPaymentReference() {
+	return paymentReference;
+    }
 
-	public void setPaymentReference(String paymentReference) {
-		this.paymentReference = paymentReference;
-	}
+    public void setPaymentReference(String paymentReference) {
+	this.paymentReference = paymentReference;
+    }
 
-	public long getTokenId() {
-		return tokenId;
-	}
+    public String getTokenId() {
+	return tokenId;
+    }
 
-	public void setTokenId(long tokenId) {
-		this.tokenId = tokenId;
-	}
+    public void setTokenId(String tokenId) {
+	this.tokenId = tokenId;
+    }
 
-	public String getTransactionDate() {
-		return transactionDate;
-	}
+    public String getTransactionDate() {
+	return transactionDate;
+    }
 
-	public void setTransactionDate(String transactionDate) {
-		this.transactionDate = transactionDate;
-	}
+    public void setTransactionDate(String transactionDate) {
+	this.transactionDate = transactionDate;
+    }
 }

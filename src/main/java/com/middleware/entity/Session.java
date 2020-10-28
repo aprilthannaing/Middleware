@@ -20,28 +20,37 @@ public class Session extends AbstractEntity implements Serializable {
     private long Id;
 
     @JsonView(Views.Thin.class)
-    private String userId;
+    private String paymentReference;
 
     @JsonView(Views.Thin.class)
-    private String paymentId;
+    private String paymentNote;
 
     @JsonView(Views.Thin.class)
-    private String name;
+    private String payerEmail;
 
     @JsonView(Views.Thin.class)
-    private String email;
+    private String payerPhone;
 
     @JsonView(Views.Thin.class)
-    private String phoneNo;
+    private String amount1;
 
     @JsonView(Views.Thin.class)
-    private String paymentdescription;
+    private String amount2;
 
     @JsonView(Views.Thin.class)
-    private String amount;
+    private String amountDescription1;
 
     @JsonView(Views.Thin.class)
-    private String currency;
+    private String amountDescription2;
+
+    @JsonView(Views.Thin.class)
+    private String currencyType;
+
+    @JsonView(Views.Thin.class)
+    private String transactionId;
+
+    @JsonView(Views.Thin.class)
+    private String bankIdentifier;
 
     @JsonView(Views.Thin.class)
     private String startDate;
@@ -50,74 +59,109 @@ public class Session extends AbstractEntity implements Serializable {
     private String endDate;
 
     @JsonView(Views.Thin.class)
+    private String totalAmount;
+
+    @JsonView(Views.Thin.class)
     @Enumerated(EnumType.STRING)
     private SessionStatus sessionStatus;
-    
+
     @JsonView(Views.Thin.class)
     private String sessionId;
 
-    public String getPaymentId() {
-	return paymentId;
+    public long getId() {
+	return Id;
     }
 
-    public void setPaymentId(String paymentId) {
-	this.paymentId = paymentId;
+    public void setId(long id) {
+	Id = id;
     }
 
-    public String getUserId() {
-	return userId;
+    public String getPaymentReference() {
+	return paymentReference;
     }
 
-    public void setUserId(String userId) {
-	this.userId = userId;
+    public void setPaymentReference(String paymentReference) {
+	this.paymentReference = paymentReference;
     }
 
-    public String getName() {
-	return name;
+    public String getPaymentNote() {
+	return paymentNote;
     }
 
-    public void setName(String name) {
-	this.name = name;
+    public void setPaymentNote(String paymentNote) {
+	this.paymentNote = paymentNote;
     }
 
-    public String getEmail() {
-	return email;
+    public String getPayerEmail() {
+	return payerEmail;
     }
 
-    public void setEmail(String email) {
-	this.email = email;
+    public void setPayerEmail(String payerEmail) {
+	this.payerEmail = payerEmail;
     }
 
-    public String getPhoneNo() {
-	return phoneNo;
+    public String getPayerPhone() {
+	return payerPhone;
     }
 
-    public void setPhoneNo(String phoneNo) {
-	this.phoneNo = phoneNo;
+    public void setPayerPhone(String payerPhone) {
+	this.payerPhone = payerPhone;
     }
 
-    public String getPaymentdescription() {
-	return paymentdescription;
+    public String getAmount1() {
+	return amount1;
     }
 
-    public void setPaymentdescription(String paymentdescription) {
-	this.paymentdescription = paymentdescription;
+    public void setAmount1(String amount1) {
+	this.amount1 = amount1;
     }
 
-    public String getAmount() {
-	return amount;
+    public String getAmount2() {
+	return amount2;
     }
 
-    public void setAmount(String amount) {
-	this.amount = amount;
+    public void setAmount2(String amount2) {
+	this.amount2 = amount2;
     }
 
-    public String getCurrency() {
-	return currency;
+    public String getAmountDescription1() {
+	return amountDescription1;
     }
 
-    public void setCurrency(String currency) {
-	this.currency = currency;
+    public void setAmountDescription1(String amountDescription1) {
+	this.amountDescription1 = amountDescription1;
+    }
+
+    public String getAmountDescription2() {
+	return amountDescription2;
+    }
+
+    public void setAmountDescription2(String amountDescription2) {
+	this.amountDescription2 = amountDescription2;
+    }
+
+    public String getCurrencyType() {
+	return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+	this.currencyType = currencyType;
+    }
+
+    public String getTransactionId() {
+	return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+	this.transactionId = transactionId;
+    }
+
+    public String getBankIdentifier() {
+	return bankIdentifier;
+    }
+
+    public void setBankIdentifier(String bankIdentifier) {
+	this.bankIdentifier = bankIdentifier;
     }
 
     public String getStartDate() {
@@ -144,20 +188,20 @@ public class Session extends AbstractEntity implements Serializable {
 	this.sessionStatus = sessionStatus;
     }
 
-	public String getSessionId() {
-		return sessionId;
-	}
+    public String getSessionId() {
+	return sessionId;
+    }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+    public void setSessionId(String sessionId) {
+	this.sessionId = sessionId;
+    }
 
-	public long getId() {
-		return Id;
-	}
+    public String getTotalAmount() {
+	return totalAmount;
+    }
 
-	public void setId(long id) {
-		Id = id;
-	}
+    public void setTotalAmount(String totalAmount) {
+	this.totalAmount = totalAmount;
+    }
 
 }
