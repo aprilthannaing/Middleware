@@ -10,7 +10,6 @@ import org.springframework.util.CollectionUtils;
 import com.mchange.rmi.ServiceUnavailableException;
 import com.middleware.dao.CBPaymentTransactionDao;
 import com.middleware.entity.CBPayTransaction;
-import com.middleware.entity.CBPaymentTransaction;
 import com.middleware.entity.Result;
 import com.middleware.service.CBPaymentTransactionService;
 
