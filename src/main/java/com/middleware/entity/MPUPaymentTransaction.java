@@ -254,4 +254,8 @@ public class MPUPaymentTransaction extends AbstractEntity implements Serializabl
 	this.link = link;
     }
 
+    public boolean isApproved() {
+	return getFailReason().equals("Approved");
+    }
+
 }

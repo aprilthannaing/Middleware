@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 import com.mchange.rmi.ServiceUnavailableException;
 import com.middleware.dao.CBPaymentTransactionDao;
 import com.middleware.entity.CBPayTransaction;
+import com.middleware.entity.CBPaymentTransaction;
 import com.middleware.entity.Result;
 import com.middleware.service.CBPaymentTransactionService;
 
@@ -72,4 +73,13 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 		List<CBPayTransaction> cbPayList = cbpaymentDao.getEntitiesByQuery(query);
 		return cbPayList;
 	}
+	
+	 public CBPayTransaction findByTokenId(String tokenId) {
+		String query = "from CBPayTransaction cb where sessionId='" + tokenId + "'";
+		List<CBPayTransaction> cbTransactionList = cbpaymentDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(cbTransactionList))
+		    return null;
+		return cbTransactionList.get(0);
+	    }	
+	
 }

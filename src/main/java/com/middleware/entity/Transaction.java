@@ -19,6 +19,39 @@ public class Transaction {
     @JsonView(Views.Thin.class)
     private String transactionDate;
 
+    @JsonView(Views.Thin.class)
+    private String paymentConfirmationDate;
+
+    @JsonView(Views.Thin.class)
+    private String paymentStatus;
+
+    @JsonView(Views.Thin.class)
+    private String receiptNumber;
+
+    public String getPaymentStatus() {
+	return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+	this.paymentStatus = paymentStatus;
+    }
+
+    public String getReceiptNumber() {
+	return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+	this.receiptNumber = receiptNumber;
+    }
+
+    public String getPaymentConfirmationDate() {
+	return paymentConfirmationDate;
+    }
+
+    public void setPaymentConfirmationDate(String paymentConfirmationDate) {
+	this.paymentConfirmationDate = paymentConfirmationDate;
+    }
+
     public String getBankIdentifier() {
 	return bankIdentifier;
     }
@@ -58,4 +91,5 @@ public class Transaction {
     public void setTransactionDate(String transactionDate) {
 	this.transactionDate = transactionDate;
     }
+
 }

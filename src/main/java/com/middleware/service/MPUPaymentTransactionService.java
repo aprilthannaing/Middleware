@@ -6,9 +6,11 @@ import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.Result;
 
 public interface MPUPaymentTransactionService {
-    
+
     public Result saveMPUPayment(MPUPaymentTransaction data);
 
     public List<MPUPaymentTransaction> findByDateRange(String startDate, String endDate);
+
+    public MPUPaymentTransaction findByTokenId(String tokenId);
 
 }

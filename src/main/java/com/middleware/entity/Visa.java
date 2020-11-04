@@ -351,4 +351,8 @@ public class Visa extends AbstractEntity implements Serializable {
 	public void setVisaTransaction(VisaTransaction visaTransaction) {
 		this.visaTransaction = visaTransaction;
 	}
+	
+	public boolean isSuccess() {
+	    return getResult().equals("SUCCESS");
+	}
 }

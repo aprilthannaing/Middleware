@@ -13,8 +13,9 @@ import com.middleware.service.GeneralService;
 
 @Service("generalService")
 public class GeneralServiceImpl implements GeneralService {
-    
+
     public String generateSession(Long id) {
+
 	char[] chars = id.toString().toCharArray();
 	String key = "S1S2S3";
 	int iterations = 500;
@@ -33,4 +34,5 @@ public class GeneralServiceImpl implements GeneralService {
 	}
 	return hashPass;
     }
+
 }

@@ -13,5 +13,7 @@ public interface CBPaymentTransactionService {
 	public CBPayTransaction checkTranID(long tranid);
 	
 	public List<CBPayTransaction> findByDateRange(String startDate, String endDate);
+	
+	 public CBPayTransaction findByTokenId(String tokenId);
 
 }

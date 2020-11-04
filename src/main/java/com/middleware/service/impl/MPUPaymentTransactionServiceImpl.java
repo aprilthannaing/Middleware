@@ -5,12 +5,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.mchange.rmi.ServiceUnavailableException;
 import com.middleware.dao.MPUPaymentTransactionDao;
 import com.middleware.entity.CBPayTransaction;
 import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.Result;
+import com.middleware.entity.Session;
 import com.middleware.service.MPUPaymentTransactionService;
 
 @Service("PaymentTransactionServiceImpl")
@@ -50,11 +52,19 @@ public class MPUPaymentTransactionServiceImpl implements MPUPaymentTransactionSe
 	String query = "select count(*) from MPUPaymentTransaction";
 	return mpuPaymentDao.findLongByQueryString(query).get(0);
     }
-    
+
     public List<MPUPaymentTransaction> findByDateRange(String startDate, String endDate) {
-	String query = "from MPUPaymentTransaction mpu where mpu.creationDate between '" + startDate + "' and '" + endDate
-			+ "'";
+	String query = "from MPUPaymentTransaction mpu where mpu.creationDate between '" + startDate + "' and '"
+		+ endDate + "'";
 	return mpuPaymentDao.getEntitiesByQuery(query);
+    }
+
+    public MPUPaymentTransaction findByTokenId(String tokenId) {
+	String query = "from MPUPaymentTransaction mpu where sessionId='" + tokenId + "'";
+	List<MPUPaymentTransaction> MPUPaymentTransactionList = mpuPaymentDao.getEntitiesByQuery(query);
+	if (CollectionUtils.isEmpty(MPUPaymentTransactionList))
+	    return null;
+	return MPUPaymentTransactionList.get(0);
     }
 
 }

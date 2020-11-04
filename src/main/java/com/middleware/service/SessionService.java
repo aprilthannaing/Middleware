@@ -15,8 +15,9 @@ public interface SessionService {
     public String getUserId();
 
     public Session findByUserId(String userId);
-    
-    public Session findBySessionId(String sessionId);  
-    
+
+    public Session findBySessionId(String sessionId);
+
+    public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId);
 
 }

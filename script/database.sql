@@ -127,3 +127,8 @@ CREATE TABLE `mpuPaymentTransaction` (
   `creationDate` varchar(150) NOT NULL,
   PRIMARY KEY (`tranID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE session ADD COLUMN paymentType enum('MPU', 'CBPAY', 'VISA') DEFAULT NULL;
+ALTER TABLE session ADD COLUMN paymentConfirmationDate varchar(255) DEFAULT NULL;
+

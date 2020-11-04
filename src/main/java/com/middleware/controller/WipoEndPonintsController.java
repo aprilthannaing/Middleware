@@ -5,10 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.middleware.entity.AES;
+import com.middleware.entity.CBPayTransaction;
+import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.entity.SessionStatus;
 import com.middleware.entity.SystemConstant;
 import com.middleware.entity.Transaction;
 import com.middleware.entity.Views;
+import com.middleware.entity.Visa;
+import com.middleware.service.CBPaymentTransactionService;
 import com.middleware.service.GeneralService;
+import com.middleware.service.MPUPaymentTransactionService;
 import com.middleware.service.SessionService;
+import com.middleware.service.VisaService;
 
 @RestController
 @RequestMapping("payments")
@@ -39,6 +41,15 @@ public class WipoEndPonintsController extends AbstractController {
 
     @Autowired
     private GeneralService generalService;
+
+    @Autowired
+    private MPUPaymentTransactionService mpuService;
+
+    @Autowired
+    private CBPaymentTransactionService cbPayService;
+
+    @Autowired
+    private VisaService visaService;
 
     private static Logger logger = Logger.getLogger(WipoEndPonintsController.class);
 
@@ -76,7 +87,7 @@ public class WipoEndPonintsController extends AbstractController {
 
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST) /* WIPO REST end point 2.3 */
     @ResponseBody
     @JsonView(Views.Summary.class)
     public JSONObject payments(@RequestBody JSONObject json) throws Exception {
@@ -148,6 +159,86 @@ public class WipoEndPonintsController extends AbstractController {
 
 	String encryptValue = AES.encrypt(sessionId + "", secretKey);
 	resultJson.put("redirectHTML", "localhost:4200/home/" + encryptValue);
+	return resultJson;
+    }
+
+    /*
+     * request -------{ "tokenId": "77MTv5xDWMlFMNe+utqDCERcqkI=",
+     * "paymentReference": "123" }
+     */
+
+    /*
+     * response -------- { "transaction": { "bankIdentifier":" ACLEDA", //
+     * compulsory "amount":"250", // compulsory "paymentReference":
+     * "020170808001234B", // compulsory "tokenId”: "2903e6c8-4df2073e4095", //
+     * compulsory "transactionDate”: "2017-08-08T12:08", // compulsory
+     * "paymentConfirmationDate": "2017-08-08T13:08", // compulsory
+     * "paymentStatus":"1", // compulsory “receiptNumber”: ”20181203000017”
+     * //Optional }, // error operation code and details which may provide more
+     * specific information "errors”: { “code”:””, “bankCode”:”2052”,
+     * “bankDetails”:”” } }
+     */
+
+    @RequestMapping(value = "status", method = RequestMethod.POST)
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public JSONObject paymentStatus(@RequestBody JSONObject json) {
+	JSONObject resultJson = new JSONObject();
+	Object paymentReferenceObject = json.get("paymentReference");
+	if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty()) {
+	    resultJson.put("errorMsg", "Payment Reference must not empty!");
+	    return resultJson;
+	}
+
+	Object tokenIdObject = json.get("tokenId");
+	if (tokenIdObject == null || tokenIdObject.toString().isEmpty()) {
+	    resultJson.put("errorMsg", "Token Id must not empty!");
+	    return resultJson;
+	}
+
+	String paymentReference = paymentReferenceObject.toString();
+	String tokenId = tokenIdObject.toString();
+	Session session = sessionService.findByPaymentReferenceAndTokenId(paymentReference, tokenId);
+	if (session == null) {
+	    resultJson.put("errorMsg", "Something wrong in your request!");
+	    return resultJson;
+	}
+
+	Transaction transaction = new Transaction();
+	transaction.setBankIdentifier(session.getBankIdentifier());
+	transaction.setAmount(session.getTotalAmount());
+	transaction.setPaymentReference(session.getPaymentReference());
+	transaction.setTokenId(session.getSessionId());
+	transaction.setTransactionDate(session.getStartDate());
+	transaction.setPaymentConfirmationDate(session.getPaymentConfirmationDate());
+
+	switch (session.getPaymentType()) {
+	case MPU:
+	    MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
+	    transaction.setReceiptNumber("");
+	    break;
+
+	case CBPAY:
+	    CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(cbPay.isSuccess() ? "1" : "0");
+	    transaction.setReceiptNumber("");
+	    break;
+	case VISA:
+	    Visa visa = visaService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(visa.isSuccess() ? "1" : "0");
+	    transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
+	    break;
+
+	}
+	
+	JSONObject errors = new JSONObject();
+	errors.put("code", "");
+	errors.put("bankCode", "2052");
+	errors.put("bankDetails", "");
+
+	resultJson.put("transaction", transaction);
+	resultJson.put("errors", errors);
 	return resultJson;
     }
 

@@ -107,7 +107,7 @@ public class MPUResultController {
 	paymentdata.setDateTime(dateTime);
 	paymentdata.setStatus(status);
 	paymentdata.setFailReason(failReason);
-	paymentdata.setUserDefined1(userDefined1);
+	paymentdata.setUserDefined1(userDefined1);  /*token Id*/
 	paymentdata.setUserDefined2(userDefined2);
 	paymentdata.setUserDefined3(userDefined3);
 	paymentdata.setCategoryCode(categoryCode);

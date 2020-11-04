@@ -16,249 +16,253 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "cbPayTransaction")
 public class CBPayTransaction extends AbstractEntity implements Serializable {
-	@Id
-	@Column(name = "tranID", unique = true, nullable = false)
-	private long tranID;
+    @Id
+    @Column(name = "tranID", unique = true, nullable = false)
+    private long tranID;
 
-	@Column(name = "reqId")
-	private String reqId = "";
+    @Column(name = "reqId")
+    private String reqId = "";
 
-	@Column(name = "merId")
-	private String merId = "";
+    @Column(name = "merId")
+    private String merId = "";
 
-	@Column(name = "subMerId")
-	private String subMerId = "";
+    @Column(name = "subMerId")
+    private String subMerId = "";
 
-	@Column(name = "terminalId")
-	private String terminalId = "";
+    @Column(name = "terminalId")
+    private String terminalId = "";
 
-	@Column(name = "transAmount")
-	private String transAmount = "";
+    @Column(name = "transAmount")
+    private String transAmount = "";
 
-	@Column(name = "transCurrency")
-	private String transCurrency = "";
+    @Column(name = "transCurrency")
+    private String transCurrency = "";
 
-	@Column(name = "ref1")
-	private String ref1 = "";
+    @Column(name = "ref1")
+    private String ref1 = "";
 
-	@Column(name = "ref2")
-	private String ref2 = "";
+    @Column(name = "ref2")
+    private String ref2 = "";
 
-	@Column(name = "merDqrCode")
-	private String merDqrCode = "";
+    @Column(name = "merDqrCode")
+    private String merDqrCode = "";
 
-	@Column(name = "transExpiredTime")
-	private String transExpiredTime = "";
+    @Column(name = "transExpiredTime")
+    private String transExpiredTime = "";
 
-	@Column(name = "refNo")
-	private String refNo = "";
+    @Column(name = "refNo")
+    private String refNo = "";
 
-	@Column(name = "transRef")
-	private String transRef = "";
+    @Column(name = "transRef")
+    private String transRef = "";
 
-	@Column(name = "transStatus")
-	private String transStatus = "";
+    @Column(name = "transStatus")
+    private String transStatus = "";
 
-	@Column(name = "code")
-	private String code = "";
+    @Column(name = "code")
+    private String code = "";
 
-	@Column(name = "msg")
-	private String msg = "";
+    @Column(name = "msg")
+    private String msg = "";
 
-	@Column(name = "t1")
-	private String t1 = "";
+    @Column(name = "t1")
+    private String t1 = "";
 
-	@Column(name = "t2")
-	private String t2 = "";
+    @Column(name = "t2")
+    private String t2 = "";
 
-	@Column(name = "t3")
-	private String t3 = "";
-	
-	@Column(name = "checkedDateTime")
-	private String checkedDateTime = "";
-	
-	@Column(name = "createdDateTime")
-	private String createdDateTime = "";
+    @Column(name = "t3")
+    private String t3 = "";
 
-	@JsonView(Views.Thin.class)
-	@JoinColumn(name = "sessionId")
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Session session;
+    @Column(name = "checkedDateTime")
+    private String checkedDateTime = "";
 
-	public Session getSession() {
-		return session;
-	}
+    @Column(name = "createdDateTime")
+    private String createdDateTime = "";
 
-	public void setSession(Session session) {
-		this.session = session;
-	}
+    @JsonView(Views.Thin.class)
+    @JoinColumn(name = "sessionId")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Session session;
 
-	public long getTranID() {
-		return tranID;
-	}
+    public Session getSession() {
+	return session;
+    }
 
-	public void setTranID(long tranID) {
-		this.tranID = tranID;
-	}
+    public void setSession(Session session) {
+	this.session = session;
+    }
 
-	public String getReqId() {
-		return reqId;
-	}
+    public long getTranID() {
+	return tranID;
+    }
 
-	public void setReqId(String reqId) {
-		this.reqId = reqId;
-	}
+    public void setTranID(long tranID) {
+	this.tranID = tranID;
+    }
 
-	public String getMerId() {
-		return merId;
-	}
+    public String getReqId() {
+	return reqId;
+    }
 
-	public void setMerId(String merId) {
-		this.merId = merId;
-	}
+    public void setReqId(String reqId) {
+	this.reqId = reqId;
+    }
 
-	public String getSubMerId() {
-		return subMerId;
-	}
+    public String getMerId() {
+	return merId;
+    }
 
-	public void setSubMerId(String subMerId) {
-		this.subMerId = subMerId;
-	}
+    public void setMerId(String merId) {
+	this.merId = merId;
+    }
 
-	public String getTerminalId() {
-		return terminalId;
-	}
+    public String getSubMerId() {
+	return subMerId;
+    }
 
-	public void setTerminalId(String terminalId) {
-		this.terminalId = terminalId;
-	}
+    public void setSubMerId(String subMerId) {
+	this.subMerId = subMerId;
+    }
 
-	public String getTransAmount() {
-		return transAmount;
-	}
+    public String getTerminalId() {
+	return terminalId;
+    }
 
-	public void setTransAmount(String transAmount) {
-		this.transAmount = transAmount;
-	}
+    public void setTerminalId(String terminalId) {
+	this.terminalId = terminalId;
+    }
 
-	public String getTransCurrency() {
-		return transCurrency;
-	}
+    public String getTransAmount() {
+	return transAmount;
+    }
 
-	public void setTransCurrency(String transCurrency) {
-		this.transCurrency = transCurrency;
-	}
+    public void setTransAmount(String transAmount) {
+	this.transAmount = transAmount;
+    }
 
-	public String getRef1() {
-		return ref1;
-	}
+    public String getTransCurrency() {
+	return transCurrency;
+    }
 
-	public void setRef1(String ref1) {
-		this.ref1 = ref1;
-	}
+    public void setTransCurrency(String transCurrency) {
+	this.transCurrency = transCurrency;
+    }
 
-	public String getRef2() {
-		return ref2;
-	}
+    public String getRef1() {
+	return ref1;
+    }
 
-	public void setRef2(String ref2) {
-		this.ref2 = ref2;
-	}
+    public void setRef1(String ref1) {
+	this.ref1 = ref1;
+    }
 
-	public String getMerDqrCode() {
-		return merDqrCode;
-	}
+    public String getRef2() {
+	return ref2;
+    }
 
-	public void setMerDqrCode(String merDqrCode) {
-		this.merDqrCode = merDqrCode;
-	}
+    public void setRef2(String ref2) {
+	this.ref2 = ref2;
+    }
 
-	public String getTransExpiredTime() {
-		return transExpiredTime;
-	}
+    public String getMerDqrCode() {
+	return merDqrCode;
+    }
 
-	public void setTransExpiredTime(String transExpiredTime) {
-		this.transExpiredTime = transExpiredTime;
-	}
+    public void setMerDqrCode(String merDqrCode) {
+	this.merDqrCode = merDqrCode;
+    }
 
-	public String getRefNo() {
-		return refNo;
-	}
+    public String getTransExpiredTime() {
+	return transExpiredTime;
+    }
 
-	public void setRefNo(String refNo) {
-		this.refNo = refNo;
-	}
+    public void setTransExpiredTime(String transExpiredTime) {
+	this.transExpiredTime = transExpiredTime;
+    }
 
-	public String getTransRef() {
-		return transRef;
-	}
+    public String getRefNo() {
+	return refNo;
+    }
 
-	public void setTransRef(String transRef) {
-		this.transRef = transRef;
-	}
+    public void setRefNo(String refNo) {
+	this.refNo = refNo;
+    }
 
-	public String getTransStatus() {
-		return transStatus;
-	}
+    public String getTransRef() {
+	return transRef;
+    }
 
-	public void setTransStatus(String transStatus) {
-		this.transStatus = transStatus;
-	}
+    public void setTransRef(String transRef) {
+	this.transRef = transRef;
+    }
 
-	public String getCode() {
-		return code;
-	}
+    public String getTransStatus() {
+	return transStatus;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setTransStatus(String transStatus) {
+	this.transStatus = transStatus;
+    }
 
-	public String getT1() {
-		return t1;
-	}
+    public String getCode() {
+	return code;
+    }
 
-	public void setT1(String t1) {
-		this.t1 = t1;
-	}
+    public void setCode(String code) {
+	this.code = code;
+    }
 
-	public String getT2() {
-		return t2;
-	}
+    public String getT1() {
+	return t1;
+    }
 
-	public void setT2(String t2) {
-		this.t2 = t2;
-	}
+    public void setT1(String t1) {
+	this.t1 = t1;
+    }
 
-	public String getT3() {
-		return t3;
-	}
+    public String getT2() {
+	return t2;
+    }
 
-	public void setT3(String t3) {
-		this.t3 = t3;
-	}
+    public void setT2(String t2) {
+	this.t2 = t2;
+    }
 
-	public String getMsg() {
-		return msg;
-	}
+    public String getT3() {
+	return t3;
+    }
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
+    public void setT3(String t3) {
+	this.t3 = t3;
+    }
 
-	public String getCheckedDateTime() {
-		return checkedDateTime;
-	}
+    public String getMsg() {
+	return msg;
+    }
 
-	public void setCheckedDateTime(String checkedDateTime) {
-		this.checkedDateTime = checkedDateTime;
-	}
+    public void setMsg(String msg) {
+	this.msg = msg;
+    }
 
-	public String getCreatedDateTime() {
-		return createdDateTime;
-	}
+    public String getCheckedDateTime() {
+	return checkedDateTime;
+    }
 
-	public void setCreatedDateTime(String createdDateTime) {
-		this.createdDateTime = createdDateTime;
-	}
+    public void setCheckedDateTime(String checkedDateTime) {
+	this.checkedDateTime = checkedDateTime;
+    }
+
+    public String getCreatedDateTime() {
+	return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+	this.createdDateTime = createdDateTime;
+    }
+
+    public boolean isSuccess() {
+	return getTransStatus().equals("S");
+    }
 
 }
