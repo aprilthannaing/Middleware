@@ -18,6 +18,8 @@ public interface SessionService {
 
     public Session findBySessionId(String sessionId);
 
+    public Session findByPaymentReference(String paymentReference);
+
     public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId);
 
 }

@@ -162,6 +162,39 @@ public class WipoEndPonintsController extends AbstractController {
 	return resultJson;
     }
 
+    private Transaction getTransactionFromSession(Session session) {
+	Transaction transaction = new Transaction();
+	transaction.setBankIdentifier(session.getBankIdentifier());
+	transaction.setAmount(session.getTotalAmount());
+	transaction.setPaymentReference(session.getPaymentReference());
+	transaction.setTokenId(session.getSessionId());
+	transaction.setTransactionDate(session.getStartDate());
+	transaction.setPaymentConfirmationDate(session.getPaymentConfirmationDate());
+
+	String tokenId = session.getSessionId();
+	switch (session.getPaymentType()) {
+	case MPU:
+	    MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
+	    transaction.setReceiptNumber("");
+	    break;
+
+	case CBPAY:
+	    CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(cbPay.isSuccess() ? "1" : "0");
+	    transaction.setReceiptNumber("");
+	    break;
+	case VISA:
+	    Visa visa = visaService.findByTokenId(tokenId);
+	    transaction.setPaymentStatus(visa.isSuccess() ? "1" : "0");
+	    transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
+	    break;
+
+	}
+
+	return transaction;
+    }
+
     /*
      * request -------{ "tokenId": "77MTv5xDWMlFMNe+utqDCERcqkI=",
      * "paymentReference": "123" }
@@ -179,7 +212,7 @@ public class WipoEndPonintsController extends AbstractController {
      * “bankDetails”:”” } }
      */
 
-    @RequestMapping(value = "status", method = RequestMethod.POST)
+    @RequestMapping(value = "status", method = RequestMethod.POST) /* rest end point 2.4 */
     @ResponseBody
     @JsonView(Views.Summary.class)
     public JSONObject paymentStatus(@RequestBody JSONObject json) {
@@ -204,41 +237,56 @@ public class WipoEndPonintsController extends AbstractController {
 	    return resultJson;
 	}
 
-	Transaction transaction = new Transaction();
-	transaction.setBankIdentifier(session.getBankIdentifier());
-	transaction.setAmount(session.getTotalAmount());
-	transaction.setPaymentReference(session.getPaymentReference());
-	transaction.setTokenId(session.getSessionId());
-	transaction.setTransactionDate(session.getStartDate());
-	transaction.setPaymentConfirmationDate(session.getPaymentConfirmationDate());
-
-	switch (session.getPaymentType()) {
-	case MPU:
-	    MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
-	    transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
-	    transaction.setReceiptNumber("");
-	    break;
-
-	case CBPAY:
-	    CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
-	    transaction.setPaymentStatus(cbPay.isSuccess() ? "1" : "0");
-	    transaction.setReceiptNumber("");
-	    break;
-	case VISA:
-	    Visa visa = visaService.findByTokenId(tokenId);
-	    transaction.setPaymentStatus(visa.isSuccess() ? "1" : "0");
-	    transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
-	    break;
-
-	}
-	
 	JSONObject errors = new JSONObject();
 	errors.put("code", "");
 	errors.put("bankCode", "2052");
 	errors.put("bankDetails", "");
 
-	resultJson.put("transaction", transaction);
+	resultJson.put("transaction", getTransactionFromSession(session));
 	resultJson.put("errors", errors);
+	return resultJson;
+    }
+
+    /*
+     * request like call back url response response --------
+     * 
+     * { "transaction": { "bankIdentifier":" ACLEDA", // compulsory
+     * "paymentReference": "020170808001234B", // compulsory
+     * "tokenId”: "2903e6c8-21b5-4e28-851b-4df2073e4095",// compulsory
+     * "transactionDate”: "2017-08-08T12:08", // compulsory
+     * "paymentConfirmationDate": "2017-08-08T13:08", // compulsory
+     * "paymentStatus":"1", // compulsory “receiptNumber”: ”20181203000017”
+     * //Optional },// error operation code and details which may provide more
+     * specific information "errors”: { “code”:””, “bankCode”:”2052”,
+     * “bankDetails”:”” }
+     * 
+     */
+    @RequestMapping(value = "ack", method = RequestMethod.POST) /* rest end point 2.5 */
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public JSONObject ack(@RequestBody JSONObject json) {
+	JSONObject resultJson = new JSONObject();
+	Object paymentReferenceObject = json.get("paymentReference");
+	if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty()) {
+	    resultJson.put("errorMsg", "Payment Reference must not empty!");
+	    return resultJson;
+	}
+
+	String paymentReference = paymentReferenceObject.toString();
+	Session session = sessionService.findByPaymentReference(paymentReference);
+	if (session == null) {
+	    resultJson.put("errorMsg", "Something wrong in your request!");
+	    return resultJson;
+	}
+
+	JSONObject errors = new JSONObject();
+	errors.put("code", "");
+	errors.put("bankCode", "2052");
+	errors.put("bankDetails", "");
+
+	resultJson.put("transaction", getTransactionFromSession(session));
+	resultJson.put("errors", errors);
+
 	return resultJson;
     }
 
