@@ -1,10 +1,11 @@
 package com.middleware.service.impl;
 
-import javax.naming.ServiceUnavailableException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.middleware.dao.UserDao;
 import com.middleware.entity.User;
@@ -19,14 +20,18 @@ public class UserServiceImpl implements UserService {
 	private Logger logger = Logger.getLogger(UserServiceImpl.class);
 
 	@Override
-	public void save(User user) throws ServiceUnavailableException {
-		if (user.isBoIdRequired(user.getId())) {
-		    user.setId(getId());
-	    }
-		if(user.isBoIdRequired(Long.parseLong(user.getBoId()))) {
-			user.setBoId(getUserBoId());
+	public void save(User user) {
+		try {
+			if (user.isBoIdRequired(user.getId())) {
+				user.setId(getId());
+			}
+			if (user.isBoIdRequired(Long.parseLong(user.getBoId()))) {
+				user.setBoId(getUserBoId());
+			}
+			userDao.saveOrUpdate(user);
+		} catch (com.mchange.rmi.ServiceUnavailableException e) {
+			e.printStackTrace();
 		}
-		userDao.save(user);
 
 	}
 	private long getId() {
@@ -46,4 +51,12 @@ public class UserServiceImpl implements UserService {
     	return "USR" + plus();
     }
     
+	@Override
+	public User getUserbyemail(String emailaddress) {
+		String query = "select User from User where email='" + "'";
+		List<User> userList = userDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(userList)) 
+			return null;
+		return userList.get(0);
+	}	
 }

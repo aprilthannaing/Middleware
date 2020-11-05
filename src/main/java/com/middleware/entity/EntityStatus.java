@@ -1,6 +1,6 @@
 package com.middleware.entity;
 
-public enum UserStatus {
+public enum EntityStatus {
 	ACTIVE, INACTIVE;
 
 }

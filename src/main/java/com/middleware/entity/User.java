@@ -37,7 +37,7 @@ public class User extends AbstractEntity implements Serializable {
 	
     @JsonView(Views.Thin.class)
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private EntityStatus status;
 
 	public long getId() {
 		return id;
@@ -79,11 +79,11 @@ public class User extends AbstractEntity implements Serializable {
 		this.password = password;
 	}
 
-	public UserStatus getStatus() {
+	public EntityStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(UserStatus status) {
+	public void setStatus(EntityStatus status) {
 		this.status = status;
 	}
 
