@@ -5,8 +5,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class AbstractEntity {
 
-	public boolean isBoIdRequired(Long boId) {
-		return boId == 0 || SystemConstant.BOID_REQUIRED.equals(boId);
+	public boolean isIdRequired(Long id) {
+		return id == 0 || SystemConstant.ID_REQUIRED.equals(id);
 	}
-
 }

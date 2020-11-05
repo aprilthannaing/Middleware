@@ -115,7 +115,7 @@ CREATE TABLE `mpuPaymentTransaction` (
   `dateTime` varchar(14) NOT NULL,
   `status` varchar(2) NOT NULL,
   `failReason` varchar(100) NOT NULL,
-  `categoryCode` varchar(20) NOT NULL,
+  `categoryCode` varchar(20) NOT NULL,‌ေ
   `currencyCode` varchar(3) NOT NULL,
   `userDefined1` varchar(150) NOT NULL,
   `userDefined2` varchar(150) NOT NULL,
@@ -132,3 +132,14 @@ CREATE TABLE `mpuPaymentTransaction` (
 ALTER TABLE session ADD COLUMN paymentType enum('MPU', 'CBPAY', 'VISA') DEFAULT NULL;
 ALTER TABLE session ADD COLUMN paymentConfirmationDate varchar(255) DEFAULT NULL;
 
+
+CREATE TABLE `user` (
+ `id` bigint(20) NOT NULL,
+ `boId` varchar(255) NOT NULL,
+ `name` varchar(100) DEFAULT NULL,
+ `phoneNo` varchar(50) DEFAULT NULL,
+ `email` varchar(255) NOT NULL,
+ `password` varchar(255) NOT NULL,
+ `status` enum('ACTIVE','INACTIVE') NOT NULL,
+ PRIMARY KEY (`boId`)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

@@ -26,6 +26,8 @@ package com.middleware.entity;
 public abstract interface SystemConstant {
 
 	public static Long INTERNAL_BOID = (long) -2;
+	
+	public static final Long ID_REQUIRED = (long) -1;
 
 	public static final Long BOID_REQUIRED = (long) -1;
 
