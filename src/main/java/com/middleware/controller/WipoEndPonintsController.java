@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.middleware.entity.AES;
 import com.middleware.entity.CBPayTransaction;
 import com.middleware.entity.MPUPaymentTransaction;
+import com.middleware.entity.PaymentType;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.entity.SessionStatus;
@@ -135,10 +136,8 @@ public class WipoEndPonintsController extends AbstractController {
 	List<Object> amountDetailObjectList = (List<Object>) json.get("amountDetails");
 	session.setAmount1(ObjectListToJSONObjectList(amountDetailObjectList).get(0).get("amount").toString());
 	session.setAmount2(ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("amount").toString());
-	session.setAmountDescription1(
-		ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
-	session.setAmountDescription2(
-		ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
+	session.setAmountDescription1(ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
+	session.setAmountDescription2(ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
 	session.setSessionStatus(SessionStatus.ACTIVE);
 	sessionService.save(session);
 
@@ -172,7 +171,11 @@ public class WipoEndPonintsController extends AbstractController {
 	transaction.setPaymentConfirmationDate(session.getPaymentConfirmationDate());
 
 	String tokenId = session.getSessionId();
-	switch (session.getPaymentType()) {
+	PaymentType paymentType = session.getPaymentType();
+	if (paymentType == null)
+	    return transaction;
+	
+	switch (paymentType) {
 	case MPU:
 	    MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
 	    transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
