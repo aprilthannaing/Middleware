@@ -36,7 +36,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     private Long getId() {
-	return countSession() + 1000000;
+	return countSession() + 1000000; 
     }
 
     public long countSession() {

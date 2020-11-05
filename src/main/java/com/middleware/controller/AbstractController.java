@@ -1,6 +1,10 @@
 package com.middleware.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -358,5 +362,66 @@ public class AbstractController {
 	    e.printStackTrace();
 	}
 	return retMsgDesc;
+    }
+
+    public String getEndDateOfMonth(String date) {
+
+	try {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+	    Date convertedDate = dateFormat.parse(date);
+	    Calendar c = Calendar.getInstance();
+	    c.setTime(convertedDate);
+	    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+	    return c.getTime().toString().split(" ")[2];
+	} catch (ParseException e) {
+	    logger.error("Error: " + e.getMessage());
+	}
+	return null;
+    }
+    
+    
+    public String getEndDateOfYear(String year) {
+
+  	try {
+  	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+  	    Date convertedDate = dateFormat.parse(year + "/12/01");
+  	    Calendar c = Calendar.getInstance();
+  	    c.setTime(convertedDate);
+  	    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+  	    return year + "/12/" + c.getTime().toString().split(" ")[2];
+  	} catch (ParseException e) {
+  	    logger.error("Error: " + e.getMessage());
+  	}
+  	return null;
+      }
+
+    public int parseMonthToInt(String month) {
+	switch (month) {
+	case "Jan":
+	    return 1;
+	case "Feb":
+	    return 2;
+	case "Mar":
+	    return 3;
+	case "Apr":
+	    return 4;
+	case "May":
+	    return 5;
+	case "June":
+	    return 6;
+	case "July":
+	    return 7;
+	case "Aug":
+	    return 8;
+	case "Sep":
+	    return 9;
+	case "Oct":
+	    return 10;
+	case "Nov":
+	    return 11;
+	case "Dec":
+	    return 12;
+	}
+	return -1;
     }
 }

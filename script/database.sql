@@ -15,7 +15,7 @@ CREATE TABLE `session` (
  `payerPhone` varchar(100) DEFAULT NULL,
  `startDate` varchar(50) DEFAULT NULL,
  `endDate` varchar(50) DEFAULT NULL,
- `sessionId` varchar(32) NOT NULL,
+ `sessionId` varchar(255) NOT NULL,
  `sessionStatus` enum('ACTIVE','INACTIVE') NOT NULL,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -23,7 +23,7 @@ CREATE TABLE `session` (
   CREATE TABLE `visa` (
   id bigint(20) primary key not null auto_increment,
   `visaTransactionId` bigint(20) DEFAULT NULL,
-  `sessionId` bigint(20) DEFAULT NULL,
+  `sessionId` varchar(255) NOT NULL,
   `amount` bigint(20) DEFAULT NULL,
   `interactionOperation` varchar(30) DEFAULT NULL,
   `merchantId` varchar(255) DEFAULT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `VisaTransaction` (
   
   CREATE TABLE `cbPayTransaction` (
   `tranID` bigint NOT NULL,
-  `sessionId` bigint(20) DEFAULT NULL,
+ `sessionId` varchar(255) NOT NULL,
   `reqId` varchar(32) NOT NULL,
   `merId` varchar(16) NOT NULL,
   `subMerId` varchar(16) NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE `VisaTransaction` (
 
 CREATE TABLE `mpuPaymentTransaction` (
   `tranID` bigint NOT NULL,
-  `sessionId` bigint(20) DEFAULT NULL,
+  `sessionId` varchar(255) NOT NULL,
   `merchantID` varchar(15) NOT NULL,
   `respCode` varchar(2) NOT NULL,
   `pan` varchar(16) NOT NULL,
@@ -131,6 +131,10 @@ CREATE TABLE `mpuPaymentTransaction` (
 
 ALTER TABLE session ADD COLUMN paymentType enum('MPU', 'CBPAY', 'VISA') DEFAULT NULL;
 ALTER TABLE session ADD COLUMN paymentConfirmationDate varchar(255) DEFAULT NULL;
+ALTER TABLE cbpaytransaction ADD COLUMN checkedDateTime varchar(255) DEFAULT NULL; 
+ALTER TABLE cbpaytransaction ADD COLUMN createdDateTime varchar(255) DEFAULT NULL;
+ALTER TABLE cbpaytransaction ADD COLUMN sessionId varchar(255) DEFAULT NULL;
+
 
 //user
 CREATE TABLE `user` (
