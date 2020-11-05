@@ -73,7 +73,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session checkingSession(String id) {
-	String query = "from Session where sessionId ='" + id + "' and sessionStatus='"+ SessionStatus.ACTIVE +"'";
+	String query = "from Session where sessionId ='" + id + "' and sessionStatus='" + SessionStatus.ACTIVE + "'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(userList))
 	    return null;
@@ -88,7 +88,7 @@ public class SessionServiceImpl implements SessionService {
 	return sessionList.get(0);
     }
 
-    /*find by token Id*/
+    /* find by token Id */
     public Session findBySessionId(String sessionId) {
 	String query = "from Session where sessionId='" + sessionId + "'";
 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
@@ -96,19 +96,19 @@ public class SessionServiceImpl implements SessionService {
 	    return null;
 	return sessionList.get(0);
     }
-    
-    /*find by payment reference and token Id*/
+
+    /* find by payment reference and token Id */
     public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId) {
-	String query = "from Session where paymentReference='" + paymentReference  + "' and sessionId='" + tokenId + "'";
+	String query = "from Session where paymentReference='" + paymentReference + "' and sessionId='" + tokenId + "'";
 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(sessionList))
 	    return null;
 	return sessionList.get(0);
     }
-    
-    /*find by payment reference*/
+
+    /* find by payment reference */
     public Session findByPaymentReference(String paymentReference) {
-	String query = "from Session where 'paymentReference'=" + paymentReference;
+	String query = "from Session where paymentReference='" + paymentReference + "'";
 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(sessionList))
 	    return null;
