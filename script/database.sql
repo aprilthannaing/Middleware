@@ -132,7 +132,7 @@ CREATE TABLE `mpuPaymentTransaction` (
 ALTER TABLE session ADD COLUMN paymentType enum('MPU', 'CBPAY', 'VISA') DEFAULT NULL;
 ALTER TABLE session ADD COLUMN paymentConfirmationDate varchar(255) DEFAULT NULL;
 
-
+//user
 CREATE TABLE `user` (
  `id` bigint(20) NOT NULL,
  `boId` varchar(255) NOT NULL,

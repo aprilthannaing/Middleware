@@ -20,10 +20,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void save(User user) throws ServiceUnavailableException {
-		if (user.isIdRequired(user.getId())) {
+		if (user.isBoIdRequired(user.getId())) {
 		    user.setId(getId());
 	    }
-		if(user.isIdRequired(Long.parseLong(user.getBoId()))) {
+		if(user.isBoIdRequired(Long.parseLong(user.getBoId()))) {
 			user.setBoId(getUserBoId());
 		}
 		userDao.save(user);
