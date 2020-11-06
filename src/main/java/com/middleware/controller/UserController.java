@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.middleware.dao.UserDao;
 import com.middleware.entity.AES;
 import com.middleware.entity.SystemConstant;
 import com.middleware.entity.User;
@@ -25,6 +26,9 @@ public class UserController extends AbstractController {
 
 	@Autowired
 	private UserService userService;
+	
+	private UserDao userDao;
+	
 
 	private static Logger logger = Logger.getLogger(UserController.class);
 
@@ -41,8 +45,6 @@ public class UserController extends AbstractController {
 		String email = json.get("email").toString();
 		
 		final String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}{8,64}$";
-		
-//		final String regex = "^(?=.{8,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$";
 		
 		if(!email.matches(regex)) {
 			return "Your email is invalid!";
@@ -79,10 +81,10 @@ public class UserController extends AbstractController {
 		
 		User user = userService.getUserbyemail(requestedEmail);
 		String password = user.getPassword();
-		//String decryptedPassword = AES.decrypt(password, secretKey);
+		String decryptedPassword = AES.decrypt(password, secretKey);
 	
 		
-		if (requestedPassword.equals(password)) 
+		if (requestedPassword.equals(decryptedPassword)) 
 			resultJson.put("message", "Login Successful!");
 		
 		 else
@@ -90,5 +92,44 @@ public class UserController extends AbstractController {
 		
 		return resultJson;
 
+	}
+	
+	@RequestMapping(value = "changePassword", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Thin.class)
+	public JSONObject changePassword(@RequestBody JSONObject json) throws ServiceUnavailableException {
+		
+		JSONObject resultJson = new JSONObject();
+		
+		String userId = json.get("userId").toString();
+		String oldPassword = json.get("oldPassword").toString();
+		String newPassword = json.get("newPassword").toString();
+		
+		if(oldPassword.equals(newPassword)) {
+			resultJson.put("message", "Your new password must be different with current password!");
+			return resultJson;
+		}
+		User user = userService.findByUserId(userId);
+		if(user == null) {
+			resultJson.put("message", "Your Customer Id is not found");
+			return resultJson;
+		}
+		String encryptedPassword = user.getPassword();
+		
+		String decryptedPassword = AES.decrypt(encryptedPassword, secretKey);
+		
+		if(oldPassword.equals(decryptedPassword)) {
+			
+			String encryptedNewPassword = AES.encrypt(newPassword, secretKey);
+			user.setPassword(encryptedNewPassword);
+//			resultJson.put("message", encryptedNewPassword);
+//			return resultJson;
+			userService.save(user);
+			resultJson.put("message", "Updated successfully!");
+			return resultJson;
+
+		}
+		resultJson.put("message", "Updating password is not successful!");
+		return resultJson;
 	}
 }
