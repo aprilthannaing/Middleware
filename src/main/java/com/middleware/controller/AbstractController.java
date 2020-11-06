@@ -2,6 +2,8 @@ package com.middleware.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -424,4 +426,11 @@ public class AbstractController {
 	}
 	return -1;
     }
+    
+    public String dateTimeFormat() {
+    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    	LocalDateTime now = LocalDateTime.now();
+    	return dateFormat.format(now);
+    }
+    
 }

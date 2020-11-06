@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name = "cbPayTransaction")
+@Table(name = "cbpayTransaction")
 public class CBPayTransaction extends AbstractEntity implements Serializable {
     @Id
     @Column(name = "tranID", unique = true, nullable = false)

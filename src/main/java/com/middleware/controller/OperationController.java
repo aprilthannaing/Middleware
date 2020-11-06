@@ -28,7 +28,7 @@ import com.middleware.service.VisaTransactionService;
 
 @RestController
 @RequestMapping("operation")
-public class OperationController {
+public class OperationController extends AbstractController{
 
     @Autowired
     private MPUPaymentTransactionService paymnentService;
@@ -68,10 +68,15 @@ public class OperationController {
 	Result result = new Result();
 	CBPayTransaction cbpaydata = cbpaymentService.checkTransRef(json.getTransRef());
 	if (cbpaydata != null) {
+		cbpaydata.setCheckedDateTime(dateTimeFormat());
 	    cbpaydata.setTransStatus(json.getTransStatus());
 	    result = cbpaymentService.savecbpayment(cbpaydata);
-	} else
+	    //if(json.getTransStatus().equals("S"))
+	    	//new WipoEndPonintsController().paymentStatus(json);
+	} else {
+		json.setCreatedDateTime(dateTimeFormat());
 	    result = cbpaymentService.savecbpayment(json);
+	}
 	return result;
     }
 

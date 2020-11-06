@@ -12,6 +12,9 @@ public class Result {
 	@JsonView(Views.Thin.class)
 	private String result = "";
 	
+	@JsonView(Views.Thin.class)
+	private String result1 = "";
+	
 	public String getDescription() {
 		return description;
 	}
@@ -34,6 +37,14 @@ public class Result {
 
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	public String getResult1() {
+		return result1;
+	}
+
+	public void setResult1(String result1) {
+		this.result1 = result1;
 	}
 
 }

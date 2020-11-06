@@ -3,6 +3,9 @@ package com.middleware.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 
 public class Transaction {
+	
+	@JsonView(Views.Thin.class)
+	private String orderId;
 
     @JsonView(Views.Thin.class)
     private String bankIdentifier;
@@ -92,4 +95,12 @@ public class Transaction {
 	this.transactionDate = transactionDate;
     }
 
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+    
 }

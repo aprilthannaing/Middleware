@@ -17,6 +17,7 @@ public class Session extends AbstractEntity implements Serializable {
 
     @Id
     @Column(name = "Id", unique = true, nullable = false)
+    @JsonView(Views.Thin.class)
     private long Id;
 
     @JsonView(Views.Thin.class)

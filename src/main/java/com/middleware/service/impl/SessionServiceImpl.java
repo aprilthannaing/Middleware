@@ -28,11 +28,13 @@ public class SessionServiceImpl implements SessionService {
     private Logger logger = Logger.getLogger(SessionServiceImpl.class);
 
     @Transactional(readOnly = false)
-    public void save(Session session) throws ServiceUnavailableException {
-
+    public String save(Session session) throws ServiceUnavailableException {
 	if (session.isBoIdRequired(session.getId()))
 	    session.setId(getId());
-	sessionDao.save(session);
+		String sessionId = generalService.generateSession(session.getId());
+		session.setSessionId(sessionId);
+		sessionDao.save(session);
+		return session.getSessionId();
     }
 
     private Long getId() {

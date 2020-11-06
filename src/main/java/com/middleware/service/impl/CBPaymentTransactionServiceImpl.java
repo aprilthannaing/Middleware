@@ -46,12 +46,12 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 	}
 
 	public long countcbpay() {
-		String query = "select count(*) from CBPaytransaction";
+		String query = "select count(*) from CBPayTransaction";
 		return cbpaymentDao.findLongByQueryString(query).get(0);
 	}
 
 	public CBPayTransaction checkTransRef(String transRef) {
-		String query = "select cbpay from CBPaytransaction cbpay where transRef=" + transRef;
+		String query = "select cbpay from CBPayTransaction cbpay where transRef=" + transRef;
 		List<CBPayTransaction> mobileUserList = cbpaymentDao.byQuery(query);
 		if (CollectionUtils.isEmpty(mobileUserList))
 			return null;
@@ -59,7 +59,7 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 	}
 
 	public CBPayTransaction checkTranID(long tranid) {
-		String query = "from CBPaytransaction where tranID=" + tranid;
+		String query = "from CBPayTransaction where tranID=" + tranid;
 		List<CBPayTransaction> mobileUserList = cbpaymentDao.getEntitiesByQuery(query);
 		if (CollectionUtils.isEmpty(mobileUserList))
 			return null;
