@@ -1,7 +1,6 @@
 package com.middleware.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -79,6 +79,9 @@ public class CBPayTransaction extends AbstractEntity implements Serializable {
 
     @Column(name = "createdDateTime")
     private String createdDateTime = "";
+    
+    @Transient
+    private String sessionId = "";
 
     @JsonView(Views.Thin.class)
     @JoinColumn(name = "sessionId")
@@ -264,5 +267,13 @@ public class CBPayTransaction extends AbstractEntity implements Serializable {
     public boolean isSuccess() {
 	return getTransStatus().equals("S");
     }
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 
 }

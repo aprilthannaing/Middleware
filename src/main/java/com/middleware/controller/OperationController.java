@@ -75,7 +75,10 @@ public class OperationController extends AbstractController{
 	    	//new WipoEndPonintsController().paymentStatus(json);
 	} else {
 		json.setCreatedDateTime(dateTimeFormat());
-	    result = cbpaymentService.savecbpayment(json);
+		Session session = sessionService.checkingSession(json.getSessionId());
+		if(session != null)
+			json.setSession(session);
+		result = cbpaymentService.savecbpayment(json);
 	}
 	return result;
     }

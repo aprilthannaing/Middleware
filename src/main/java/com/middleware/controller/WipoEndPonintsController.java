@@ -14,6 +14,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -55,9 +56,6 @@ public class WipoEndPonintsController extends AbstractController {
     private SessionService sessionService;
 
     @Autowired
-    private GeneralService generalService;
-
-    @Autowired
     private MPUPaymentTransactionService mpuService;
 
     @Autowired
@@ -65,6 +63,9 @@ public class WipoEndPonintsController extends AbstractController {
 
     @Autowired
     private VisaService visaService;
+    
+    @Value("${frondEndURL}")
+	private String frondEndURL;
 
     private static Logger logger = Logger.getLogger(WipoEndPonintsController.class);
 
@@ -172,7 +173,7 @@ public class WipoEndPonintsController extends AbstractController {
 	resultJson.put("errors", errors);
 
 	//String encryptValue = AES.encrypt(sessionId + "", secretKey);
-	resultJson.put("redirectHTML", "localhost:4200/home/" + sessionId);
+	resultJson.put("redirectHTML", frondEndURL + "/home/" + sessionId);
 	return resultJson;
     }
 
@@ -326,6 +327,17 @@ public class WipoEndPonintsController extends AbstractController {
 	if (session != null) {
 		//update session
 		session.setEndDate(dateTimeFormat());
+		if(!json.get("type").toString().equals("")) {
+			String paymentType = json.get("type").toString();
+			if(paymentType.equals("MPU"))
+				session.setPaymentType(PaymentType.MPU);
+			else if(paymentType.equals("CBPAY"))
+				session.setPaymentType(PaymentType.CBPAY);
+			else if(paymentType.equals("VISA"))
+				session.setPaymentType(PaymentType.VISA);
+			session.setPaymentConfirmationDate(dateTimeFormat());
+		}
+		
 		sessionService.save(session);
 		
 	    res.put("code", "0000");
