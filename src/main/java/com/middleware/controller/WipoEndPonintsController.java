@@ -171,8 +171,8 @@ public class WipoEndPonintsController extends AbstractController {
 	resultJson.put("transaction", transaction);
 	resultJson.put("errors", errors);
 
-	String encryptValue = AES.encrypt(sessionId + "", secretKey);
-	resultJson.put("redirectHTML", "localhost:4200/home/" + encryptValue);
+	//String encryptValue = AES.encrypt(sessionId + "", secretKey);
+	resultJson.put("redirectHTML", "localhost:4200/home/" + sessionId);
 	return resultJson;
     }
 
@@ -321,8 +321,8 @@ public class WipoEndPonintsController extends AbstractController {
 	}
 
 	String requestId = requestIdObject.toString();
-	String id = AES.decrypt(requestId, secretKey);
-	Session session = sessionService.checkingSession(id);
+	//String id = AES.decrypt(requestId, secretKey);
+	Session session = sessionService.checkingSession(requestId);
 	if (session != null) {
 		//update session
 		session.setEndDate(dateTimeFormat());
@@ -346,15 +346,6 @@ public class WipoEndPonintsController extends AbstractController {
 	return message;
     }
     
-	@RequestMapping(value = "ack", method = RequestMethod.POST)
-	@ResponseBody
-	@JsonView(Views.Summary.class)
-	public JSONObject paymentAck(@RequestBody JSONObject json) throws Exception {
-		JSONObject res = new JSONObject();
-		String req = json.get("paymentReference").toString();
-		return res;
-	}
-	
 	private static String serviceUrl = "http://<hostname>:<port-number>/efiling/paymentStatus";
 
 	public void checkPaymentStatus(JSONObject json) throws IOException {
@@ -388,7 +379,7 @@ public class WipoEndPonintsController extends AbstractController {
 		Session session = null;
 		String id = json.get("id").toString();
 		if(!id.equals("") || !id.equals(null)) {
-			id = AES.decrypt(id, secretKey);
+			//id = AES.decrypt(id, secretKey);
 			session = sessionService.checkingSession(id);
 		}
 			

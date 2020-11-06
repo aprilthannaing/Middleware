@@ -79,10 +79,10 @@ public class UserController extends AbstractController {
 		
 		User user = userService.getUserbyemail(requestedEmail);
 		String password = user.getPassword();
-		String decryptedPassword = AES.decrypt(password, secretKey);
+		//String decryptedPassword = AES.decrypt(password, secretKey);
 	
 		
-		if (requestedPassword.equals(decryptedPassword)) 
+		if (requestedPassword.equals(password)) 
 			resultJson.put("message", "Login Successful!");
 		
 		 else
