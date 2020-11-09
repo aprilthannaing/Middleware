@@ -56,10 +56,11 @@ public class UserServiceImpl implements UserService {
 	return "USR" + plus();
     }
 
+
     @Override
     public User getUserbyemail(String emailaddress) {
 
-	String query = "select User from User where email='" + "'";
+	String query = "select User from User where email='" +emailaddress + "'";
 	List<User> userList = userDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(userList))
 	    return null;
@@ -75,5 +76,8 @@ public class UserServiceImpl implements UserService {
 	    return null;
 	return userList.get(0);
     }
+
+	
+
 
 }

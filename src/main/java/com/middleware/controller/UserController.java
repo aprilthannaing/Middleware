@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.middleware.dao.UserDao;
 import com.middleware.entity.AES;
-import com.middleware.entity.SystemConstant;
-import com.middleware.entity.User;
 import com.middleware.entity.EntityStatus;
 import com.middleware.entity.Gender;
+import com.middleware.entity.SystemConstant;
+import com.middleware.entity.User;
 import com.middleware.entity.Views;
 import com.middleware.service.UserService;
 
@@ -147,4 +147,20 @@ public class UserController extends AbstractController {
 	resultJson.put("message", "Updating password is not successful!");
 	return resultJson;
     }
+	
+	@RequestMapping(value = "checkPhone", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Summary.class)
+	public boolean checkPhone(@RequestBody JSONObject json) throws ServiceUnavailableException {
+		
+		String userId = json.get("userId").toString();
+		String phoneNo = json.get("phoneNo").toString();
+		User user = userService.findByUserId(userId);
+		if(user.getPhoneNo().equals(phoneNo)) {
+			return true;
+		}
+		return false;
+		
+	}
+
 }
