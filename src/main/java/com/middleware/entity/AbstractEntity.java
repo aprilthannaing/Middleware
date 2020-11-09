@@ -11,14 +11,14 @@ public class AbstractEntity {
 
     @JsonView(Views.Thin.class)
     @Enumerated(EnumType.STRING)
-    private EntityStatus status;
+    private EntityStatus entityStatus;
 
-    public EntityStatus getStatus() {
-	return status;
+    public EntityStatus getEntityStatus() {
+	return entityStatus;
     }
 
-    public void setStatus(EntityStatus status) {
-	this.status = status;
+    public void setEntityStatus(EntityStatus entityStatus) {
+	this.entityStatus = entityStatus;
     }
 
     public boolean isBoIdRequired(Long id) {

@@ -144,6 +144,7 @@ CREATE TABLE `user` (
  `phoneNo` varchar(50) DEFAULT NULL,
  `email` varchar(255) NOT NULL,
  `password` varchar(255) NOT NULL,
- `status` enum('ACTIVE','INACTIVE') NOT NULL,
+  `gender` enum('MALE','FEMALE','CUSTOM') NOT NULL,
+ `entityStatus` enum('ACTIVE','INACTIVE') NOT NULL,
  PRIMARY KEY (`boId`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
