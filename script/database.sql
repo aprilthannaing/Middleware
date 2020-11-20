@@ -16,7 +16,7 @@ CREATE TABLE `session` (
  `startDate` varchar(50) DEFAULT NULL,
  `endDate` varchar(50) DEFAULT NULL,
  `sessionId` varchar(255) NOT NULL,
- `sessionStatus` enum('ACTIVE','INACTIVE') NOT NULL,
+ `entityStatus` enum('ACTIVE','INACTIVE') NOT NULL,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
   
@@ -134,6 +134,9 @@ ALTER TABLE session ADD COLUMN paymentConfirmationDate varchar(255) DEFAULT NULL
 ALTER TABLE cbpaytransaction ADD COLUMN checkedDateTime varchar(255) DEFAULT NULL; 
 ALTER TABLE cbpaytransaction ADD COLUMN createdDateTime varchar(255) DEFAULT NULL;
 ALTER TABLE cbpaytransaction ADD COLUMN sessionId varchar(255) DEFAULT NULL;
+ALTER TABLE visa ADD COLUMN entityStatus enum('ACTIVE','INACTIVE') NOT NULL;
+ALTER TABLE cbpaytransaction ADD COLUMN entityStatus enum('ACTIVE','INACTIVE') NOT NULL;
+ALTER TABLE mpupaymenttransaction ADD COLUMN entityStatus enum('ACTIVE','INACTIVE') NOT NULL;
 
 
 //user

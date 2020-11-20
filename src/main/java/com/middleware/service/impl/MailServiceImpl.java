@@ -64,7 +64,7 @@ public class MailServiceImpl implements MailService {
 	    multipart.addBodyPart(messageBodyPart);
 
 	    messageBodyPart = new MimeBodyPart();
-	    String filename = "C:\\Users\\DELL\\middle-workspace\\Report\\Visa.xlsx";
+	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
 	    DataSource source = new FileDataSource(filename);
 	    messageBodyPart.setDataHandler(new DataHandler(source));
 	    messageBodyPart.setFileName("TransactionReport.xlsx");

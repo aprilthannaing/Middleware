@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -33,6 +35,7 @@ public class User extends AbstractEntity implements Serializable {
     @JsonView(Views.Summary.class)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     public long getId() {

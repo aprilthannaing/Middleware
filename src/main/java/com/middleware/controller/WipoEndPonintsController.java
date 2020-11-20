@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Hex;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
@@ -31,11 +29,10 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.middleware.entity.AES;
 import com.middleware.entity.CBPayTransaction;
+import com.middleware.entity.EntityStatus;
 import com.middleware.entity.MPUPaymentTransaction;
 import com.middleware.entity.PaymentType;
-import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.entity.SessionStatus;
 import com.middleware.entity.SystemConstant;
@@ -43,7 +40,6 @@ import com.middleware.entity.Transaction;
 import com.middleware.entity.Views;
 import com.middleware.entity.Visa;
 import com.middleware.service.CBPaymentTransactionService;
-import com.middleware.service.GeneralService;
 import com.middleware.service.MPUPaymentTransactionService;
 import com.middleware.service.SessionService;
 import com.middleware.service.VisaService;
@@ -156,7 +152,7 @@ public class WipoEndPonintsController extends AbstractController {
 		ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
 	session.setAmountDescription2(
 		ObjectListToJSONObjectList(amountDetailObjectList).get(1).get("description").toString());
-	session.setSessionStatus(SessionStatus.ACTIVE);
+	session.setEntityStatus(EntityStatus.ACTIVE);
 	session.setEndDate(dateTimeFormat());
 	String sessionId = sessionService.save(session);
 
@@ -403,7 +399,7 @@ public class WipoEndPonintsController extends AbstractController {
 	    resultJson.put("description", "Session Time Out");
 	}
 	session.setEndDate(dateTimeFormat());
-	session.setSessionStatus(SessionStatus.INACTIVE);
+	session.setEntityStatus(EntityStatus.INACTIVE);
 	sessionService.save(session);
 	resultJson.put("code", "0000");
 	resultJson.put("description", "Session Completed");

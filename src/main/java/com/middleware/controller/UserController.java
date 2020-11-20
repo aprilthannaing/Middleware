@@ -87,20 +87,24 @@ public class UserController extends AbstractController {
 	}
 
 	User user = userService.getUserbyemail(requestedEmail);
-	if(user == null) {
+	if (user == null) {
 	    resultJson.put("status", "0");
 	    resultJson.put("msg", "This email is not registerd!");
 	    return resultJson;
 	}
-	
+
 	String password = user.getPassword();
 	String decryptedPassword = AES.decrypt(password, secretKey);
+	
+	logger.info("requestedPassword!!!!!!!!!" + requestedPassword);
+	logger.info("decryptedPassword!!!!!!!!!" + decryptedPassword);
+
+
 
 	if (!requestedPassword.equals(decryptedPassword)) {
 	    resultJson.put("status", "0");
 	    resultJson.put("msg", "Password is wrong!");
 	    return resultJson;
-
 	}
 
 	resultJson.put("status", "1");
@@ -109,58 +113,61 @@ public class UserController extends AbstractController {
 
     }
 
-    @RequestMapping(value = "changePassword", method = RequestMethod.POST)
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "forgetpassword", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Thin.class)
     public JSONObject changePassword(@RequestBody JSONObject json) throws ServiceUnavailableException {
 
 	JSONObject resultJson = new JSONObject();
-
 	String userId = json.get("userId").toString();
-	String oldPassword = json.get("oldPassword").toString();
 	String newPassword = json.get("newPassword").toString();
+	String confirmPassword = json.get("confirmPassword").toString();
 
-	if (oldPassword.equals(newPassword)) {
-	    resultJson.put("message", "Your new password must be different with current password!");
+	if (!newPassword.equals(confirmPassword)) {
+	    resultJson.put("msg", "Your new password and confirm password must be equal!");
+	    resultJson.put("status", "0");
 	    return resultJson;
 	}
+
 	User user = userService.findByUserId(userId);
 	if (user == null) {
-	    resultJson.put("message", "Your Customer Id is not found");
+	    resultJson.put("msg", "This User is not registered!");
+	    resultJson.put("status", "0");
 	    return resultJson;
 	}
+
 	String encryptedPassword = user.getPassword();
-
-	String decryptedPassword = AES.decrypt(encryptedPassword, secretKey);
-
-	if (oldPassword.equals(decryptedPassword)) {
-
-	    String encryptedNewPassword = AES.encrypt(newPassword, secretKey);
-	    user.setPassword(encryptedNewPassword);
-//			resultJson.put("message", encryptedNewPassword);
-//			return resultJson;
-	    userService.save(user);
-	    resultJson.put("message", "Updated successfully!");
-	    return resultJson;
-
-	}
-	resultJson.put("message", "Updating password is not successful!");
+	user.setPassword(encryptedPassword);
+	resultJson.put("msg", "Success!");
+	resultJson.put("status", "1");
 	return resultJson;
     }
-	
-	@RequestMapping(value = "checkPhone", method = RequestMethod.POST)
-	@ResponseBody
-	@JsonView(Views.Summary.class)
-	public boolean checkPhone(@RequestBody JSONObject json) throws ServiceUnavailableException {
-		
-		String userId = json.get("userId").toString();
-		String phoneNo = json.get("phoneNo").toString();
-		User user = userService.findByUserId(userId);
-		if(user.getPhoneNo().equals(phoneNo)) {
-			return true;
-		}
-		return false;
-		
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "checkphone", method = RequestMethod.POST)
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public JSONObject checkPhone(@RequestBody JSONObject json) throws ServiceUnavailableException {
+	JSONObject resultJson = new JSONObject();
+	String userId = json.get("userId").toString();
+	String phoneNo = json.get("phone").toString();
+	User user = userService.findByUserId(userId);
+	if (user == null) {
+	    resultJson.put("msg", "This phone number isn't found!");
+	    resultJson.put("status", "0");
+	    return resultJson;
+
 	}
 
+	if (!user.getPhoneNo().equals(phoneNo)) {
+	    resultJson.put("msg", "Your phone number is wrong!");
+	    resultJson.put("status", "0");
+	    return resultJson;
+
+	}
+	resultJson.put("msg", "Success");
+	resultJson.put("status", "1");
+	return resultJson;
+    }
 }
