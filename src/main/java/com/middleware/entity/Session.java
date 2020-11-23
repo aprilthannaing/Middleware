@@ -21,10 +21,16 @@ public class Session extends AbstractEntity implements Serializable {
     private long Id;
 
     @JsonView(Views.Thin.class)
+    private String requestorId;
+
+    @JsonView(Views.Thin.class)
     private String paymentReference;
 
     @JsonView(Views.Thin.class)
     private String paymentNote;
+
+    @JsonView(Views.Thin.class)
+    private String payerName;
 
     @JsonView(Views.Thin.class)
     private String payerEmail;
@@ -78,6 +84,22 @@ public class Session extends AbstractEntity implements Serializable {
 
     public void setId(long id) {
 	Id = id;
+    }
+
+    public String getPayerName() {
+	return payerName;
+    }
+
+    public void setPayerName(String payerName) {
+	this.payerName = payerName;
+    }
+
+    public String getRequestorId() {
+	return requestorId;
+    }
+
+    public void setRequestorId(String requestorId) {
+	this.requestorId = requestorId;
     }
 
     public String getPaymentReference() {

@@ -1,11 +1,14 @@
 package com.middleware.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 public class Transaction {
-	
-	@JsonView(Views.Thin.class)
-	private String orderId;
+
+    @JsonView(Views.Thin.class)
+    private String transactionId;
 
     @JsonView(Views.Thin.class)
     private String bankIdentifier;
@@ -14,7 +17,7 @@ public class Transaction {
     private String amount;
 
     @JsonView(Views.Thin.class)
-    private String paymentReference;
+    private String paymentReference; // ***
 
     @JsonView(Views.Thin.class)
     private String tokenId;
@@ -29,7 +32,62 @@ public class Transaction {
     private String paymentStatus;
 
     @JsonView(Views.Thin.class)
+    private String currencyType;
+
+    @JsonView(Views.Thin.class)
     private String receiptNumber;
+
+    @JsonView(Views.Thin.class)
+    private String paymentNote;
+
+    @JsonView(Views.Thin.class)
+    private Payer payer;
+
+    public Payer getPayer() {
+	return payer;
+    }
+
+    public void setPayer(Payer payer) {
+	this.payer = payer;
+    }
+
+    @JsonView(Views.Thin.class)
+    private List<AmountDetails> amountDetails;
+
+    public List<AmountDetails> getAmountDetails() {
+	if(amountDetails == null) {
+	    amountDetails = new ArrayList<AmountDetails>();
+	}
+	return amountDetails;
+    }
+
+    public void setAmountDetails(List<AmountDetails> amountDetails) {
+	this.amountDetails = amountDetails;
+    }
+
+    public String getPaymentNote() {
+	return paymentNote;
+    }
+
+    public void setPaymentNote(String paymentNote) {
+	this.paymentNote = paymentNote;
+    }
+
+    public String getTransactionId() {
+	return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+	this.transactionId = transactionId;
+    }
+
+    public String getCurrencyType() {
+	return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+	this.currencyType = currencyType;
+    }
 
     public String getPaymentStatus() {
 	return paymentStatus;
@@ -95,12 +153,4 @@ public class Transaction {
 	this.transactionDate = transactionDate;
     }
 
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-    
 }

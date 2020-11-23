@@ -6,7 +6,7 @@ import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 
 public interface SessionService {
-    public String save(Session session) throws ServiceUnavailableException;
+    public void save(Session session) throws ServiceUnavailableException;
 
     public Result acceptSession(Session session);
 
@@ -21,5 +21,7 @@ public interface SessionService {
     public Session findByPaymentReference(String paymentReference);
 
     public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId);
+
+    public Session findByTransactionId(String transactionId);
 
 }

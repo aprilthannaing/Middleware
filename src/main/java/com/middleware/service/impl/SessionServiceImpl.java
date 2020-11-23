@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import com.middleware.dao.SessionDao;
+import com.middleware.entity.EntityStatus;
 import com.middleware.entity.Result;
 import com.middleware.entity.Session;
 import com.middleware.service.GeneralService;
@@ -28,17 +29,16 @@ public class SessionServiceImpl implements SessionService {
     private Logger logger = Logger.getLogger(SessionServiceImpl.class);
 
     @Transactional(readOnly = false)
-    public String save(Session session) throws ServiceUnavailableException {
+    public void save(Session session) throws ServiceUnavailableException {
 	if (session.isBoIdRequired(session.getId()))
 	    session.setId(getId());
-		String sessionId = generalService.generateSession(session.getId());
-		session.setSessionId(sessionId);
-		sessionDao.save(session);
-		return session.getSessionId();
+	String sessionId = generalService.generateSession(session.getId());
+	session.setSessionId(sessionId);
+	sessionDao.save(session);
     }
 
     private Long getId() {
-	return countSession() + 1000000; 
+	return countSession() + 1000000;
     }
 
     public long countSession() {
@@ -75,7 +75,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session checkingSession(String id) {
-	String query = "from Session where sessionId ='" + id + "' and sessionStatus='" + SessionStatus.ACTIVE + "'";
+	String query = "from Session where sessionId ='" + id + "' and entityStatus='" + EntityStatus.ACTIVE + "'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(userList))
 	    return null;
@@ -116,5 +116,13 @@ public class SessionServiceImpl implements SessionService {
 	    return null;
 	return sessionList.get(0);
     }
+    
+    public Session findByTransactionId(String transactionId) {
+ 	String query = "from Session where transactionId='" + transactionId + "'";
+ 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+ 	if (CollectionUtils.isEmpty(sessionList))
+ 	    return null;
+ 	return sessionList.get(0);
+     }
 
 }
