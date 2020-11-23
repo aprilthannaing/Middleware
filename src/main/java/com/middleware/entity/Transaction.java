@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class Transaction {
 
-    @JsonView(Views.Thin.class)
     private String transactionId;
 
     @JsonView(Views.Thin.class)
@@ -17,7 +16,7 @@ public class Transaction {
     private String amount;
 
     @JsonView(Views.Thin.class)
-    private String paymentReference; // ***
+    private String paymentReference;
 
     @JsonView(Views.Thin.class)
     private String tokenId;
@@ -37,11 +36,11 @@ public class Transaction {
     @JsonView(Views.Thin.class)
     private String receiptNumber;
 
-    @JsonView(Views.Thin.class)
     private String paymentNote;
 
-    @JsonView(Views.Thin.class)
     private Payer payer;
+
+    private List<AmountDetails> amountDetails;
 
     public Payer getPayer() {
 	return payer;
@@ -51,11 +50,8 @@ public class Transaction {
 	this.payer = payer;
     }
 
-    @JsonView(Views.Thin.class)
-    private List<AmountDetails> amountDetails;
-
     public List<AmountDetails> getAmountDetails() {
-	if(amountDetails == null) {
+	if (amountDetails == null) {
 	    amountDetails = new ArrayList<AmountDetails>();
 	}
 	return amountDetails;

@@ -102,7 +102,7 @@ public class WipoEndPonintsController extends AbstractController {
 
 	Session session = new Session();
 	session.setId(SystemConstant.BOID_REQUIRED);
-	String[] requestorId  = json.get("requestorId").toString().split("/");
+	String[] requestorId = json.get("requestorId").toString().split("/");
 	session.setRequestorId(requestorId[0]);
 	session.setPayerName(requestorId[1]);
 	session.setPaymentReference(transaction.getPaymentReference());
@@ -149,19 +149,19 @@ public class WipoEndPonintsController extends AbstractController {
 	}
 
 	Session sessionByPaymentRef = sessionService.findByPaymentReference(transaction.getPaymentReference());
-	if (sessionByPaymentRef != null) {
-	    errors.put("code", "-5");
-	    errors.put("bankCode", "24000");
-	    errors.put("bankDetails", "bank service unavailable");
+	if (sessionByPaymentRef == null) {
+	    errors.put("code", "-3");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
 	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
 
 	Session sessionbyTransactionId = sessionService.findByTransactionId(transaction.getTransactionId());
-	if (sessionbyTransactionId != null) {
-	    errors.put("code", "-5");
-	    errors.put("bankCode", "24000");
-	    errors.put("bankDetails", "bank service unavailable");
+	if (sessionbyTransactionId == null) {
+	    errors.put("code", "-3");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
 	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
@@ -195,7 +195,7 @@ public class WipoEndPonintsController extends AbstractController {
 	transaction.setPaymentStatus("1");
 	transaction.setTransactionDate(dateFormat.format(now));
 	transaction.setTokenId(session.getSessionId());
-	transaction.setPaymentConfirmationDate(dateFormat.format(now));	
+	transaction.setPaymentConfirmationDate(dateFormat.format(now));
 	resultJson.put("transaction", transaction);
 	resultJson.put("redirectHTML", frondEndURL + "/home/" + session.getSessionId());
 	return resultJson;
@@ -218,17 +218,26 @@ public class WipoEndPonintsController extends AbstractController {
 	switch (paymentType) {
 	case MPU:
 	    MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
+	    if (mpu == null) {
+		return null;
+	    }
 	    transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
 	    transaction.setReceiptNumber("");
 	    break;
 
 	case CBPAY:
 	    CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
+	    if (cbPay == null) {
+		return null;
+	    }
 	    transaction.setPaymentStatus(cbPay.isSuccess() ? "1" : "0");
 	    transaction.setReceiptNumber("");
 	    break;
 	case VISA:
 	    Visa visa = visaService.findByTokenId(tokenId);
+	    if (visa == null) {
+		return null;
+	    }
 	    transaction.setPaymentStatus(visa.isSuccess() ? "1" : "0");
 	    transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
 	    break;
@@ -260,15 +269,16 @@ public class WipoEndPonintsController extends AbstractController {
     @JsonView(Views.Summary.class)
     public JSONObject paymentStatus(@RequestBody JSONObject json) {
 	JSONObject resultJson = new JSONObject();
+	JSONObject errors = new JSONObject();
 	Object paymentReferenceObject = json.get("paymentReference");
-	if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty()) {
-	    resultJson.put("errorMsg", "Payment Reference must not empty!");
-	    return resultJson;
-	}
-
 	Object tokenIdObject = json.get("tokenId");
-	if (tokenIdObject == null || tokenIdObject.toString().isEmpty()) {
-	    resultJson.put("errorMsg", "Token Id must not empty!");
+
+	if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty() || tokenIdObject == null
+		|| tokenIdObject.toString().isEmpty()) {
+	    errors.put("code", "-3");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference");
+	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
 
@@ -276,17 +286,22 @@ public class WipoEndPonintsController extends AbstractController {
 	String tokenId = tokenIdObject.toString();
 	Session session = sessionService.findByPaymentReferenceAndTokenId(paymentReference, tokenId);
 	if (session == null) {
-	    resultJson.put("errorMsg", "Something wrong in your request!");
+	    errors.put("code", "-3");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference");
+	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
 
-	JSONObject errors = new JSONObject();
-	errors.put("code", "");
-	errors.put("bankCode", "2052");
-	errors.put("bankDetails", "");
-
-	resultJson.put("transaction", getTransactionFromSession(session));
-	resultJson.put("errors", errors);
+	Transaction transaction = getTransactionFromSession(session);
+	if (transaction == null) {
+	    errors.put("code", "-5");
+	    errors.put("bankCode", "24000");
+	    errors.put("bankDetails", "bank service unavailable ");
+	    resultJson.put("errors", errors);
+	    return resultJson;
+	}
+	resultJson.put("transaction", transaction);
 	return resultJson;
     }
 
@@ -309,27 +324,37 @@ public class WipoEndPonintsController extends AbstractController {
     @JsonView(Views.Summary.class)
     public JSONObject ack(@RequestBody JSONObject json) {
 	JSONObject resultJson = new JSONObject();
+	JSONObject errors = new JSONObject();
+
 	Object paymentReferenceObject = json.get("paymentReference");
 	if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty()) {
-	    resultJson.put("errorMsg", "Payment Reference must not empty!");
+	    errors.put("code", "-3");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference");
+	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
 
 	String paymentReference = paymentReferenceObject.toString();
 	Session session = sessionService.findByPaymentReference(paymentReference);
 	if (session == null) {
-	    resultJson.put("errorMsg", "Something wrong in your request!");
+	    errors.put("code", "-5");
+	    errors.put("bankCode", "24503");
+	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference");
+	    resultJson.put("errors", errors);
 	    return resultJson;
 	}
 
-	JSONObject errors = new JSONObject();
-	errors.put("code", "");
-	errors.put("bankCode", "2052");
-	errors.put("bankDetails", "");
+	Transaction transaction = getTransactionFromSession(session);
+	if (transaction == null) {
+	    errors.put("code", "-5");
+	    errors.put("bankCode", "24000");
+	    errors.put("bankDetails", "bank service unavailable ");
+	    resultJson.put("errors", errors);
+	    return resultJson;
+	}
 
-	resultJson.put("transaction", getTransactionFromSession(session));
-	resultJson.put("errors", errors);
-
+	resultJson.put("transaction", transaction);
 	return resultJson;
     }
 
