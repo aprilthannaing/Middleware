@@ -226,7 +226,8 @@ public class ReportController extends AbstractController {
 
 			writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "A", count,
 					mpuPayment.getCreationDate(), (short) 13, IndexedColors.BLACK.index);
-			writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count, session.getPayerPhone(),
+			writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "B", count,
+				session.getPayerPhone(),
 					(short) 13, IndexedColors.BLACK.index);
 			writeValueinSpecificeCellWithColumn(workbook, sheet.getSheetName(), "C", count, session.getPayerEmail(),
 					(short) 13, IndexedColors.BLACK.index);
