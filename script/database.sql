@@ -1,6 +1,8 @@
 
+
 CREATE TABLE `session` (
  `id` bigint(20) NOT NULL auto_increment,
+  `requestorId`varchar(150) DEFAULT NULL,
  `transactionId`varchar(150) DEFAULT NULL,
  `bankIdentifier` varchar(255) DEFAULT NULL,
  `currencyType` varchar(150) DEFAULT NULL,
@@ -9,13 +11,16 @@ CREATE TABLE `session` (
  `amount2` varchar(255) DEFAULT NULL,
  `amountDescription1` varchar(255) DEFAULT NULL,
  `amountDescription2` varchar(255) DEFAULT NULL,
- `paymentReference` varchar(255) DEFAULT NULL,
+ `paymentReference` varchar(255) DEFAULT NULL,   
  `paymentNote`varchar(255) DEFAULT NULL,
+ `payerName` varchar(100) DEFAULT NULL,
  `payerEmail` varchar(100) DEFAULT NULL,
  `payerPhone` varchar(100) DEFAULT NULL,
  `startDate` varchar(50) DEFAULT NULL,
  `endDate` varchar(50) DEFAULT NULL,
+ `paymentConfirmationDate` varchar(50) DEFAULT NULL,
  `sessionId` varchar(255) NOT NULL,
+ `paymentType` varchar(255) DEFAULT NULL,
  `entityStatus` enum('ACTIVE','INACTIVE') NOT NULL,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
