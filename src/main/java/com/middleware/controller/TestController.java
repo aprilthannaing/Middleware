@@ -62,4 +62,11 @@ public class TestController extends AbstractController {
 	return "yes";
     }
 
+    @RequestMapping(value = "authenticate", method = RequestMethod.GET) /* WIPO REST end point 2.6 */
+    @JsonView(Views.Summary.class)
+    public String authenticate() {
+
+	return "success";
+    }
+
 }
