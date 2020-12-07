@@ -1,5 +1,6 @@
 package com.middleware.service.impl;
 
+import java.io.File;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -59,21 +60,31 @@ public class MailServiceImpl implements MailService {
 	    message.setText(mailEvent.getContent());
 
 	    BodyPart messageBodyPart = new MimeBodyPart();
-	    messageBodyPart.setText("The Payment Transactions report allows sellers to see the transactions that have taken place since the previous settlement period. “Transactions” include orders, adjustments, refunds, and Amazon-initiated credits or charges.");
+	    messageBodyPart.setText("The Payment Transactions report allows sellers to see the transactions that have taken place since the previous settlement period. â€œTransactionsâ€� include orders, adjustments, refunds, and Amazon-initiated credits or charges.");
 	    Multipart multipart = new MimeMultipart();
 	    multipart.addBodyPart(messageBodyPart);
 
 	    messageBodyPart = new MimeBodyPart();
-	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
-	    DataSource source = new FileDataSource(filename);
+//	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
+	    String filePath = "C:\\Users\\ASUS\\Downloads\\TestPayment.xlsx";
+	    
+	    String fileName = new File(filePath).getName();
+		
+	    DataSource source = new FileDataSource(filePath);
 	    messageBodyPart.setDataHandler(new DataHandler(source));
-	    messageBodyPart.setFileName("TransactionReport.xlsx");
+	    messageBodyPart.setFileName(fileName);
 	    multipart.addBodyPart(messageBodyPart);
 	    message.setContent(multipart);
 
 	    System.out.println("sending...");
 	    Transport.send(message);
 	    System.out.println("Sent message successfully....");
+	    
+	   
+	    File fileToDelete = new File(filePath);
+	    fileToDelete.delete();
+	    
+	    
 	} catch (MessagingException e) {
 	    logger.info("error: " + e.getMessage());
 	    return e.getMessage();

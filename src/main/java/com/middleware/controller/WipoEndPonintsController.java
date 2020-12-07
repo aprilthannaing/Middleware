@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -74,9 +75,9 @@ public class WipoEndPonintsController extends AbstractController {
      * 
      * { "transaction": { "bankIdentifier":" ACLEDA", "amount":"250",
      * "paymentReference": "020170808001234B",
-     * "tokenIdâ€�: "2903e6c8-21b5-4e28-851b-4df2073e4095",
-     * "transactionDateâ€�: "2017-08-08T13:09" }, "errorsâ€�: { â€œcodeâ€�:â€�â€�,
-     * â€œbankCodeâ€�:â€�2052â€�, â€œbankDetailsâ€�:â€�â€� }, "redirectHTML":"" }
+     * "tokenIdÃ¢â‚¬ï¿½: "2903e6c8-21b5-4e28-851b-4df2073e4095",
+     * "transactionDateÃ¢â‚¬ï¿½: "2017-08-08T13:09" }, "errorsÃ¢â‚¬ï¿½: { Ã¢â‚¬Å“codeÃ¢â‚¬ï¿½:Ã¢â‚¬ï¿½Ã¢â‚¬ï¿½,
+     * Ã¢â‚¬Å“bankCodeÃ¢â‚¬ï¿½:Ã¢â‚¬ï¿½2052Ã¢â‚¬ï¿½, Ã¢â‚¬Å“bankDetailsÃ¢â‚¬ï¿½:Ã¢â‚¬ï¿½Ã¢â‚¬ï¿½ }, "redirectHTML":"" }
      */
 
     private List<JSONObject> ObjectListToJSONObjectList(List<Object> amountDetails) {
@@ -149,7 +150,7 @@ public class WipoEndPonintsController extends AbstractController {
 	}
 
 	Session sessionByPaymentRef = sessionService.findByPaymentReference(transaction.getPaymentReference());
-	if (sessionByPaymentRef == null) {
+	if (sessionByPaymentRef != null) {
 	    errors.put("code", "-3");
 	    errors.put("bankCode", "24503");
 	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
@@ -158,7 +159,7 @@ public class WipoEndPonintsController extends AbstractController {
 	}
 
 	Session sessionbyTransactionId = sessionService.findByTransactionId(transaction.getTransactionId());
-	if (sessionbyTransactionId == null) {
+	if (sessionbyTransactionId != null) {
 	    errors.put("code", "-3");
 	    errors.put("bankCode", "24503");
 	    errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
@@ -255,13 +256,13 @@ public class WipoEndPonintsController extends AbstractController {
     /*
      * response -------- { "transaction": { "bankIdentifier":" ACLEDA", //
      * compulsory "amount":"250", // compulsory "paymentReference":
-     * "020170808001234B", // compulsory "tokenId”: "2903e6c8-4df2073e4095", //
-     * compulsory "transactionDate”: "2017-08-08T12:08", // compulsory
+     * "020170808001234B", // compulsory "tokenIdâ€�: "2903e6c8-4df2073e4095", //
+     * compulsory "transactionDateâ€�: "2017-08-08T12:08", // compulsory
      * "paymentConfirmationDate": "2017-08-08T13:08", // compulsory
-     * "paymentStatus":"1", // compulsory “receiptNumber”: ”20181203000017”
+     * "paymentStatus":"1", // compulsory â€œreceiptNumberâ€�: â€�20181203000017â€�
      * //Optional }, // error operation code and details which may provide more
-     * specific information "errors”: { “code”:””, “bankCode”:”2052”,
-     * “bankDetails”:”” } }
+     * specific information "errorsâ€�: { â€œcodeâ€�:â€�â€�, â€œbankCodeâ€�:â€�2052â€�,
+     * â€œbankDetailsâ€�:â€�â€� } }
      */
 
     @RequestMapping(value = "status", method = RequestMethod.POST) /* rest end point 2.4 */
@@ -310,13 +311,13 @@ public class WipoEndPonintsController extends AbstractController {
      * 
      * { "transaction": { "bankIdentifier":" ACLEDA", // compulsory
      * "paymentReference": "020170808001234B", // compulsory
-     * "tokenId”: "2903e6c8-21b5-4e28-851b-4df2073e4095",// compulsory
-     * "transactionDate”: "2017-08-08T12:08", // compulsory
+     * "tokenIdâ€�: "2903e6c8-21b5-4e28-851b-4df2073e4095",// compulsory
+     * "transactionDateâ€�: "2017-08-08T12:08", // compulsory
      * "paymentConfirmationDate": "2017-08-08T13:08", // compulsory
-     * "paymentStatus":"1", // compulsory “receiptNumber”: ”20181203000017”
+     * "paymentStatus":"1", // compulsory â€œreceiptNumberâ€�: â€�20181203000017â€�
      * //Optional },// error operation code and details which may provide more
-     * specific information "errors”: { “code”:””, “bankCode”:”2052”,
-     * “bankDetails”:”” }
+     * specific information "errorsâ€�: { â€œcodeâ€�:â€�â€�, â€œbankCodeâ€�:â€�2052â€�,
+     * â€œbankDetailsâ€�:â€�â€� }
      * 
      */
     @RequestMapping(value = "ack", method = RequestMethod.POST) /* rest end point 2.5 */
@@ -358,6 +359,7 @@ public class WipoEndPonintsController extends AbstractController {
 	return resultJson;
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "check", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
@@ -431,6 +433,7 @@ public class WipoEndPonintsController extends AbstractController {
 	logger.info("response: " + response);
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "sessionOut", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
@@ -455,4 +458,22 @@ public class WipoEndPonintsController extends AbstractController {
 	return resultJson;
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @RequestMapping(value = "ApOrNot", method = RequestMethod.POST)
+    @ResponseBody
+    @JsonView(Views.Summary.class)
+    public JSONObject ApOrNot(@RequestBody JSONObject json) throws Exception {
+    	JSONObject resultJson = new JSONObject();
+    	if(json.get("status").toString().equals("Ap")) 
+    	{
+    		resultJson.put("status", "Ap");
+    		resultJson.put("returnUrl", "http://localhost:4200//mpu/frontEndRedirect");
+    	}
+    	else {
+    		resultJson.put("returnUrl", "http://localhost:4200//mpu/frontEndRedirect");
+    		resultJson.put("failReason", "");
+    	}
+    		
+    	return resultJson;
+    }
 }

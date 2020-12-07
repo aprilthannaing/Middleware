@@ -18,6 +18,7 @@ import com.middleware.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
+
 	@Autowired
 	private UserDao userDao;
 
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+
 	private long getId() {
 		return countUser() + 1;
 	}
@@ -47,14 +49,18 @@ public class UserServiceImpl implements UserService {
 		return countUser() + 10000;
 	}
 
+
 	public long countUser() {
 		String query = "select count(*) from User";
 		return userDao.findLongByQueryString(query).get(0);
 	}
 
+
+
 	public String getUserBoId() {
 		return "USR" + plus();
 	}
+
 
 	@Override
 	public User getUserbyemail(String emailaddress) {
@@ -64,6 +70,8 @@ public class UserServiceImpl implements UserService {
 			return null;
 		return userList.get(0);
 	}
+
+
 
 	@Override
 	public User findByUserId(String boId) throws ServiceUnavailableException {

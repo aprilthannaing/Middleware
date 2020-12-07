@@ -78,13 +78,6 @@ public class User extends AbstractEntity implements Serializable {
 	this.email = email;
     }
 
-    public String getPassword() {
-	return password;
-    }
-
-    public void setPassword(String password) {
-	this.password = password;
-    }
 
     public String getBoId() {
 	return boId;
@@ -93,5 +86,19 @@ public class User extends AbstractEntity implements Serializable {
     public void setBoId(String boId) {
 	this.boId = boId;
     }
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	
+
+
+	
+	
 
 }
