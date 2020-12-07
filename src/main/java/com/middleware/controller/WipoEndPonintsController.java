@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -361,6 +362,7 @@ public class WipoEndPonintsController extends AbstractController {
     @RequestMapping(value = "check", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
+    @CrossOrigin(origins = "*")
     public JSONObject checkingUser(@RequestBody JSONObject json) throws Exception {
 	JSONObject res = new JSONObject();
 	Object requestIdObject = json.get("id");
