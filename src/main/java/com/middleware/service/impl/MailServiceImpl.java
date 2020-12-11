@@ -66,7 +66,7 @@ public class MailServiceImpl implements MailService {
 
 	    messageBodyPart = new MimeBodyPart();
 //	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
-	    String filePath = "C:\\Users\\ASUS\\Downloads\\TestPayment.xlsx";
+	    String filePath = "C:\\Users\\ASUS\\Downloads\\payment.xlsx";
 	    
 	    String fileName = new File(filePath).getName();
 		
@@ -78,11 +78,12 @@ public class MailServiceImpl implements MailService {
 
 	    System.out.println("sending...");
 	    Transport.send(message);
+
 	    System.out.println("Sent message successfully....");
 	    
-	   
 	    File fileToDelete = new File(filePath);
 	    fileToDelete.delete();
+	    
 	    
 	    
 	} catch (MessagingException e) {

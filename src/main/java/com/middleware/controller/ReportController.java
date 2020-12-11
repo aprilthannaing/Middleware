@@ -57,7 +57,7 @@ public class ReportController extends AbstractController {
 	@RequestMapping(value = "payment", method = RequestMethod.GET)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public String getReport(@RequestParam("input") String param, HttpServletResponse response) throws Exception {
+	public void getReport(@RequestParam("input") String param, HttpServletResponse response) throws Exception {
 		
 		String[] str = param.split(",");
 		String option = str[str.length - 1];
@@ -95,14 +95,14 @@ public class ReportController extends AbstractController {
 		writeVisaSheet(workbook, startDate, endDate);
 		writeCBPaySheet(workbook, startDate, endDate);
 		writeMPUSheet(workbook, startDate, endDate);
-		//workbook.write(response.getOutputStream());
+		workbook.write(response.getOutputStream());
 		
 //		String newFilePath = "C:\\Users\\DELL\\middle-workspace\\Report\\Payment.xlsx";
-		String newFilePath = "C:\\Users\\ASUS\\Downloads\\TestPayment.xlsx";
-		FileOutputStream out = new FileOutputStream(new File(newFilePath));
-		workbook.write(out);
+//		String newFilePath = "C:\\Users\\ASUS\\Downloads\\TestPayment.xlsx";
+//		FileOutputStream out = new FileOutputStream(new File(newFilePath));
+//		workbook.write(out);
 
-		return "success";
+//		return "success";
 
 		 
 	}
