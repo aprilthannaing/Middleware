@@ -19,6 +19,18 @@ public class Session extends AbstractEntity implements Serializable {
     @Column(name = "Id", unique = true, nullable = false)
     @JsonView(Views.Thin.class)
     private long Id;
+    
+    @JsonView(Views.Thin.class)
+    @Enumerated(EnumType.STRING)
+    private EntityStatus entityStatus;
+
+    public EntityStatus getEntityStatus() {
+	return entityStatus;
+    }
+
+    public void setEntityStatus(EntityStatus entityStatus) {
+	this.entityStatus = entityStatus;
+    }
 
     @JsonView(Views.Thin.class)
     private String requestorId;

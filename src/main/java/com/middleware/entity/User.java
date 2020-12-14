@@ -37,6 +37,18 @@ public class User extends AbstractEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    
+    @JsonView(Views.Thin.class)
+    @Enumerated(EnumType.STRING)
+    private EntityStatus entityStatus;
+
+    public EntityStatus getEntityStatus() {
+	return entityStatus;
+    }
+
+    public void setEntityStatus(EntityStatus entityStatus) {
+	this.entityStatus = entityStatus;
+    }
 
     public long getId() {
 	return id;

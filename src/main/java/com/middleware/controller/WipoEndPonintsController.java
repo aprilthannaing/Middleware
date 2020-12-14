@@ -363,7 +363,6 @@ public class WipoEndPonintsController extends AbstractController {
     @RequestMapping(value = "check", method = RequestMethod.POST)
     @ResponseBody
     @JsonView(Views.Summary.class)
-    @CrossOrigin(origins = "*")
     public JSONObject checkingUser(@RequestBody JSONObject json) throws Exception {
 	JSONObject res = new JSONObject();
 	Object requestIdObject = json.get("id");
