@@ -477,3 +477,4 @@ public class WipoEndPonintsController extends AbstractController {
     	return resultJson;
     }
 }
+

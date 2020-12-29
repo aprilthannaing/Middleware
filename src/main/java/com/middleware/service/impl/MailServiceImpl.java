@@ -69,6 +69,7 @@ public class MailServiceImpl implements MailService {
 	    String filePath = "C:\\Users\\ASUS\\Downloads\\payment.xlsx";
 	    
 	    String fileName = new File(filePath).getName();
+	    logger.info(fileName);
 		
 	    DataSource source = new FileDataSource(filePath);
 	    messageBodyPart.setDataHandler(new DataHandler(source));
