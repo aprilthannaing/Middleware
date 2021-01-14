@@ -28,7 +28,7 @@ import com.middleware.service.MailService;
 
 @Service("mailService")
 @Transactional(readOnly = true)
-public class MailServiceImpl implements MailService {
+public class MailServiceImpl implements MailService{
 
     private static Logger logger = Logger.getLogger(MailServiceImpl.class);
 
@@ -65,8 +65,9 @@ public class MailServiceImpl implements MailService {
 	    multipart.addBodyPart(messageBodyPart);
 
 	    messageBodyPart = new MimeBodyPart();
+	    
 //	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
-	    String filePath = "C:\\Users\\ASUS\\Downloads\\payment.xlsx";
+	    String filePath = "C:\\Users\\ASUS\\Payment.xlsx";
 	    
 	    String fileName = new File(filePath).getName();
 	    logger.info(fileName);
@@ -82,15 +83,11 @@ public class MailServiceImpl implements MailService {
 
 	    System.out.println("Sent message successfully....");
 	    
-	    File fileToDelete = new File(filePath);
-	    fileToDelete.delete();
-	    
-	    
-	    
 	} catch (MessagingException e) {
 	    logger.info("error: " + e.getMessage());
 	    return e.getMessage();
 	}
+
 	return "success";
 
     }
