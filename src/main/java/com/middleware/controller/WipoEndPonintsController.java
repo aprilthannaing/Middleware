@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -126,7 +127,7 @@ public class WipoEndPonintsController extends AbstractController {
 	sessionService.save(session);
 	return session;
     }
-
+    
     @RequestMapping(value = "", method = RequestMethod.POST) /* WIPO REST end point 2.3 */
     @ResponseBody
     @JsonView(Views.Summary.class)
@@ -198,7 +199,7 @@ public class WipoEndPonintsController extends AbstractController {
 	transaction.setTokenId(session.getSessionId());
 	transaction.setPaymentConfirmationDate(dateFormat.format(now));
 	resultJson.put("transaction", transaction);
-	resultJson.put("redirectHTML", frondEndURL + "/home/" + session.getSessionId());
+	resultJson.put("redirectHTML", frondEndURL + "?id=" + session.getSessionId());
 	return resultJson;
     }
 

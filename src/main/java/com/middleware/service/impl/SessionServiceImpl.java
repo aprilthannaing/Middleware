@@ -75,7 +75,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session checkingSession(String id) {
-	String query = "from Session where sessionId ='" + id + "' and entityStatus='" + EntityStatus.INACTIVE + "'";
+	String query = "from Session where sessionId ='" + id + "' and entityStatus='" + EntityStatus.ACTIVE + "'";
 	List<Session> userList = sessionDao.getEntitiesByQuery(query);
 	if (CollectionUtils.isEmpty(userList))
 	    return null;
