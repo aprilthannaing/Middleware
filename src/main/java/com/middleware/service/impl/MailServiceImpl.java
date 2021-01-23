@@ -66,8 +66,7 @@ public class MailServiceImpl implements MailService{
 
 	    messageBodyPart = new MimeBodyPart();
 	    
-//	    String filename = "C:\\Users\\DELL\\Project\\middle-workspace\\Report\\Visa.xlsx";  
-	    String filePath = "C:\\Users\\ASUS\\Payment.xlsx";
+        String filePath = "D://Project//WIPO//Report//Payment.xlsx";  
 	    
 	    String fileName = new File(filePath).getName();
 	    logger.info(fileName);

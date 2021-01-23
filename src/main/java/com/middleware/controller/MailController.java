@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,70 +30,72 @@ import com.middleware.service.MailService;
 @RequestMapping("mail")
 public class MailController extends AbstractController {
 
-    @Autowired
-    private MailService mailService;
+	@Autowired
+	private MailService mailService;
 
-    private static Logger logger = Logger.getLogger(MailController.class);
+	@Value("${FILEPATH}")
+	private String filePath;
 
-    private String send(String email, String startDate, String endDate) throws Exception, IOException {
-	MailEvent mailEvent = new MailEvent();
-	mailEvent.setSubject("Transaction Report");
-	mailEvent.setContent("Transaction Report of payment");
-	mailEvent.setTo(email);
-	
-	XSSFWorkbook workbook = (XSSFWorkbook) WorkbookFactory
-			.create(new File("C:\\Users\\ASUS//TransactionReport.xlsx"));
-//	D:\\Project\\middle-workspace\\Report1\\TransactionReport.xlsx
-	writeSheet(workbook, startDate, endDate);
+	private static Logger logger = Logger.getLogger(MailController.class);
 
-	String newFilePath = "C:\\Users\\ASUS//Payment.xlsx";
+	private String send(String email, String startDate, String endDate) throws Exception, IOException {
+		MailEvent mailEvent = new MailEvent();
+		mailEvent.setSubject("Transaction Report");
+		mailEvent.setContent("Transaction Report of payment");
+		mailEvent.setTo(email);
 
-	FileOutputStream out = new FileOutputStream(new File(newFilePath));
-	workbook.write(out);
-	String result = mailService.sendMail(mailEvent);
-	
-	if(result.equals("success")) {
+		XSSFWorkbook workbook = (XSSFWorkbook) WorkbookFactory.create(new File(filePath + "TransactionReport.xlsx"));
+		writeSheet(workbook, startDate, endDate);
 
-		out.close();
-		Path path = FileSystems.getDefault().getPath(newFilePath);
-		 try {
-	            Files.delete(path);
-	        } catch (NoSuchFileException x) {
-	            System.err.format("%s: no such" + " file or directory%n", path);
-	        } catch (IOException x) {
-	            System.err.println(x);
-	        }
-	    
-	    return "success";
-	    
-	}else return "fail";
-    }
+		String newFilePath = filePath + "Payment.xlsx";
 
-    private String sendEmail(JSONObject json) throws IOException, Exception {
-	String emails = json.get("emails").toString();
-	String startDate = getStartDate(json.get("parameter").toString());
-	String endDate = getEndDate(json.get("parameter").toString());
-	logger.info("StartDate!" + startDate);
-	logger.info("endDate!" + endDate);
-	if (emails.contains(",")) {
-	    for (String email : emails.split(",")) {
-		logger.info("email!!!!!!!!!!!!!!: " + email);
-		String msg = send(email, startDate, endDate);
-		if (!msg.equals("success"))
-		    return msg;
-	    }
-	} else
-	    return send(emails, startDate, endDate);
-	return "success";
-    }
+		FileOutputStream out = new FileOutputStream(new File(newFilePath));
+		workbook.write(out);
+		String result = mailService.sendMail(mailEvent);
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "report", method = RequestMethod.POST)
-    @ResponseBody
-    @JsonView(Views.Summary.class)
-    public String sendMail(@RequestBody JSONObject json) throws Exception {
-	logger.info("return message!!!!!!!!!!!!!" + sendEmail(json));
+		if (result.equals("success")) {
 
-	return sendEmail(json);
-    }
+			out.close();
+			Path path = FileSystems.getDefault().getPath(newFilePath);
+			try {
+				Files.delete(path);
+			} catch (NoSuchFileException x) {
+				System.err.format("%s: no such" + " file or directory%n", path);
+			} catch (IOException x) {
+				System.err.println(x);
+			}
+
+			return "success";
+
+		} else
+			return "fail";
+	}
+
+	private String sendEmail(JSONObject json) throws IOException, Exception {
+		String emails = json.get("emails").toString();
+		String startDate = getStartDate(json.get("parameter").toString());
+		String endDate = getEndDate(json.get("parameter").toString());
+		logger.info("StartDate!" + startDate);
+		logger.info("endDate!" + endDate);
+		if (emails.contains(",")) {
+			for (String email : emails.split(",")) {
+				logger.info("email!!!!!!!!!!!!!!: " + email);
+				String msg = send(email, startDate, endDate);
+				if (!msg.equals("success"))
+					return msg;
+			}
+		} else
+			return send(emails, startDate, endDate);
+		return "success";
+	}
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "report", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Summary.class)
+	public String sendMail(@RequestBody JSONObject json) throws Exception {
+		logger.info("return message!!!!!!!!!!!!!" + sendEmail(json));
+
+		return sendEmail(json);
+	}
 }
