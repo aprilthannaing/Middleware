@@ -43,7 +43,7 @@ import com.middleware.service.VisaService;
 
 @Service
 public class AbstractController {
-//	public static final String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";
+	//public static final String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";
 	// wipouser,123//SHA1
 	
 	public static final String secretKey = "mykey@91mykey@91";

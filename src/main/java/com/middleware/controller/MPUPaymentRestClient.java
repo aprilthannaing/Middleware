@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,7 +46,7 @@ public class MPUPaymentRestClient {
 		final HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		factory.setHttpClient(httpClient);
 		restTemplate.setRequestFactory(factory);
-		
+
 		ResponseEntity<String> response = restTemplate.exchange(serviceUrl, HttpMethod.POST, entity, String.class);
 
 		logger.info("Result - status (" + response.getStatusCode() + ") has body: " + response.hasBody());
@@ -84,8 +85,9 @@ public class MPUPaymentRestClient {
 			response.append(inputLine);
 		}
 		in.close();
-		
+
 		return responseUrl;
 	}
-	
+
+
 }
