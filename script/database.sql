@@ -156,3 +156,8 @@ CREATE TABLE `user` (
  `entityStatus` enum('ACTIVE','INACTIVE') NOT NULL,
  PRIMARY KEY (`boId`)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE session ADD COLUMN finalAmount varchar(255) DEFAULT NULL;
+ALTER TABLE session ADD COLUMN serviceCharges varchar(255) DEFAULT NULL;
+

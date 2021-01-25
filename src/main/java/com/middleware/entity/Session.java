@@ -89,6 +89,12 @@ public class Session extends AbstractEntity implements Serializable {
 
     @JsonView(Views.Thin.class)
     private String sessionId;
+    
+    @JsonView(Views.Thin.class)
+    private String serviceCharges;
+    
+    @JsonView(Views.Thin.class)
+    private String finalAmount;
 
     public long getId() {
 	return Id;
@@ -249,5 +255,21 @@ public class Session extends AbstractEntity implements Serializable {
     public void setTotalAmount(String totalAmount) {
 	this.totalAmount = totalAmount;
     }
+
+	public String getServiceCharges() {
+		return serviceCharges;
+	}
+
+	public void setServiceCharges(String serviceCharges) {
+		this.serviceCharges = serviceCharges;
+	}
+
+	public String getFinalAmount() {
+		return finalAmount;
+	}
+
+	public void setFinalAmount(String finalAmount) {
+		this.finalAmount = finalAmount;
+	}
 
 }

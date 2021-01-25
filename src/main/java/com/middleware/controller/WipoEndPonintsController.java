@@ -68,6 +68,10 @@ public class WipoEndPonintsController extends AbstractController {
 
 	@Value("${frondEndURL}")
 	private String frondEndURL;
+	
+	
+	@Value("${SERVICECHARGES}")
+	private String SERVICECHARGES;
 
 	private static Logger logger = Logger.getLogger(WipoEndPonintsController.class);
 
@@ -124,6 +128,14 @@ public class WipoEndPonintsController extends AbstractController {
 		session.setAmountDescription2(amountDetails.get(1).getDescription());
 		session.setEntityStatus(EntityStatus.ACTIVE);
 		session.setEndDate(dateTimeFormat());
+		session.setServiceCharges(SERVICECHARGES);
+		//final Amount
+		long finalAmt = 0;
+		long serviceCharges = Long.parseLong(SERVICECHARGES);
+		String totalAmount = transaction.getAmount().substring(0,transaction.getAmount().indexOf("."));
+		long totalAmount1 = Long.parseLong(totalAmount);
+		finalAmt = totalAmount1 + serviceCharges;
+		session.setFinalAmount(finalAmt + "");
 		sessionService.save(session);
 		return session;
 	}
@@ -438,6 +450,7 @@ public class WipoEndPonintsController extends AbstractController {
 	@RequestMapping(value = "sessionOut", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
+	@CrossOrigin(origins = "*")
 	public JSONObject sessionOut(@RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
 		Session session = null;
@@ -445,6 +458,7 @@ public class WipoEndPonintsController extends AbstractController {
 		if (!id.equals("") || !id.equals(null)) {
 			// id = AES.decrypt(id, secretKey);
 			session = sessionService.checkingSession(id);
+			logger.info(session);
 		}
 
 		if (session == null) {
@@ -456,6 +470,7 @@ public class WipoEndPonintsController extends AbstractController {
 		sessionService.save(session);
 		resultJson.put("code", "0000");
 		resultJson.put("description", "Session Completed");
+		resultJson.put("response", session);
 		return resultJson;
 	}
 

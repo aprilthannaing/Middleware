@@ -5,6 +5,7 @@ import javax.naming.ServiceUnavailableException;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -86,12 +87,14 @@ public class OperationController extends AbstractController {
 	@RequestMapping(value = "saveVisa", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public String saveVisa(@RequestBody JSONObject json) throws ServiceUnavailableException {
-
+	@CrossOrigin(origins = "*")
+	public JSONObject saveVisa(@RequestBody JSONObject json) throws ServiceUnavailableException {
+		JSONObject jsonRes = new JSONObject();
 		Object sessionId = json.get("sessionId");
-		if (sessionId == null || sessionId.toString().isEmpty())
-			return "Can't Save";
-
+		if (sessionId == null || sessionId.toString().isEmpty()) {
+			jsonRes.put("", "Cannot Save");
+			return jsonRes;
+		}
 		Session session = sessionService.findBySessionId(sessionId.toString());
 		if (session != null)
 			sessionService.save(session);
@@ -105,7 +108,7 @@ public class OperationController extends AbstractController {
 		visaTransaction.setTaxAmount(json.get("taxAmount").toString());
 		visaTransaction.setType(json.get("type").toString());
 		visaTransaction.setVersion(json.get("version").toString().isEmpty() ? 0 : Integer.parseInt(json.get("version").toString()));
-		visaTransaction.setAcquirerMessage(json.get("acquirerMessage").toString());
+		//visaTransaction.setAcquirerMessage(json.get("acquirerMessage").toString());
 		visaTransactionService.save(visaTransaction);
 
 		Visa visa = new Visa();
@@ -133,7 +136,8 @@ public class OperationController extends AbstractController {
 		visa.setVisaTransaction(visaTransaction);
 		visa.setSession(session);
 		visaService.save(visa);
-		return "success";
+		jsonRes.put("message", "Save SuccessFully");
+		return jsonRes;
 	}
 
 }
