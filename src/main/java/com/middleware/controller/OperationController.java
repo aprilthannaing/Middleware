@@ -64,6 +64,7 @@ public class OperationController extends AbstractController {
 
 	@RequestMapping(value = "saveCBPaytransaction", method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin(origins = "*")
 	@JsonView(Views.Summary.class)
 	public Result saveCBPaytransaction(@RequestBody CBPayTransaction json) throws Exception {
 		Result result = new Result();
@@ -107,8 +108,9 @@ public class OperationController extends AbstractController {
 		visaTransaction.setReceipt(json.get("receipt").toString());
 		visaTransaction.setTaxAmount(json.get("taxAmount").toString());
 		visaTransaction.setType(json.get("type").toString());
-		visaTransaction.setVersion(json.get("version").toString().isEmpty() ? 0 : Integer.parseInt(json.get("version").toString()));
-		//visaTransaction.setAcquirerMessage(json.get("acquirerMessage").toString());
+		visaTransaction.setVersion(
+				json.get("version").toString().isEmpty() ? 0 : Integer.parseInt(json.get("version").toString()));
+		// visaTransaction.setAcquirerMessage(json.get("acquirerMessage").toString());
 		visaTransactionService.save(visaTransaction);
 
 		Visa visa = new Visa();

@@ -68,8 +68,7 @@ public class WipoEndPonintsController extends AbstractController {
 
 	@Value("${frondEndURL}")
 	private String frondEndURL;
-	
-	
+
 	@Value("${SERVICECHARGES}")
 	private String SERVICECHARGES;
 
@@ -129,10 +128,10 @@ public class WipoEndPonintsController extends AbstractController {
 		session.setEntityStatus(EntityStatus.ACTIVE);
 		session.setEndDate(dateTimeFormat());
 		session.setServiceCharges(SERVICECHARGES);
-		//final Amount
+		// final Amount
 		long finalAmt = 0;
 		long serviceCharges = Long.parseLong(SERVICECHARGES);
-		String totalAmount = transaction.getAmount().substring(0,transaction.getAmount().indexOf("."));
+		String totalAmount = transaction.getAmount().substring(0, transaction.getAmount().indexOf("."));
 		long totalAmount1 = Long.parseLong(totalAmount);
 		finalAmt = totalAmount1 + serviceCharges;
 		session.setFinalAmount(finalAmt + "");
@@ -140,7 +139,10 @@ public class WipoEndPonintsController extends AbstractController {
 		return session;
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.POST) /* WIPO REST end point 2.3 (save session with transaction information, session id is token id.) */ 
+	@RequestMapping(value = "", method = RequestMethod.POST) /*
+																 * WIPO REST end point 2.3 (save session with
+																 * transaction information, session id is token id.)
+																 */
 	@ResponseBody
 	@JsonView(Views.Summary.class)
 	public JSONObject payments(@RequestBody JSONObject json) throws Exception {
@@ -211,8 +213,13 @@ public class WipoEndPonintsController extends AbstractController {
 		transaction.setTokenId(session.getSessionId());
 		transaction.setPaymentConfirmationDate(dateFormat.format(now));
 		resultJson.put("transaction", transaction);
-//		resultJson.put("redirectHTML", frondEndURL + "/home/" + session.getSessionId());
-		resultJson.put("redirectHTML", frondEndURL + "?id=" + session.getSessionId());
+
+		String redirectHTML = "<link rel=\\\"stylesheet\\\" href=\\\"https://fonts.googleapis.com/icon?family=Material+Icons\\\"><link href=\\\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\\\" rel=\\\"stylesheet\\\" crossorigin=\\\"anonymous\\\"><!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"> <title>WIPO File</title> <base href=\\\"/\\\"> <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"> <link rel=\\\"icon\\\" type=\\\"image/x-icon\\\" href=\\\"favicon.ico\\\"></head><body> <script>window.location.replace"
+				+ "('" + frondEndURL + "?id=" + session.getSessionId() + "')</script></body></html>";
+
+		// resultJson.put("redirectHTML", frondEndURL + "?id=" +
+		// session.getSessionId());
+		resultJson.put("redirectHTML", redirectHTML);
 		return resultJson;
 	}
 

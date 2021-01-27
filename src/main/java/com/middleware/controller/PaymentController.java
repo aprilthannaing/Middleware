@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +56,48 @@ public class PaymentController extends AbstractController {
 	 * "95923535341"); requestJson.put("ref2", "10043553461");
 	 */
 
+	public JSONObject checkQR(JSONObject json) throws IOException {
+		SSL ssl = new SSL();
+		ssl.disableSslVerification();
+
+		String url = "https://103.150.78.103:4443/payment-api/v1/qr/check-transaction.service";
+
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Authen-Token",
+				"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTY3NzU2NzIsIm1lcklkIjoiNTgxNTAwMDAwMDAwMDE3In0.hO4-eWFQHM5STCydXlwr2SjghmFe_4GgmccBq3vJvUY");
+		con.setRequestMethod("POST");
+		con.setDoOutput(true);
+
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(json.toString());
+		wr.flush();
+		wr.close();
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			System.out.println("inputLine : " + inputLine);
+
+			response.append(inputLine);
+		}
+		in.close();
+
+		Gson g = new Gson();
+		return g.fromJson(response.toString(), JSONObject.class);
+	}
+
+	@ResponseBody
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "checkqr", method = RequestMethod.POST)
+	@JsonView(Views.Summary.class)
+	public JSONObject checkqr(@RequestBody JSONObject json) throws IOException {
+		return checkQR(json);
+	}
+
 	public JSONObject generateQR(JSONObject json) throws IOException {
 		SSL ssl = new SSL();
 		ssl.disableSslVerification();
@@ -89,10 +132,11 @@ public class PaymentController extends AbstractController {
 		return g.fromJson(response.toString(), JSONObject.class);
 	}
 
-	@RequestMapping(value = "generateqr", method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "generateqr", method = RequestMethod.POST)
 	@JsonView(Views.Summary.class)
-	public JSONObject test(@RequestBody JSONObject json) throws IOException {
+	public JSONObject generateqr(@RequestBody JSONObject json) throws IOException {
 		return generateQR(json);
 
 	}
