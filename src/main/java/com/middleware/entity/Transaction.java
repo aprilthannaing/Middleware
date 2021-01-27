@@ -7,146 +7,146 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class Transaction {
 
-    private String transactionId;
+	private String transactionId;
 
-    @JsonView(Views.Thin.class)
-    private String bankIdentifier;
+	@JsonView(Views.Thin.class)
+	private String bankIdentifier;
 
-    @JsonView(Views.Thin.class)
-    private String amount;
+	@JsonView(Views.Thin.class)
+	private String amount;
 
-    @JsonView(Views.Thin.class)
-    private String paymentReference;
+	@JsonView(Views.Thin.class)
+	private String paymentReference;
 
-    @JsonView(Views.Thin.class)
-    private String tokenId;
+	@JsonView(Views.Thin.class)
+	private String tokenId;
 
-    @JsonView(Views.Thin.class)
-    private String transactionDate;
+	@JsonView(Views.Thin.class)
+	private String transactionDate;
 
-    @JsonView(Views.Thin.class)
-    private String paymentConfirmationDate;
+	// @JsonView(Views.Thin.class)
+	private String paymentConfirmationDate;
 
-    @JsonView(Views.Thin.class)
-    private String paymentStatus;
+	// @JsonView(Views.Thin.class)
+	private String paymentStatus;
 
-    @JsonView(Views.Thin.class)
-    private String currencyType;
+	// @JsonView(Views.Thin.class)
+	private String currencyType;
 
-    @JsonView(Views.Thin.class)
-    private String receiptNumber;
+	// @JsonView(Views.Thin.class)
+	private String receiptNumber;
 
-    private String paymentNote;
+	private String paymentNote;
 
-    private Payer payer;
+	private Payer payer;
 
-    private List<AmountDetails> amountDetails;
+	private List<AmountDetails> amountDetails;
 
-    public Payer getPayer() {
-	return payer;
-    }
-
-    public void setPayer(Payer payer) {
-	this.payer = payer;
-    }
-
-    public List<AmountDetails> getAmountDetails() {
-	if (amountDetails == null) {
-	    amountDetails = new ArrayList<AmountDetails>();
+	public Payer getPayer() {
+		return payer;
 	}
-	return amountDetails;
-    }
 
-    public void setAmountDetails(List<AmountDetails> amountDetails) {
-	this.amountDetails = amountDetails;
-    }
+	public void setPayer(Payer payer) {
+		this.payer = payer;
+	}
 
-    public String getPaymentNote() {
-	return paymentNote;
-    }
+	public List<AmountDetails> getAmountDetails() {
+		if (amountDetails == null) {
+			amountDetails = new ArrayList<AmountDetails>();
+		}
+		return amountDetails;
+	}
 
-    public void setPaymentNote(String paymentNote) {
-	this.paymentNote = paymentNote;
-    }
+	public void setAmountDetails(List<AmountDetails> amountDetails) {
+		this.amountDetails = amountDetails;
+	}
 
-    public String getTransactionId() {
-	return transactionId;
-    }
+	public String getPaymentNote() {
+		return paymentNote;
+	}
 
-    public void setTransactionId(String transactionId) {
-	this.transactionId = transactionId;
-    }
+	public void setPaymentNote(String paymentNote) {
+		this.paymentNote = paymentNote;
+	}
 
-    public String getCurrencyType() {
-	return currencyType;
-    }
+	public String getTransactionId() {
+		return transactionId;
+	}
 
-    public void setCurrencyType(String currencyType) {
-	this.currencyType = currencyType;
-    }
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
 
-    public String getPaymentStatus() {
-	return paymentStatus;
-    }
+	public String getCurrencyType() {
+		return currencyType;
+	}
 
-    public void setPaymentStatus(String paymentStatus) {
-	this.paymentStatus = paymentStatus;
-    }
+	public void setCurrencyType(String currencyType) {
+		this.currencyType = currencyType;
+	}
 
-    public String getReceiptNumber() {
-	return receiptNumber;
-    }
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
 
-    public void setReceiptNumber(String receiptNumber) {
-	this.receiptNumber = receiptNumber;
-    }
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
 
-    public String getPaymentConfirmationDate() {
-	return paymentConfirmationDate;
-    }
+	public String getReceiptNumber() {
+		return receiptNumber;
+	}
 
-    public void setPaymentConfirmationDate(String paymentConfirmationDate) {
-	this.paymentConfirmationDate = paymentConfirmationDate;
-    }
+	public void setReceiptNumber(String receiptNumber) {
+		this.receiptNumber = receiptNumber;
+	}
 
-    public String getBankIdentifier() {
-	return bankIdentifier;
-    }
+	public String getPaymentConfirmationDate() {
+		return paymentConfirmationDate;
+	}
 
-    public void setBankIdentifier(String bankIdentifier) {
-	this.bankIdentifier = bankIdentifier;
-    }
+	public void setPaymentConfirmationDate(String paymentConfirmationDate) {
+		this.paymentConfirmationDate = paymentConfirmationDate;
+	}
 
-    public String getAmount() {
-	return amount;
-    }
+	public String getBankIdentifier() {
+		return bankIdentifier;
+	}
 
-    public void setAmount(String amount) {
-	this.amount = amount;
-    }
+	public void setBankIdentifier(String bankIdentifier) {
+		this.bankIdentifier = bankIdentifier;
+	}
 
-    public String getPaymentReference() {
-	return paymentReference;
-    }
+	public String getAmount() {
+		return amount;
+	}
 
-    public void setPaymentReference(String paymentReference) {
-	this.paymentReference = paymentReference;
-    }
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
 
-    public String getTokenId() {
-	return tokenId;
-    }
+	public String getPaymentReference() {
+		return paymentReference;
+	}
 
-    public void setTokenId(String tokenId) {
-	this.tokenId = tokenId;
-    }
+	public void setPaymentReference(String paymentReference) {
+		this.paymentReference = paymentReference;
+	}
 
-    public String getTransactionDate() {
-	return transactionDate;
-    }
+	public String getTokenId() {
+		return tokenId;
+	}
 
-    public void setTransactionDate(String transactionDate) {
-	this.transactionDate = transactionDate;
-    }
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
+	}
+
+	public String getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 
 }

@@ -121,10 +121,13 @@ public class WipoEndPonintsController extends AbstractController {
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		session.setStartDate(dateFormat.format(now));
-		session.setAmount1(amountDetails.get(0).getAmount() + "");
-		session.setAmount2(amountDetails.get(1).getAmount() + "");
-		session.setAmountDescription1(amountDetails.get(0).getDescription());
-		session.setAmountDescription2(amountDetails.get(1).getDescription());
+		if (!CollectionUtils.isEmpty(amountDetails)) {
+			session.setAmount1(amountDetails.get(0).getAmount() + "");
+			session.setAmount2(amountDetails.get(1).getAmount() + "");
+			session.setAmountDescription1(amountDetails.get(0).getDescription());
+			session.setAmountDescription2(amountDetails.get(1).getDescription());
+		}
+
 		session.setEntityStatus(EntityStatus.ACTIVE);
 		session.setEndDate(dateTimeFormat());
 		session.setServiceCharges(SERVICECHARGES);
@@ -183,9 +186,8 @@ public class WipoEndPonintsController extends AbstractController {
 //		}
 
 		Payer payer = transaction.getPayer();
-		List<AmountDetails> amountDetails = transaction.getAmountDetails();
-		if (payer == null || CollectionUtils.isEmpty(amountDetails) || requestorId == null
-				|| requestorId.toString().isEmpty()) {
+		List<AmountDetails> amountDetails = transaction.getAmountDetails(); // CollectionUtils.isEmpty(amountDetails) ||
+		if (payer == null || requestorId == null || requestorId.toString().isEmpty()) {
 			errors.put("code", "-3");
 			errors.put("bankCode", "24502");
 			errors.put("bankDetails", " unauthorized user credentials");
