@@ -24,16 +24,16 @@ public class Transaction {
 	@JsonView(Views.Thin.class)
 	private String transactionDate;
 
-	// @JsonView(Views.Thin.class)
+	@JsonView(Views.Summary.class)
 	private String paymentConfirmationDate;
 
-	// @JsonView(Views.Thin.class)
+	@JsonView(Views.Summary.class)
 	private String paymentStatus;
 
-	// @JsonView(Views.Thin.class)
+	//@JsonView(Views.Summary.class)
 	private String currencyType;
 
-	// @JsonView(Views.Thin.class)
+	@JsonView(Views.Summary.class)
 	private String receiptNumber;
 
 	private String paymentNote;

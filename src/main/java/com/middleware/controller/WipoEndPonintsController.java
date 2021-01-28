@@ -118,9 +118,10 @@ public class WipoEndPonintsController extends AbstractController {
 		session.setPaymentNote(transaction.getPaymentNote());
 		session.setPayerEmail(payer.getEmail());
 		session.setPayerPhone(payer.getPhone());
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
-		session.setStartDate(dateFormat.format(now));
+		String[] dateString = dateFormat.format(now).toString().split(" ");
+		session.setStartDate(dateString[0] + "T" + dateString[1]);
 		if (!CollectionUtils.isEmpty(amountDetails)) {
 			session.setAmount1(amountDetails.get(0).getAmount() + "");
 			session.setAmount2(amountDetails.get(1).getAmount() + "");
@@ -147,7 +148,7 @@ public class WipoEndPonintsController extends AbstractController {
 																 * transaction information, session id is token id.)
 																 */
 	@ResponseBody
-	@JsonView(Views.Summary.class)
+	@JsonView(Views.Thin.class)
 	public JSONObject payments(@RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
 		JSONObject errors = new JSONObject();
@@ -166,24 +167,6 @@ public class WipoEndPonintsController extends AbstractController {
 			resultJson.put("errors", errors);
 			return resultJson;
 		}
-
-//		Session sessionByPaymentRef = sessionService.findByPaymentReference(transaction.getPaymentReference());
-//		if (sessionByPaymentRef == null) {
-//			errors.put("code", "-3");
-//			errors.put("bankCode", "24503");
-//			errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
-//			resultJson.put("errors", errors);
-//			return resultJson;
-//		}
-
-//		Session sessionbyTransactionId = sessionService.findByTransactionId(transaction.getTransactionId());
-//		if (sessionbyTransactionId == null) {
-//			errors.put("code", "-3");
-//			errors.put("bankCode", "24503");
-//			errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
-//			resultJson.put("errors", errors);
-//			return resultJson;
-//		}
 
 		Payer payer = transaction.getPayer();
 		List<AmountDetails> amountDetails = transaction.getAmountDetails(); // CollectionUtils.isEmpty(amountDetails) ||
@@ -208,19 +191,12 @@ public class WipoEndPonintsController extends AbstractController {
 		}
 
 		Session session = getSession(json, transaction);
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now();
 		transaction.setPaymentStatus("1");
-		transaction.setTransactionDate(dateFormat.format(now));
+		transaction.setTransactionDate(session.getStartDate());
 		transaction.setTokenId(session.getSessionId());
-		transaction.setPaymentConfirmationDate(dateFormat.format(now));
 		resultJson.put("transaction", transaction);
-
 		String redirectHTML = "<link rel=\\\"stylesheet\\\" href=\\\"https://fonts.googleapis.com/icon?family=Material+Icons\\\"><link href=\\\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\\\" rel=\\\"stylesheet\\\" crossorigin=\\\"anonymous\\\"><!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"> <title>WIPO File</title> <base href=\\\"/\\\"> <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"> <link rel=\\\"icon\\\" type=\\\"image/x-icon\\\" href=\\\"favicon.ico\\\"></head><body> <script>window.location.replace"
 				+ "('" + frondEndURL + "?id=" + session.getSessionId() + "')</script></body></html>";
-
-		// resultJson.put("redirectHTML", frondEndURL + "?id=" +
-		// session.getSessionId());
 		resultJson.put("redirectHTML", redirectHTML);
 		return resultJson;
 	}
@@ -236,8 +212,10 @@ public class WipoEndPonintsController extends AbstractController {
 
 		String tokenId = session.getSessionId();
 		PaymentType paymentType = session.getPaymentType();
-		if (paymentType == null)
+		if (paymentType == null) {
+			transaction.setPaymentStatus("0");
 			return transaction;
+		}
 
 		switch (paymentType) {
 		case MPU:
