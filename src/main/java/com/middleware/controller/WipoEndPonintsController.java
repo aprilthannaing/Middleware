@@ -118,6 +118,7 @@ public class WipoEndPonintsController extends AbstractController {
 		session.setPaymentNote(transaction.getPaymentNote());
 		session.setPayerEmail(payer.getEmail());
 		session.setPayerPhone(payer.getPhone());
+		session.setPaymentStatus(0);
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
 		String[] dateString = dateFormat.format(now).toString().split(" ");
@@ -191,7 +192,6 @@ public class WipoEndPonintsController extends AbstractController {
 		}
 
 		Session session = getSession(json, transaction);
-		transaction.setPaymentStatus("1");
 		transaction.setTransactionDate(session.getStartDate());
 		transaction.setTokenId(session.getSessionId());
 		resultJson.put("transaction", transaction);
@@ -213,7 +213,7 @@ public class WipoEndPonintsController extends AbstractController {
 		String tokenId = session.getSessionId();
 		PaymentType paymentType = session.getPaymentType();
 		if (paymentType == null) {
-			transaction.setPaymentStatus("0");
+			transaction.setPaymentStatus(0);
 			return transaction;
 		}
 
@@ -223,7 +223,7 @@ public class WipoEndPonintsController extends AbstractController {
 			if (mpu == null) {
 				return null;
 			}
-			transaction.setPaymentStatus(mpu.isApproved() ? "1" : "0");
+			transaction.setPaymentStatus(mpu.isApproved() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber("");
 			break;
 
@@ -232,7 +232,7 @@ public class WipoEndPonintsController extends AbstractController {
 			if (cbPay == null) {
 				return null;
 			}
-			transaction.setPaymentStatus(cbPay.isSuccess() ? "1" : "0");
+			transaction.setPaymentStatus(cbPay.isSuccess() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber("");
 			break;
 		case VISA:
@@ -240,7 +240,7 @@ public class WipoEndPonintsController extends AbstractController {
 			if (visa == null) {
 				return null;
 			}
-			transaction.setPaymentStatus(visa.isSuccess() ? "1" : "0");
+			transaction.setPaymentStatus(visa.isSuccess() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
 			break;
 
@@ -458,6 +458,21 @@ public class WipoEndPonintsController extends AbstractController {
 		resultJson.put("code", "0000");
 		resultJson.put("description", "Session Completed");
 		resultJson.put("response", session);
+		return resultJson;
+	}
+
+	@RequestMapping(value = "paymentStatus", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Thin.class)
+	@CrossOrigin(origins = "*")
+	public JSONObject setPaymentStatus(@RequestBody JSONObject json) throws Exception {
+		JSONObject resultJson = new JSONObject();
+
+		Session session = sessionService.findBySessionId(json.get("sessionId").toString());
+		session.setPaymentStatus(Integer.parseInt(json.get("paymentStatus").toString()));
+		sessionService.save(session);
+		
+		resultJson.put("status", true);
 		return resultJson;
 	}
 

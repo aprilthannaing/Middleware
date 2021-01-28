@@ -28,9 +28,9 @@ public class Transaction {
 	private String paymentConfirmationDate;
 
 	@JsonView(Views.Summary.class)
-	private String paymentStatus;
+	private int paymentStatus;
 
-	//@JsonView(Views.Summary.class)
+	// @JsonView(Views.Summary.class)
 	private String currencyType;
 
 	@JsonView(Views.Summary.class)
@@ -85,11 +85,11 @@ public class Transaction {
 		this.currencyType = currencyType;
 	}
 
-	public String getPaymentStatus() {
+	public int getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(String paymentStatus) {
+	public void setPaymentStatus(int paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 

@@ -117,7 +117,7 @@ public class OperationController extends AbstractController {
 		visa.setId(SystemConstant.BOID_REQUIRED);
 		visa.setMerchantId(json.get("merchantId").toString());
 		visa.setMerchantCategoryCode(json.get("merchantCategoryCode").toString());
-		visa.setOrderId(json.get("orderId").toString().isEmpty() ? 0 : Long.parseLong(json.get("orderId").toString()));
+		visa.setOrderId(json.get("orderId").toString());
 		visa.setCurrency(json.get("currency").toString());
 		visa.setDescription(json.get("description").toString());
 		visa.setCustomerName(json.get("customerName").toString());

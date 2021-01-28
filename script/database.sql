@@ -161,3 +161,7 @@ CREATE TABLE `user` (
 ALTER TABLE session ADD COLUMN finalAmount varchar(255) DEFAULT NULL;
 ALTER TABLE session ADD COLUMN serviceCharges varchar(255) DEFAULT NULL;
 
+//to add
+ALTER TABLE session ADD COLUMN paymentStatus varchar(255) DEFAULT NULL;
+ALTER TABLE visa MODIFY COLUMN orderId varchar(255); 
+

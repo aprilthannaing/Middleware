@@ -31,7 +31,7 @@ public class Visa extends AbstractEntity implements Serializable {
 	private String merchantCategoryCode;
 
 	@JsonView(Views.Thin.class)
-	private long orderId;
+	private String orderId;
 
 	@JsonView(Views.Thin.class)
 	private long amount;
@@ -152,11 +152,11 @@ public class Visa extends AbstractEntity implements Serializable {
 		this.merchantCategoryCode = merchantCategoryCode;
 	}
 
-	public long getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
@@ -351,8 +351,8 @@ public class Visa extends AbstractEntity implements Serializable {
 	public void setVisaTransaction(VisaTransaction visaTransaction) {
 		this.visaTransaction = visaTransaction;
 	}
-	
+
 	public boolean isSuccess() {
-	    return getResult().equals("SUCCESS");
+		return getResult().equals("SUCCESS");
 	}
 }

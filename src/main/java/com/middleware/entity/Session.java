@@ -15,246 +15,257 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "session")
 public class Session extends AbstractEntity implements Serializable {
 
-    @Id
-    @Column(name = "Id", unique = true, nullable = false)
-    @JsonView(Views.Thin.class)
-    private long Id;
-    
-    @JsonView(Views.Thin.class)
-    @Enumerated(EnumType.STRING)
-    private EntityStatus entityStatus;
+	@Id
+	@Column(name = "Id", unique = true, nullable = false)
+	@JsonView(Views.Thin.class)
+	private long Id;
 
-    public EntityStatus getEntityStatus() {
-	return entityStatus;
-    }
+	@JsonView(Views.Thin.class)
+	@Enumerated(EnumType.STRING)
+	private EntityStatus entityStatus;
 
-    public void setEntityStatus(EntityStatus entityStatus) {
-	this.entityStatus = entityStatus;
-    }
+	public EntityStatus getEntityStatus() {
+		return entityStatus;
+	}
 
-    @JsonView(Views.Thin.class)
-    private String requestorId;
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
 
-    @JsonView(Views.Thin.class)
-    private String paymentReference;
+	@JsonView(Views.Thin.class)
+	private String requestorId;
 
-    @JsonView(Views.Thin.class)
-    private String paymentNote;
+	@JsonView(Views.Thin.class)
+	private String paymentReference;
 
-    @JsonView(Views.Thin.class)
-    private String payerName;
+	@JsonView(Views.Thin.class)
+	private String paymentNote;
 
-    @JsonView(Views.Thin.class)
-    private String payerEmail;
+	@JsonView(Views.Thin.class)
+	private String payerName;
 
-    @JsonView(Views.Thin.class)
-    private String payerPhone;
+	@JsonView(Views.Thin.class)
+	private String payerEmail;
 
-    @JsonView(Views.Thin.class)
-    private String amount1;
+	@JsonView(Views.Thin.class)
+	private String payerPhone;
 
-    @JsonView(Views.Thin.class)
-    private String amount2;
+	@JsonView(Views.Thin.class)
+	private String amount1;
 
-    @JsonView(Views.Thin.class)
-    private String amountDescription1;
+	@JsonView(Views.Thin.class)
+	private String amount2;
 
-    @JsonView(Views.Thin.class)
-    private String amountDescription2;
+	@JsonView(Views.Thin.class)
+	private String amountDescription1;
 
-    @JsonView(Views.Thin.class)
-    private String currencyType;
+	@JsonView(Views.Thin.class)
+	private String amountDescription2;
 
-    @JsonView(Views.Thin.class)
-    private String transactionId;
+	@JsonView(Views.Thin.class)
+	private String currencyType;
 
-    @JsonView(Views.Thin.class)
-    private String bankIdentifier;
+	@JsonView(Views.Thin.class)
+	private String transactionId;
 
-    @JsonView(Views.Thin.class)
-    private String startDate;
+	@JsonView(Views.Thin.class)
+	private String bankIdentifier;
 
-    @JsonView(Views.Thin.class)
-    private String endDate;
+	@JsonView(Views.Thin.class)
+	private String startDate;
 
-    @JsonView(Views.Thin.class)
-    private String totalAmount;
+	@JsonView(Views.Thin.class)
+	private String endDate;
 
-    @JsonView(Views.Thin.class)
-    @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+	@JsonView(Views.Thin.class)
+	private String totalAmount;
 
-    @JsonView(Views.Thin.class)
-    private String paymentConfirmationDate;
+	@JsonView(Views.Thin.class)
+	@Enumerated(EnumType.STRING)
+	private PaymentType paymentType;
 
-    @JsonView(Views.Thin.class)
-    private String sessionId;
-    
-    @JsonView(Views.Thin.class)
-    private String serviceCharges;
-    
-    @JsonView(Views.Thin.class)
-    private String finalAmount;
+	@JsonView(Views.Thin.class)
+	private String paymentConfirmationDate;
 
-    public long getId() {
-	return Id;
-    }
+	@JsonView(Views.Thin.class)
+	private String sessionId;
 
-    public void setId(long id) {
-	Id = id;
-    }
+	@JsonView(Views.Thin.class)
+	private String serviceCharges;
 
-    public String getPayerName() {
-	return payerName;
-    }
+	@JsonView(Views.Thin.class)
+	private String finalAmount;
 
-    public void setPayerName(String payerName) {
-	this.payerName = payerName;
-    }
+	@JsonView(Views.Thin.class)
+	private int paymentStatus;
 
-    public String getRequestorId() {
-	return requestorId;
-    }
+	public int getPaymentStatus() {
+		return paymentStatus;
+	}
 
-    public void setRequestorId(String requestorId) {
-	this.requestorId = requestorId;
-    }
+	public void setPaymentStatus(int paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
 
-    public String getPaymentReference() {
-	return paymentReference;
-    }
+	public long getId() {
+		return Id;
+	}
 
-    public void setPaymentReference(String paymentReference) {
-	this.paymentReference = paymentReference;
-    }
+	public void setId(long id) {
+		Id = id;
+	}
 
-    public String getPaymentNote() {
-	return paymentNote;
-    }
+	public String getPayerName() {
+		return payerName;
+	}
 
-    public void setPaymentNote(String paymentNote) {
-	this.paymentNote = paymentNote;
-    }
+	public void setPayerName(String payerName) {
+		this.payerName = payerName;
+	}
 
-    public String getPayerEmail() {
-	return payerEmail;
-    }
+	public String getRequestorId() {
+		return requestorId;
+	}
 
-    public void setPayerEmail(String payerEmail) {
-	this.payerEmail = payerEmail;
-    }
+	public void setRequestorId(String requestorId) {
+		this.requestorId = requestorId;
+	}
 
-    public PaymentType getPaymentType() {
-	return paymentType;
-    }
+	public String getPaymentReference() {
+		return paymentReference;
+	}
 
-    public void setPaymentType(PaymentType paymentType) {
-	this.paymentType = paymentType;
-    }
+	public void setPaymentReference(String paymentReference) {
+		this.paymentReference = paymentReference;
+	}
 
-    public String getPayerPhone() {
-	return payerPhone;
-    }
+	public String getPaymentNote() {
+		return paymentNote;
+	}
 
-    public void setPayerPhone(String payerPhone) {
-	this.payerPhone = payerPhone;
-    }
+	public void setPaymentNote(String paymentNote) {
+		this.paymentNote = paymentNote;
+	}
 
-    public String getAmount1() {
-	return amount1;
-    }
+	public String getPayerEmail() {
+		return payerEmail;
+	}
 
-    public void setAmount1(String amount1) {
-	this.amount1 = amount1;
-    }
+	public void setPayerEmail(String payerEmail) {
+		this.payerEmail = payerEmail;
+	}
 
-    public String getAmount2() {
-	return amount2;
-    }
+	public PaymentType getPaymentType() {
+		return paymentType;
+	}
 
-    public void setAmount2(String amount2) {
-	this.amount2 = amount2;
-    }
+	public void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
+	}
 
-    public String getAmountDescription1() {
-	return amountDescription1;
-    }
+	public String getPayerPhone() {
+		return payerPhone;
+	}
 
-    public void setAmountDescription1(String amountDescription1) {
-	this.amountDescription1 = amountDescription1;
-    }
+	public void setPayerPhone(String payerPhone) {
+		this.payerPhone = payerPhone;
+	}
 
-    public String getAmountDescription2() {
-	return amountDescription2;
-    }
+	public String getAmount1() {
+		return amount1;
+	}
 
-    public String getPaymentConfirmationDate() {
-	return paymentConfirmationDate;
-    }
+	public void setAmount1(String amount1) {
+		this.amount1 = amount1;
+	}
 
-    public void setPaymentConfirmationDate(String paymentConfirmationDate) {
-	this.paymentConfirmationDate = paymentConfirmationDate;
-    }
+	public String getAmount2() {
+		return amount2;
+	}
 
-    public void setAmountDescription2(String amountDescription2) {
-	this.amountDescription2 = amountDescription2;
-    }
+	public void setAmount2(String amount2) {
+		this.amount2 = amount2;
+	}
 
-    public String getCurrencyType() {
-	return currencyType;
-    }
+	public String getAmountDescription1() {
+		return amountDescription1;
+	}
 
-    public void setCurrencyType(String currencyType) {
-	this.currencyType = currencyType;
-    }
+	public void setAmountDescription1(String amountDescription1) {
+		this.amountDescription1 = amountDescription1;
+	}
 
-    public String getTransactionId() {
-	return transactionId;
-    }
+	public String getAmountDescription2() {
+		return amountDescription2;
+	}
 
-    public void setTransactionId(String transactionId) {
-	this.transactionId = transactionId;
-    }
+	public String getPaymentConfirmationDate() {
+		return paymentConfirmationDate;
+	}
 
-    public String getBankIdentifier() {
-	return bankIdentifier;
-    }
+	public void setPaymentConfirmationDate(String paymentConfirmationDate) {
+		this.paymentConfirmationDate = paymentConfirmationDate;
+	}
 
-    public void setBankIdentifier(String bankIdentifier) {
-	this.bankIdentifier = bankIdentifier;
-    }
+	public void setAmountDescription2(String amountDescription2) {
+		this.amountDescription2 = amountDescription2;
+	}
 
-    public String getStartDate() {
-	return startDate;
-    }
+	public String getCurrencyType() {
+		return currencyType;
+	}
 
-    public void setStartDate(String startDate) {
-	this.startDate = startDate;
-    }
+	public void setCurrencyType(String currencyType) {
+		this.currencyType = currencyType;
+	}
 
-    public String getEndDate() {
-	return endDate;
-    }
+	public String getTransactionId() {
+		return transactionId;
+	}
 
-    public void setEndDate(String endDate) {
-	this.endDate = endDate;
-    }
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
 
-    public String getSessionId() {
-	return sessionId;
-    }
+	public String getBankIdentifier() {
+		return bankIdentifier;
+	}
 
-    public void setSessionId(String sessionId) {
-	this.sessionId = sessionId;
-    }
+	public void setBankIdentifier(String bankIdentifier) {
+		this.bankIdentifier = bankIdentifier;
+	}
 
-    public String getTotalAmount() {
-	return totalAmount;
-    }
+	public String getStartDate() {
+		return startDate;
+	}
 
-    public void setTotalAmount(String totalAmount) {
-	this.totalAmount = totalAmount;
-    }
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	public String getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(String totalAmount) {
+		this.totalAmount = totalAmount;
+	}
 
 	public String getServiceCharges() {
 		return serviceCharges;
