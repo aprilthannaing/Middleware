@@ -57,28 +57,41 @@ public class PaymentController extends AbstractController {
 		SSL ssl = new SSL();
 		ssl.disableSslVerification();
 
-		String url = "https://122.248.120.252:60145/UAT/Payment/Payment/pay";
+		String url = "https://www.mpuecomuat.com:60145/UAT/Payment/Payment/Pay";
 
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("POST");
-		con.setDoOutput(true);
+//		URL obj = new URL(url);
+//		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+//		con.setRequestMethod("POST");
+//		con.setDoOutput(true);
+//
+//		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+//		wr.writeBytes(json.toString());
+//		wr.flush();
+//		wr.close();
+//
+//		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//		String inputLine;
+//		StringBuffer response = new StringBuffer();
+//
+//		while ((inputLine = in.readLine()) != null) {
+//			System.out.println("inputLine : " + inputLine);
+//			response.append(inputLine);
+//		}
+//		in.close();
 
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(json.toString());
-		wr.flush();
-		wr.close();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<String> entity = new HttpEntity<String>("", headers);
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
+		RestTemplate restTemplate = new RestTemplate();
+		final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+		final HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+		factory.setHttpClient(httpClient);
+		restTemplate.setRequestFactory(factory);
 
-		while ((inputLine = in.readLine()) != null) {
-			System.out.println("inputLine : " + inputLine);
-			response.append(inputLine);
-		}
-		in.close();
+		logger.info("serviceUrl!!" + url);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
+		logger.info("response !!!!!!!!" + response);
 		return response.toString();
 
 	}

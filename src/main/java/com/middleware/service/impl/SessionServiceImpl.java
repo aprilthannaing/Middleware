@@ -20,109 +20,110 @@ import com.middleware.entity.SessionStatus;
 @Service("sessionService")
 public class SessionServiceImpl implements SessionService {
 
-    @Autowired
-    private SessionDao sessionDao;
+	@Autowired
+	private SessionDao sessionDao;
 
-    @Autowired
-    private GeneralService generalService;
+	@Autowired
+	private GeneralService generalService;
 
-    private Logger logger = Logger.getLogger(SessionServiceImpl.class);
+	private Logger logger = Logger.getLogger(SessionServiceImpl.class);
 
-    @Transactional(readOnly = false)
-    public void save(Session session) throws ServiceUnavailableException {
-	if (session.isBoIdRequired(session.getId()))
-	    session.setId(getId());
-	String sessionId = generalService.generateSession(session.getId());
-	session.setSessionId(sessionId);
-	sessionDao.save(session);
-    }
-
-    private Long getId() {
-	return countSession() + 1000000;
-    }
-
-    public long countSession() {
-	String query = "select count(*) from Session";
-	return sessionDao.findLongByQueryString(query).get(0);
-    }
-
-    public String getUserId() {
-	return "USR" + getId();
-    }
-
-    public Result acceptSession(Session session) {
-	Result res = new Result();
-	if (session.isBoIdRequired(session.getId()))
-	    session.setId(getId());
-	String sessionid = generalService.generateSession(session.getId());
-	session.setSessionId(sessionid);
-	boolean correct = false;
-	try {
-	    correct = sessionDao.checkSaveOrUpdate(session);
-	    if (correct) {
-		res.setCode("0000");
-		res.setDescription("Successfully");
-		res.setResult(session.getSessionId());
-	    } else {
-		res.setCode("0012");
-		res.setDescription("Fail");
-	    }
-	} catch (com.mchange.rmi.ServiceUnavailableException e) {
-	    e.printStackTrace();
+	@Transactional(readOnly = false)
+	public void save(Session session) throws ServiceUnavailableException {
+		if (session.isBoIdRequired(session.getId()))
+			session.setId(getId());
+		
+		String sessionId = generalService.generateSession(session.getId());
+		session.setSessionId(sessionId);
+		sessionDao.save(session);
 	}
 
-	return res;
-    }
+	private Long getId() {
+		return countSession() + 1000000;
+	}
 
-    public Session checkingSession(String id) {
-	String query = "from Session where sessionId ='" + id + "' and entityStatus='" + EntityStatus.ACTIVE + "'";
-	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if (CollectionUtils.isEmpty(sessionList))
-	    return null;
-	return sessionList.get(0);
-    }
+	public long countSession() {
+		String query = "select count(*) from Session";
+		return sessionDao.findLongByQueryString(query).get(0);
+	}
 
-    public Session findByUserId(String userId) {
-	String query = "from Session where userId='" + userId + "'";
-	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if (CollectionUtils.isEmpty(sessionList))
-	    return null;
-	return sessionList.get(0);
-    }
+	public String getUserId() {
+		return "USR" + getId();
+	}
 
-    /* find by token Id */
-    public Session findBySessionId(String sessionId) {
-	String query = "from Session where sessionId='" + sessionId + "'";
-	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if (CollectionUtils.isEmpty(sessionList))
-	    return null;
-	return sessionList.get(0);
-    }
+	public Result acceptSession(Session session) {
+		Result res = new Result();
+		if (session.isBoIdRequired(session.getId()))
+			session.setId(getId());
+		String sessionid = generalService.generateSession(session.getId());
+		session.setSessionId(sessionid);
+		boolean correct = false;
+		try {
+			correct = sessionDao.checkSaveOrUpdate(session);
+			if (correct) {
+				res.setCode("0000");
+				res.setDescription("Successfully");
+				res.setResult(session.getSessionId());
+			} else {
+				res.setCode("0012");
+				res.setDescription("Fail");
+			}
+		} catch (com.mchange.rmi.ServiceUnavailableException e) {
+			e.printStackTrace();
+		}
 
-    /* find by payment reference and token Id */
-    public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId) {
-	String query = "from Session where paymentReference='" + paymentReference + "' and sessionId='" + tokenId + "'";
-	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if (CollectionUtils.isEmpty(sessionList))
-	    return null;
-	return sessionList.get(0);
-    }
+		return res;
+	}
 
-    /* find by payment reference */
-    public Session findByPaymentReference(String paymentReference) {
-	String query = "from Session where paymentReference='" + paymentReference + "'";
-	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
-	if (CollectionUtils.isEmpty(sessionList))
-	    return null;
-	return sessionList.get(0);
-    }
-    
-    public Session findByTransactionId(String transactionId) {
- 	String query = "from Session where transactionId='" + transactionId + "'";
- 	List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
- 	if (CollectionUtils.isEmpty(sessionList))
- 	    return null;
- 	return sessionList.get(0);
-     }
+	public Session checkingSession(String id) {
+		String query = "from Session where sessionId ='" + id + "' and entityStatus='" + EntityStatus.ACTIVE + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
+
+	public Session findByUserId(String userId) {
+		String query = "from Session where userId='" + userId + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
+
+	/* find by token Id */
+	public Session findBySessionId(String sessionId) {
+		String query = "from Session where sessionId='" + sessionId + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
+
+	/* find by payment reference and token Id */
+	public Session findByPaymentReferenceAndTokenId(String paymentReference, String tokenId) {
+		String query = "from Session where paymentReference='" + paymentReference + "' and sessionId='" + tokenId + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
+
+	/* find by payment reference */
+	public Session findByPaymentReference(String paymentReference) {
+		String query = "from Session where paymentReference='" + paymentReference + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
+
+	public Session findByTransactionId(String transactionId) {
+		String query = "from Session where transactionId='" + transactionId + "'";
+		List<Session> sessionList = sessionDao.getEntitiesByQuery(query);
+		if (CollectionUtils.isEmpty(sessionList))
+			return null;
+		return sessionList.get(0);
+	}
 
 }

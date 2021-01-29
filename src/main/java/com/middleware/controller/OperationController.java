@@ -67,19 +67,23 @@ public class OperationController extends AbstractController {
 	@CrossOrigin(origins = "*")
 	@JsonView(Views.Summary.class)
 	public Result saveCBPaytransaction(@RequestBody CBPayTransaction json) throws Exception {
-		Result result = new Result();
+		Result result = new Result();		
 		CBPayTransaction cbpaydata = cbpaymentService.checkTransRef(json.getTransRef());
 		if (cbpaydata != null) {
 			cbpaydata.setCheckedDateTime(dateTimeFormat());
 			cbpaydata.setTransStatus(json.getTransStatus());
 			result = cbpaymentService.savecbpayment(cbpaydata);
-			// if(json.getTransStatus().equals("S"))
-			// new WipoEndPonintsController().paymentStatus(json);
+
 		} else {
 			json.setCreatedDateTime(dateTimeFormat());
-			Session session = sessionService.checkingSession(json.getSessionId());
-			if (session != null)
+			Session session = sessionService.findBySessionId(json.getSessionId());
+			if (session != null) {
+				if (json.getTransStatus().equals("S")) {
+					session.setPaymentStatus(1);
+					sessionService.save(session);
+				}
 				json.setSession(session);
+			}
 			result = cbpaymentService.savecbpayment(json);
 		}
 		return result;
@@ -97,8 +101,10 @@ public class OperationController extends AbstractController {
 			return jsonRes;
 		}
 		Session session = sessionService.findBySessionId(sessionId.toString());
-		if (session != null)
+		if (session != null) {
+			session.setPaymentStatus(1);
 			sessionService.save(session);
+		}
 
 		VisaTransaction visaTransaction = new VisaTransaction();
 		visaTransaction.setId(SystemConstant.BOID_REQUIRED);
