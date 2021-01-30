@@ -53,34 +53,30 @@ public class PaymentController extends AbstractController {
 
 	private static Logger logger = Logger.getLogger(PaymentController.class);
 
-	public String getMPU(JSONObject json) throws IOException {
+	@ResponseBody
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "skipssl", method = RequestMethod.POST)
+	@JsonView(Views.Thin.class)
+	public String skipSSL() throws IOException {
+		SSL ssl = new SSL();
+		ssl.disableSslVerification();
+		return "success";
+	}
+
+	@ResponseBody
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "mpu", method = RequestMethod.POST)
+	@JsonView(Views.Summary.class)
+	public ResponseEntity<String> MPU(@RequestBody JSONObject json) throws IOException {
 		SSL ssl = new SSL();
 		ssl.disableSslVerification();
 
 		String url = "https://www.mpuecomuat.com:60145/UAT/Payment/Payment/Pay";
 
-//		URL obj = new URL(url);
-//		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-//		con.setRequestMethod("POST");
-//		con.setDoOutput(true);
-//
-//		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//		wr.writeBytes(json.toString());
-//		wr.flush();
-//		wr.close();
-//
-//		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//		String inputLine;
-//		StringBuffer response = new StringBuffer();
-//
-//		while ((inputLine = in.readLine()) != null) {
-//			System.out.println("inputLine : " + inputLine);
-//			response.append(inputLine);
-//		}
-//		in.close();
-
 		HttpHeaders headers = new HttpHeaders();
-		HttpEntity<String> entity = new HttpEntity<String>("", headers);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<String> entity = new HttpEntity<String>(json.toString(), headers);
 
 		RestTemplate restTemplate = new RestTemplate();
 		final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
@@ -88,20 +84,10 @@ public class PaymentController extends AbstractController {
 		factory.setHttpClient(httpClient);
 		restTemplate.setRequestFactory(factory);
 
-		logger.info("serviceUrl!!" + url);
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-		logger.info("response !!!!!!!!" + response);
-		return response.toString();
-
-	}
-
-	@ResponseBody
-	@CrossOrigin(origins = "*")
-	@RequestMapping(value = "mpu", method = RequestMethod.POST)
-	@JsonView(Views.Summary.class)
-	public String MPU(@RequestBody JSONObject json) throws IOException {
-		return getMPU(json);
+		
+		logger.info("response !!!!!!!!!" + response);
+		return response;
 	}
 
 	public JSONObject getOrder(JSONObject json) throws IOException {
