@@ -2,10 +2,12 @@
 package com.middleware.controller;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.naming.ServiceUnavailableException;
 
@@ -25,6 +27,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -138,8 +141,12 @@ public class WipoEndPonintsController extends AbstractController {
 		long serviceCharges = Long.parseLong(SERVICECHARGES);
 		String totalAmount = transaction.getAmount().substring(0, transaction.getAmount().indexOf("."));
 		long totalAmount1 = Long.parseLong(totalAmount);
-		finalAmt = totalAmount1 + serviceCharges;
-		session.setFinalAmount(finalAmt + "");
+		finalAmt = (totalAmount1 + serviceCharges);
+
+		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		String numberAsString = numberFormat.format(finalAmt);
+
+		session.setFinalAmount(numberAsString);
 		sessionService.save(session);
 		return session;
 	}
@@ -150,8 +157,14 @@ public class WipoEndPonintsController extends AbstractController {
 																 */
 	@ResponseBody
 	@JsonView(Views.Thin.class)
-	public JSONObject payments(@RequestBody JSONObject json) throws Exception {
+	public JSONObject payments(@RequestHeader("token") String token, @RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
+
+		if (!check(token)) {
+			resultJson.put("error", "Unauthorized Request!");
+			return resultJson;
+		}
+
 		JSONObject errors = new JSONObject();
 
 		Object requestorId = json.get("requestorId");
@@ -269,8 +282,15 @@ public class WipoEndPonintsController extends AbstractController {
 	@RequestMapping(value = "status", method = RequestMethod.POST) /* rest end point 2.4 */
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public JSONObject paymentStatus(@RequestBody JSONObject json) {
+	public JSONObject paymentStatus(@RequestHeader("token") String token, @RequestBody JSONObject json)
+			throws Exception {
 		JSONObject resultJson = new JSONObject();
+
+		if (!check(token)) {
+			resultJson.put("error", "Unauthorized Request!");
+			return resultJson;
+		}
+
 		JSONObject errors = new JSONObject();
 		Object paymentReferenceObject = json.get("paymentReference");
 		Object tokenIdObject = json.get("tokenId");
@@ -324,8 +344,14 @@ public class WipoEndPonintsController extends AbstractController {
 	@RequestMapping(value = "ack", method = RequestMethod.POST) /* rest end point 2.5 */
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public JSONObject ack(@RequestBody JSONObject json) {
+	public JSONObject ack(@RequestHeader("token") String token, @RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
+
+		if (!check(token)) {
+			resultJson.put("error", "Unauthorized Request!");
+			return resultJson;
+		}
+
 		JSONObject errors = new JSONObject();
 
 		Object paymentReferenceObject = json.get("paymentReference");
@@ -471,9 +497,18 @@ public class WipoEndPonintsController extends AbstractController {
 		Session session = sessionService.findBySessionId(json.get("sessionId").toString());
 		session.setPaymentStatus(Integer.parseInt(json.get("paymentStatus").toString()));
 		sessionService.save(session);
-		
+
 		resultJson.put("status", true);
 		return resultJson;
+	}
+
+	@RequestMapping(value = "encrypt", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Thin.class)
+	@CrossOrigin(origins = "*")
+	public String encryption() throws Exception {
+		return encrypt();
+
 	}
 
 }

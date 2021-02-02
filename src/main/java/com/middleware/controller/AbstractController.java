@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.middleware.entity.AES;
 import com.middleware.entity.Session;
 import com.middleware.entity.Visa;
 import com.middleware.entity.VisaTransaction;
@@ -43,11 +45,10 @@ import com.middleware.service.VisaService;
 
 @Service
 public class AbstractController {
-	//public static final String secretKey = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";
-	// wipouser,123//SHA1
-	
+	public static final String secretKeyForBasicAuth = "67f878091a3d0b3d871bdc53f47b15aa74ad9e25";
+
 	public static final String secretKey = "mykey@91mykey@91";
-	
+
 	@Autowired
 	private VisaService visaService;
 
@@ -56,11 +57,33 @@ public class AbstractController {
 
 	@Autowired
 	private MPUPaymentTransactionService mpuPaymentService;
-	
+
 	private static Logger logger = Logger.getLogger(AbstractController.class);
 
-	public String getMyanmarElement(String content, String element,
-			String remover) {
+	public String encrypt() throws Exception {
+		byte[] encryptedMsg = AES.encrypt("hjIOI203432043#$^&*opkc,xmnvehwiewoeoweowiu", secretKey);
+		String base64Encrypted = Base64.getEncoder().encodeToString(encryptedMsg);
+		return base64Encrypted;
+	}
+
+	public String decrypt(String encryptedString) throws Exception {
+		byte[] base64DecryptedEmail = Base64.getDecoder().decode(encryptedString);
+		return AES.decrypt(base64DecryptedEmail, secretKey);
+	}
+
+	public boolean check(String encryptedString) throws Exception {
+		String originalString = "hjIOI203432043#$^&*opkc,xmnvehwiewoeoweowiu";
+
+		String decryptedString = "";
+		try {
+			decryptedString = decrypt(encryptedString);
+		} catch (Exception e) {
+			return false;
+		}
+		return decryptedString.equals(originalString);
+	}
+
+	public String getMyanmarElement(String content, String element, String remover) {
 		int begin = content.indexOf(element);
 		content = content.substring(begin, content.length());
 		int end = content.indexOf("</dynamic-content>");
@@ -75,15 +98,13 @@ public class AbstractController {
 		return "";
 	}
 
-	public String getEngElement(String content, String element,
-			String remover) {
+	public String getEngElement(String content, String element, String remover) {
 		int begin = content.indexOf(element);
 		String remainString = content.substring(begin, content.length());
 		int mStart = remainString.indexOf(remover);
 		if (mStart > 0) {
 			int mEnd = remainString.indexOf("]]");
-			if (remainString.isEmpty() || mEnd < 0 || mStart < 0
-					|| mEnd < mStart)
+			if (remainString.isEmpty() || mEnd < 0 || mStart < 0 || mEnd < mStart)
 				return "";
 
 			return Jsoup.parse(remainString.substring(mStart, mEnd)).text();
@@ -199,8 +220,7 @@ public class AbstractController {
 				: remainString.substring(0, end);
 	}
 
-	public String convertEntryListToString(List<String> entryList,
-			String input) {
+	public String convertEntryListToString(List<String> entryList, String input) {
 		int index = Integer.parseInt(input);
 		int lastIndex = (entryList.size() - 1) - (index * 10 - 10);
 		int substract = lastIndex < 9 ? lastIndex : 9;
@@ -218,12 +238,10 @@ public class AbstractController {
 		int end = content.indexOf("</dynamic-content>");
 		String remainString = content.substring(end, content.length());
 
-		int mStart = remainString
-				.indexOf("<dynamic-content language-id=\"my_MM\">");
+		int mStart = remainString.indexOf("<dynamic-content language-id=\"my_MM\">");
 		if (mStart > 0) {
 			int mEnd = remainString.lastIndexOf("</dynamic-content>");
-			return Jsoup.parse(remainString.substring(mStart, mEnd)).text()
-					.replaceAll("value 1", "");
+			return Jsoup.parse(remainString.substring(mStart, mEnd)).text().replaceAll("value 1", "");
 		}
 		return "";
 	}
@@ -239,8 +257,7 @@ public class AbstractController {
 
 		if (start < 0 || end < 0)
 			return "";
-		return Jsoup.parse(content.substring(start, end)).text()
-				.replaceAll("value 1", "");
+		return Jsoup.parse(content.substring(start, end)).text().replaceAll("value 1", "");
 	}
 
 	public List<Object> bySize(List<Object> entryList, String input) {
@@ -264,8 +281,7 @@ public class AbstractController {
 		}
 
 		Object userId = json.get("userId");
-		if (userId == null || userId.toString().isEmpty()
-				|| Long.parseLong(userId.toString()) == 0) {
+		if (userId == null || userId.toString().isEmpty() || Long.parseLong(userId.toString()) == 0) {
 			resultJson.put("message", "User Id is Empty!");
 			resultJson.put("status", "0");
 		}
@@ -294,8 +310,7 @@ public class AbstractController {
 		}
 
 		Object userId = json.get("userId");
-		if (userId == null || userId.toString().isEmpty()
-				|| Long.parseLong(userId.toString()) == 0) {
+		if (userId == null || userId.toString().isEmpty() || Long.parseLong(userId.toString()) == 0) {
 			resultJson.put("message", "User Id is Empty!");
 			resultJson.put("status", "0");
 		}
@@ -390,10 +405,8 @@ public class AbstractController {
 
 					if (!arl.get(i).equals("")) {
 
-						if (arl.get(i).split(":")[0]
-								.equalsIgnoreCase(messageCode)) {
-							System.out.println(
-									"msgdesc" + arl.get(i).split(":")[1]);
+						if (arl.get(i).split(":")[0].equalsIgnoreCase(messageCode)) {
+							System.out.println("msgdesc" + arl.get(i).split(":")[1]);
 							retMsgDesc = arl.get(i).split(":")[1];
 						}
 					}
@@ -415,8 +428,7 @@ public class AbstractController {
 			Date convertedDate = dateFormat.parse(date);
 			Calendar c = Calendar.getInstance();
 			c.setTime(convertedDate);
-			c.set(Calendar.DAY_OF_MONTH,
-					c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
 			return c.getTime().toString().split(" ")[2];
 		} catch (ParseException e) {
 			logger.error("Error: " + e.getMessage());
@@ -431,8 +443,7 @@ public class AbstractController {
 			Date convertedDate = dateFormat.parse(year + "/12/01");
 			Calendar c = Calendar.getInstance();
 			c.setTime(convertedDate);
-			c.set(Calendar.DAY_OF_MONTH,
-					c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
 			return year + "/12/" + c.getTime().toString().split(" ")[2];
 		} catch (ParseException e) {
 			logger.error("Error: " + e.getMessage());
@@ -442,41 +453,40 @@ public class AbstractController {
 
 	public String parseMonthToInt(String month) {
 		switch (month) {
-			case "Jan" :
-				return "01";
-			case "Feb" :
-				return "02";
-			case "Mar" :
-				return "03";
-			case "Apr" :
-				return "04";
-			case "May" :
-				return "05";
-			case "June" :
-				return "06";
-			case "July" :
-				return "07";
-			case "Aug" :
-				return "08";
-			case "Sep" :
-				return "09";
-			case "Oct" :
-				return "10";
-			case "Nov" :
-				return "11";
-			case "Dec" :
-				return "12";
+		case "Jan":
+			return "01";
+		case "Feb":
+			return "02";
+		case "Mar":
+			return "03";
+		case "Apr":
+			return "04";
+		case "May":
+			return "05";
+		case "June":
+			return "06";
+		case "July":
+			return "07";
+		case "Aug":
+			return "08";
+		case "Sep":
+			return "09";
+		case "Oct":
+			return "10";
+		case "Nov":
+			return "11";
+		case "Dec":
+			return "12";
 		}
 		return "-1";
 	}
 
 	public String dateTimeFormat() {
-		DateTimeFormatter dateFormat = DateTimeFormatter
-				.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
 		return dateFormat.format(now);
 	}
-	
+
 	public String getStartDate(String param) {
 
 		/*
@@ -525,7 +535,7 @@ public class AbstractController {
 		return endDate;
 
 	}
-	
+
 	public void writeValueinSpecificeCellWithBackGroundColor(Workbook workbook, String sheetName, String columnName,
 			int rowNumber, String value, short fontSize, short color) {
 
@@ -576,7 +586,7 @@ public class AbstractController {
 		cell.setCellStyle(cellStyle);
 		cell.setCellValue(value);
 	}
-	
+
 	public void writeSheet(XSSFWorkbook workbook, String startDate, String endDate) {
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		short font = 10;
@@ -632,9 +642,6 @@ public class AbstractController {
 
 	}
 
-
-	
-
 	public void writeSheet2(XSSFWorkbook workbook, String startDate, String endDate) {
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		short font = 10;
@@ -647,7 +654,11 @@ public class AbstractController {
 		for (Visa visa : visaList) {
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "A", 2 + count, count + "", font);
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "B", 2 + count,
-					"Ã¡â‚¬â„¢Ã¡â‚¬Â°Ã¡â‚¬â€¢Ã¡â‚¬Â­Ã¡â‚¬Â¯Ã¡â‚¬â€žÃ¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â½Ã¡â‚¬â€žÃ¡â‚¬Â·Ã¡â‚¬Âº Ã¡â‚¬â€°Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬â€¦Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬Å’Ã¡â‚¬Â¬Ã¡â‚¬â€�\r\n" + "(MD-0001) \r\n" + "Ã¡â‚¬â€ºÃ¡â‚¬Â¯Ã¡â‚¬Â¶Ã¡â‚¬Â¸Ã¡â‚¬Â¡Ã¡â‚¬â„¢Ã¡â‚¬Â¾Ã¡â‚¬ï¿½Ã¡â‚¬Âº (Ã¡ï¿½â€¦Ã¡ï¿½â€š)\r\n" + "Ã¡â‚¬â€�Ã¡â‚¬Â±Ã¡â‚¬â€¢Ã¡â‚¬Â¼Ã¡â‚¬Å Ã¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â±Ã¡â‚¬Â¬Ã¡â‚¬Âº", (short) 10);
+					"Ã¡â‚¬â„¢Ã¡â‚¬Â°Ã¡â‚¬â€¢Ã¡â‚¬Â­Ã¡â‚¬Â¯Ã¡â‚¬â€žÃ¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â½Ã¡â‚¬â€žÃ¡â‚¬Â·Ã¡â‚¬Âº Ã¡â‚¬â€°Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬â€¦Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬Å’Ã¡â‚¬Â¬Ã¡â‚¬â€�\r\n"
+							+ "(MD-0001) \r\n"
+							+ "Ã¡â‚¬â€ºÃ¡â‚¬Â¯Ã¡â‚¬Â¶Ã¡â‚¬Â¸Ã¡â‚¬Â¡Ã¡â‚¬â„¢Ã¡â‚¬Â¾Ã¡â‚¬ï¿½Ã¡â‚¬Âº (Ã¡ï¿½â€¦Ã¡ï¿½â€š)\r\n"
+							+ "Ã¡â‚¬â€�Ã¡â‚¬Â±Ã¡â‚¬â€¢Ã¡â‚¬Â¼Ã¡â‚¬Å Ã¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â±Ã¡â‚¬Â¬Ã¡â‚¬Âº",
+					(short) 10);
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "C", 2 + count, "(MD-0001)", font);
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "D", 2 + count,
 					"IP Department Online Filing Application", font);

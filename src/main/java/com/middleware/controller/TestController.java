@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,49 +25,54 @@ import com.middleware.entity.Views;
 @RequestMapping("")
 public class TestController extends AbstractController {
 
-    @Value("${SERVICEURL}")
-    private String SERVICEURL;
+	@Value("${SERVICEURL}")
+	private String SERVICEURL;
 
-    private static Logger logger = Logger.getLogger(TestController.class);
+	private static Logger logger = Logger.getLogger(TestController.class);
 
-    @RequestMapping(value = "", method = RequestMethod.GET) /* WIPO REST end point 2.1 */
-    @JsonView(Views.Summary.class)
-    public String test() {
+	@RequestMapping(value = "", method = RequestMethod.GET) /* WIPO REST end point 2.1 */
+	@JsonView(Views.Summary.class)
+	public String test(@RequestHeader("token") String token) throws Exception {
 
-	try {
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);
-	    HttpEntity<String> entity = new HttpEntity<String>(headers);
+		if (!check(token))
+			return "401";
 
-	    String serviceUrl = SERVICEURL + "/test";
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-	    RestTemplate restTemplate = new RestTemplate();
-	    final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-	    final HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy())
-		    .build();
-	    factory.setHttpClient(httpClient);
-	    restTemplate.setRequestFactory(factory);
+			String serviceUrl = SERVICEURL + "/test";
 
-	    ResponseEntity<String> response = restTemplate.exchange(serviceUrl, HttpMethod.GET, entity, String.class);
-	    logger.info("otherserviceResponse......" + response.getStatusCode().toString());
+			RestTemplate restTemplate = new RestTemplate();
+			final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+			final HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy())
+					.build();
+			factory.setHttpClient(httpClient);
+			restTemplate.setRequestFactory(factory);
 
-	    return response.getStatusCode().toString();
-	} catch (Exception e) {
-	    return "500";
+			ResponseEntity<String> response = restTemplate.exchange(serviceUrl, HttpMethod.GET, entity, String.class);
+			logger.info("otherserviceResponse......" + response.getStatusCode().toString());
+
+			return response.getStatusCode().toString();
+		} catch (Exception e) {
+			return "500";
+		}
 	}
-    }
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    @JsonView(Views.Summary.class)
-    public String testRunning() {
-	return "yes";
-    }
+	@RequestMapping(value = "test", method = RequestMethod.GET)
+	@JsonView(Views.Summary.class)
+	public String testRunning() {
+		return "yes";
+	}
 
-    @RequestMapping(value = "authenticate", method = RequestMethod.GET) /* WIPO REST end point 2.6 */
-    @JsonView(Views.Summary.class)
-    public String authenticate() {
+	@RequestMapping(value = "authenticate", method = RequestMethod.GET) /* WIPO REST end point 2.6 */
+	@JsonView(Views.Summary.class)
+	public String authenticate(@RequestHeader("token") String token) throws Exception {
+		if (!check(token))
+			return "fail";
 
-	return "success";
-    }
+		return "success";
+	}
 
 }
