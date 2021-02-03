@@ -475,7 +475,7 @@ public class AbstractController {
 	}
 
 	public String dateTimeFormat() {
-		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
 		return dateFormat.format(now);
 	}
@@ -578,21 +578,37 @@ public class AbstractController {
 		cell.setCellValue(value);
 	}
 
-	private void writeCBPay(XSSFWorkbook workbook, String startDate, String endDate) {
+	private void writeCBPay(XSSFWorkbook workbook, String startDate, String endDate, int count) {
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		short font = 10;
 
 		List<CBPayTransaction> cBPayTransactionList = cbPayTransactionService.findByDateRange(startDate, endDate);
 		logger.info("cbpay List!!!!!!!!!!!!!!!!" + cBPayTransactionList.size());
+		logger.info("count!!!!!!!!!!!!!!!!" + count);
+
+		for (CBPayTransaction cbPayTransaction : cBPayTransactionList) {
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "A", 2 + count, count + "", font);
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "B", 2 + count, "မူပိုင်ခွင့် ဉီးစီးဌာန\r\n" + "(MD-0001) \r\n" + "ရုံးအမှတ် (၅၂)\r\n" + "နေပြည်တော်", (short) 10);
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "C", 2 + count, "(MD-0001)", font);
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "D", 2 + count, "IP Department Online Filing Application", font);
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "E", 2 + count, "CB Pay", font);
+			// writeValueinSpecificeCell(workbook, sheet.getSheetName(), "F", 2 + count,
+			// visa.getNameOnCard(), font);
+			// writeValueinSpecificeCell(workbook, sheet.getSheetName(), "G", 2 + count,
+			// visa.getNumber(), font);
+			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "H", 2 + count, "-", font);
+			count++;
+
+		}
 
 	}
 
-	private void writeVisa(XSSFWorkbook workbook, String startDate, String endDate) {
+	private void writeVisa(XSSFWorkbook workbook, String startDate, String endDate, int count) {
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		short font = 10;
 		List<Visa> visaList = visaService.findByDateRange(startDate, endDate);
 		logger.info("visaList!!!!!!!!!!!!!!!!" + visaList.size());
-		int count = 1;
+
 		for (Visa visa : visaList) {
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "A", 2 + count, count + "", font);
 			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "B", 2 + count, "မူပိုင်ခွင့် ဉီးစီးဌာန\r\n" + "(MD-0001) \r\n" + "ရုံးအမှတ် (၅၂)\r\n" + "နေပြည်တော်", (short) 10);
@@ -628,6 +644,7 @@ public class AbstractController {
 
 			count++;
 		}
+		logger.info("count after visa 2222222222222222222222222222" + count);
 
 	}
 
@@ -635,56 +652,10 @@ public class AbstractController {
 
 		logger.info("StartDate!!!!!!!!!!!!!!!!" + startDate);
 		logger.info("endDate!!!!!!!!!!!!!!!!" + endDate);
-
-		writeVisa(workbook, startDate, endDate);
-		writeCBPay(workbook, startDate, endDate);
-
-	}
-
-	public void writeSheet2(XSSFWorkbook workbook, String startDate, String endDate) {
-		XSSFSheet sheet = workbook.getSheetAt(0);
-		short font = 10;
-		logger.info("StartDate!!!!!!!!!!!!!!!!" + startDate);
-		logger.info("endDate!!!!!!!!!!!!!!!!" + endDate);
-
-		List<Visa> visaList = visaService.findByDateRange(startDate, endDate);
-		logger.info("visaList!!!!!!!!!!!!!!!!" + visaList.size());
 		int count = 1;
-		for (Visa visa : visaList) {
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "A", 2 + count, count + "", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "B", 2 + count, "Ã¡â‚¬â„¢Ã¡â‚¬Â°Ã¡â‚¬â€¢Ã¡â‚¬Â­Ã¡â‚¬Â¯Ã¡â‚¬â€žÃ¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â½Ã¡â‚¬â€žÃ¡â‚¬Â·Ã¡â‚¬Âº Ã¡â‚¬â€°Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬â€¦Ã¡â‚¬Â®Ã¡â‚¬Â¸Ã¡â‚¬Å’Ã¡â‚¬Â¬Ã¡â‚¬â€�\r\n" + "(MD-0001) \r\n" + "Ã¡â‚¬â€ºÃ¡â‚¬Â¯Ã¡â‚¬Â¶Ã¡â‚¬Â¸Ã¡â‚¬Â¡Ã¡â‚¬â„¢Ã¡â‚¬Â¾Ã¡â‚¬ï¿½Ã¡â‚¬Âº (Ã¡ï¿½â€¦Ã¡ï¿½â€š)\r\n" + "Ã¡â‚¬â€�Ã¡â‚¬Â±Ã¡â‚¬â€¢Ã¡â‚¬Â¼Ã¡â‚¬Å Ã¡â‚¬ÂºÃ¡â‚¬ï¿½Ã¡â‚¬Â±Ã¡â‚¬Â¬Ã¡â‚¬Âº", (short) 10);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "C", 2 + count, "(MD-0001)", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "D", 2 + count, "IP Department Online Filing Application", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "E", 2 + count, "VISA", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "F", 2 + count, visa.getNameOnCard(), font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "G", 2 + count, visa.getNumber(), font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "H", 2 + count, "-", font);
-
-			Session session = visa.getSession();
-			if (session == null)
-				continue;
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "I", 2 + count, session.getPayerName(), font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "J", 2 + count, session.getPayerPhone(), font);
-			writeValueinSpecificeCellWithBackGroundColor(workbook, sheet.getSheetName(), "K", 2 + count, session.getPayerEmail(), font, HSSFColor.HSSFColorPredefined.BLUE.getIndex());
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "L", 2 + count, session.getTotalAmount() + " " + session.getCurrencyType(), font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "M", 2 + count, "300 MMK", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "N", 2 + count, (Double.parseDouble(session.getTotalAmount()) + 300) + " " + session.getCurrencyType(), font);
-
-			String date = session.getPaymentConfirmationDate();
-			if (date != null && !date.isEmpty()) {
-				String[] confirmationDate = date.split(" ");
-				String[] processDate = confirmationDate[0].split("-");
-				writeValueinSpecificeCell(workbook, sheet.getSheetName(), "O", 2 + count, processDate[2] + "-" + processDate[1] + "-" + processDate[0] + " " + confirmationDate[1], font);
-			} else
-				writeValueinSpecificeCell(workbook, sheet.getSheetName(), "O", 2 + count, "-", font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "P", 2 + count, session.getRequestorId(), font);
-			writeValueinSpecificeCell(workbook, sheet.getSheetName(), "Q", 2 + count, session.getPaymentReference(), font);
-			VisaTransaction visaTransaction = visa.getVisaTransaction();
-			if (visaTransaction != null)
-				writeValueinSpecificeCell(workbook, sheet.getSheetName(), "R", 2 + count, visaTransaction.getTransactionId(), font);
-
-			count++;
-		}
+		writeVisa(workbook, startDate, endDate, count);		
+		logger.info("count after visa 11111111111111111111111!" + count);
+		writeCBPay(workbook, startDate, endDate, count);
 
 	}
 

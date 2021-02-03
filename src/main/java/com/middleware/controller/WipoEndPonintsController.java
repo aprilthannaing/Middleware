@@ -152,8 +152,8 @@ public class WipoEndPonintsController extends AbstractController {
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST) /*
-																 * WIPO REST end point 2.3 (save session with
-																 * transaction information, session id is token id.)
+																 * WIPO REST end point 2.3 (save session with transaction information, session
+																 * id is token id.)
 																 */
 	@ResponseBody
 	@JsonView(Views.Thin.class)
@@ -172,9 +172,7 @@ public class WipoEndPonintsController extends AbstractController {
 		ObjectMapper mapper = new ObjectMapper();
 		Transaction transaction = mapper.convertValue(transactionObject, Transaction.class);
 
-		if (transaction == null || transaction.getTransactionId() == null || transaction.getTransactionId().isEmpty()
-				|| transaction.getPaymentReference() == null || transaction.getPaymentReference().isEmpty()
-				|| transaction.getBankIdentifier() == null || transaction.getBankIdentifier().isEmpty()) {
+		if (transaction == null || transaction.getTransactionId() == null || transaction.getTransactionId().isEmpty() || transaction.getPaymentReference() == null || transaction.getPaymentReference().isEmpty() || transaction.getBankIdentifier() == null || transaction.getBankIdentifier().isEmpty()) {
 			errors.put("code", "-3");
 			errors.put("bankCode", "24503");
 			errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference.");
@@ -195,8 +193,7 @@ public class WipoEndPonintsController extends AbstractController {
 		Object paymentNote = transaction.getPaymentNote();
 		Object amount = transaction.getAmount();
 		Object currency = transaction.getCurrencyType();
-		if (paymentNote == null || paymentNote.toString().isEmpty() || amount == null || amount.toString().isEmpty()
-				|| currency == null || currency.toString().isEmpty()) {
+		if (paymentNote == null || paymentNote.toString().isEmpty() || amount == null || amount.toString().isEmpty() || currency == null || currency.toString().isEmpty()) {
 			errors.put("code", "-3");
 			errors.put("bankCode", "24501");
 			errors.put("bankDetails", "unauthorized bank credentials");
@@ -208,8 +205,7 @@ public class WipoEndPonintsController extends AbstractController {
 		transaction.setTransactionDate(session.getStartDate());
 		transaction.setTokenId(session.getSessionId());
 		resultJson.put("transaction", transaction);
-		String redirectHTML = "<link rel=\\\"stylesheet\\\" href=\\\"https://fonts.googleapis.com/icon?family=Material+Icons\\\"><link href=\\\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\\\" rel=\\\"stylesheet\\\" crossorigin=\\\"anonymous\\\"><!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"> <title>WIPO File</title> <base href=\\\"/\\\"> <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"> <link rel=\\\"icon\\\" type=\\\"image/x-icon\\\" href=\\\"favicon.ico\\\"></head><body> <script>window.location.replace"
-				+ "('" + frondEndURL + "?id=" + session.getSessionId() + "')</script></body></html>";
+		String redirectHTML = "<link rel=\\\"stylesheet\\\" href=\\\"https://fonts.googleapis.com/icon?family=Material+Icons\\\"><link href=\\\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\\\" rel=\\\"stylesheet\\\" crossorigin=\\\"anonymous\\\"><!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"> <title>WIPO File</title> <base href=\\\"/\\\"> <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"> <link rel=\\\"icon\\\" type=\\\"image/x-icon\\\" href=\\\"favicon.ico\\\"></head><body> <script>window.location.replace" + "('" + frondEndURL + "?id=" + session.getSessionId() + "')</script></body></html>";
 		resultJson.put("redirectHTML", redirectHTML);
 		return resultJson;
 	}
@@ -282,8 +278,7 @@ public class WipoEndPonintsController extends AbstractController {
 	@RequestMapping(value = "status", method = RequestMethod.POST) /* rest end point 2.4 */
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public JSONObject paymentStatus(@RequestHeader("token") String token, @RequestBody JSONObject json)
-			throws Exception {
+	public JSONObject paymentStatus(@RequestHeader("token") String token, @RequestBody JSONObject json) throws Exception {
 		JSONObject resultJson = new JSONObject();
 
 		if (!check(token)) {
@@ -295,8 +290,7 @@ public class WipoEndPonintsController extends AbstractController {
 		Object paymentReferenceObject = json.get("paymentReference");
 		Object tokenIdObject = json.get("tokenId");
 
-		if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty() || tokenIdObject == null
-				|| tokenIdObject.toString().isEmpty()) {
+		if (paymentReferenceObject == null || paymentReferenceObject.toString().isEmpty() || tokenIdObject == null || tokenIdObject.toString().isEmpty()) {
 			errors.put("code", "-3");
 			errors.put("bankCode", "24503");
 			errors.put("bankDetails", "unknown payment Transaction Identifier or Payment reference");
@@ -412,7 +406,6 @@ public class WipoEndPonintsController extends AbstractController {
 					session.setPaymentType(PaymentType.CBPAY);
 				else if (paymentType.equals("VISA"))
 					session.setPaymentType(PaymentType.VISA);
-				session.setPaymentConfirmationDate(dateTimeFormat());
 			}
 
 			sessionService.save(session);
@@ -496,6 +489,24 @@ public class WipoEndPonintsController extends AbstractController {
 
 		Session session = sessionService.findBySessionId(json.get("sessionId").toString());
 		session.setPaymentStatus(Integer.parseInt(json.get("paymentStatus").toString()));
+		sessionService.save(session);
+
+		resultJson.put("status", true);
+		return resultJson;
+	}
+
+	@RequestMapping(value = "confirmPayment", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Thin.class)
+	@CrossOrigin(origins = "*")
+	public JSONObject setConfirmPayment(@RequestBody JSONObject json) throws Exception {
+		JSONObject resultJson = new JSONObject();
+		Session session = sessionService.findBySessionId(json.get("sessionId").toString());
+
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime now = LocalDateTime.now();
+		String[] dateString = dateFormat.format(now).toString().split(" ");
+		session.setPaymentConfirmationDate(dateString[0] + "T" + dateString[1]);
 		sessionService.save(session);
 
 		resultJson.put("status", true);
