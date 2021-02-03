@@ -234,7 +234,7 @@ public class WipoEndPonintsController extends AbstractController {
 		case MPU:
 			MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
 			if (mpu == null) {
-				return null;
+				return transaction;
 			}
 			transaction.setPaymentStatus(mpu.isApproved() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber("");
@@ -243,7 +243,7 @@ public class WipoEndPonintsController extends AbstractController {
 		case CBPAY:
 			CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
 			if (cbPay == null) {
-				return null;
+				return transaction;
 			}
 			transaction.setPaymentStatus(cbPay.isSuccess() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber("");
@@ -251,7 +251,7 @@ public class WipoEndPonintsController extends AbstractController {
 		case VISA:
 			Visa visa = visaService.findByTokenId(tokenId);
 			if (visa == null) {
-				return null;
+				return transaction;
 			}
 			transaction.setPaymentStatus(visa.isSuccess() ? 1 : session.getPaymentStatus());
 			transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());

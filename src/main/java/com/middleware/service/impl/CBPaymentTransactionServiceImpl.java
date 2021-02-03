@@ -11,6 +11,7 @@ import com.mchange.rmi.ServiceUnavailableException;
 import com.middleware.dao.CBPaymentTransactionDao;
 import com.middleware.entity.CBPayTransaction;
 import com.middleware.entity.Result;
+import com.middleware.entity.Visa;
 import com.middleware.service.CBPaymentTransactionService;
 
 @Service("CBPaymentTransactionService")
@@ -67,18 +68,17 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 	}
 
 	public List<CBPayTransaction> findByDateRange(String startDate, String endDate) {
-		String query = "from CBPayTransaction cb where cb.transExpiredTime between '" + startDate + "' and '" + endDate
-				+ "'";
+		String query = "from CBPayTransaction cb where cb.transExpiredTime between '" + startDate + "' and '" + endDate + "'";
 		List<CBPayTransaction> cbPayList = cbpaymentDao.getEntitiesByQuery(query);
 		return cbPayList;
 	}
-	
-	 public CBPayTransaction findByTokenId(String tokenId) {
+
+	public CBPayTransaction findByTokenId(String tokenId) {
 		String query = "from CBPayTransaction cb where sessionId='" + tokenId + "'";
 		List<CBPayTransaction> cbTransactionList = cbpaymentDao.getEntitiesByQuery(query);
 		if (CollectionUtils.isEmpty(cbTransactionList))
-		    return null;
+			return null;
 		return cbTransactionList.get(0);
-	    }	
-	
+	}
+
 }
