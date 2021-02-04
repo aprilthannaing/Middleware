@@ -477,7 +477,8 @@ public class AbstractController {
 	public String dateTimeFormat() {
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
-		return dateFormat.format(now);
+		String[] dateString = dateFormat.format(now).toString().split(" ");
+		return dateString[0] + "T" + dateString[1];
 	}
 
 	public String getStartDate(String param) {
@@ -653,7 +654,7 @@ public class AbstractController {
 		logger.info("StartDate!!!!!!!!!!!!!!!!" + startDate);
 		logger.info("endDate!!!!!!!!!!!!!!!!" + endDate);
 		int count = 1;
-		writeVisa(workbook, startDate, endDate, count);		
+		writeVisa(workbook, startDate, endDate, count);
 		logger.info("count after visa 11111111111111111111111!" + count);
 		writeCBPay(workbook, startDate, endDate, count);
 
