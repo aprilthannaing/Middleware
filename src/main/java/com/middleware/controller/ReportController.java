@@ -52,10 +52,12 @@ public class ReportController extends AbstractController {
 	@Value("${FILEPATH}")
 	private String filePath;
 
+	@Value("${SERVICECHARGES}")
+	private String serviceChanges;
+
 	private static Logger logger = Logger.getLogger(ReportController.class);
 
-	public void writeValueinSpecificeCellWithBackGroundColor(Workbook workbook, String sheetName, String columnName,
-			int rowNumber, String value, short fontSize, short color) {
+	public void writeValueinSpecificeCellWithBackGroundColor(Workbook workbook, String sheetName, String columnName, int rowNumber, String value, short fontSize, short color) {
 
 		Sheet sheet = workbook.getSheet(sheetName);
 		Row row = null;
@@ -81,8 +83,7 @@ public class ReportController extends AbstractController {
 		cell.setCellValue(value);
 	}
 
-	public void writeValueinSpecificeCell(Workbook workbook, String sheetName, String columnName, int rowNumber,
-			String value, short fontSize) {
+	public void writeValueinSpecificeCell(Workbook workbook, String sheetName, String columnName, int rowNumber, String value, short fontSize) {
 		Sheet sheet = workbook.getSheet(sheetName);
 		Row row = null;
 		int columnNumber = CellReference.convertColStringToIndex(columnName);

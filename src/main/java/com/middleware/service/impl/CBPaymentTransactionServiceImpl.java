@@ -81,4 +81,10 @@ public class CBPaymentTransactionServiceImpl implements CBPaymentTransactionServ
 		return cbTransactionList.get(0);
 	}
 
+	public List<CBPayTransaction> getAll() {
+		String query = "from CBPayTransaction cb";
+		List<CBPayTransaction> cbPayList = cbpaymentDao.getEntitiesByQuery(query);
+		return cbPayList;
+	}
+
 }
