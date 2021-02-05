@@ -398,16 +398,64 @@ public class WipoEndPonintsController extends AbstractController {
 		if (session != null) {
 			// update session
 			session.setEndDate(dateTimeFormat());
-			if (!json.get("type").toString().equals("")) {
-				String paymentType = json.get("type").toString();
-				if (paymentType.equals("MPU"))
-					session.setPaymentType(PaymentType.MPU);
-				else if (paymentType.equals("CBPAY"))
-					session.setPaymentType(PaymentType.CBPAY);
-				else if (paymentType.equals("VISA"))
-					session.setPaymentType(PaymentType.VISA);
+			if(json.get("status") == null || !json.get("status").toString().equals("SAVE")) {
+				if (!json.get("type").toString().equals("")) {
+					String paymentType = json.get("type").toString();
+					if (paymentType.equals("MPU")) {
+						session.setPaymentType(PaymentType.MPU);
+						session.setPaymentStatus(0);
+					}else if (paymentType.equals("CBPAY")) {
+						session.setPaymentType(PaymentType.CBPAY);
+						session.setPaymentStatus(0);
+					}else if (paymentType.equals("VISA")) {
+						session.setPaymentType(PaymentType.VISA);
+						session.setPaymentStatus(0);
+					}
+				}
 			}
+			sessionService.save(session);
+			res.put("code", "0000");
+			res.put("Description", "Success");
+			res.put("userObj", session);
+		} else {
+			res.put("code", "0001");
+			res.put("Description", "User not Found!");
+		}
+		return res;
+	}
+	@RequestMapping(value = "checkUserByStatus", method = RequestMethod.POST)
+	@ResponseBody
+	@JsonView(Views.Summary.class)
+	@CrossOrigin(origins = "*")
+	public JSONObject checkUserByStatus(@RequestBody JSONObject json) throws Exception {
+		JSONObject res = new JSONObject();
+		Object requestIdObject = json.get("id");
+		if (requestIdObject == null || requestIdObject.toString().isEmpty()) {
+			res.put("code", "0001");
+			res.put("Description", "SessionId is empty");
+			return res;
+		}
 
+		String requestId = requestIdObject.toString();
+		Session session = sessionService.checkingSession(requestId);
+		if (session != null) {
+			// update session
+			session.setEndDate(dateTimeFormat());
+			if(json.get("status") == null || !json.get("status").toString().equals("")) {
+				if (!json.get("type").toString().equals("")) {
+					String paymentType = json.get("type").toString();
+					if (paymentType.equals("MPU")) {
+						session.setPaymentType(PaymentType.MPU);
+						session.setPaymentStatus(-6);
+					}else if (paymentType.equals("CBPAY")) {
+						session.setPaymentType(PaymentType.CBPAY);
+						session.setPaymentStatus(-6);
+					}else if (paymentType.equals("VISA")) {
+						session.setPaymentType(PaymentType.VISA);
+						session.setPaymentStatus(-6);
+					}
+				}
+			}
 			sessionService.save(session);
 
 			res.put("code", "0000");

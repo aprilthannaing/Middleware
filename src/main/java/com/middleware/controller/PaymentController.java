@@ -5,11 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.naming.ServiceUnavailableException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -29,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +42,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.gson.Gson;
 import com.middleware.entity.Payment;
+import com.middleware.entity.PaymentType;
+import com.middleware.entity.Session;
 import com.middleware.entity.Views;
 import com.middleware.service.SessionService;
 
@@ -220,37 +225,47 @@ public class PaymentController extends AbstractController {
 		return checkQR(json);
 	}
 
-	public JSONObject generateQR(JSONObject json) throws IOException {
+	public JSONObject generateQR(JSONObject json,String sessionID){
 		SSL ssl = new SSL();
 		ssl.disableSslVerification();
-
+		Gson g = new Gson();
+		StringBuffer response = new StringBuffer();
 		String url = "https://103.150.78.103:4443/payment-api/v1/qr/generate-transaction.service";
 
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestProperty("Content-Type", "application/json");
-		con.setRequestProperty("Authen-Token",
-				"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTY3NzU2NzIsIm1lcklkIjoiNTgxNTAwMDAwMDAwMDE3In0.hO4-eWFQHM5STCydXlwr2SjghmFe_4GgmccBq3vJvUY");
-		con.setRequestMethod("POST");
-		con.setDoOutput(true);
-
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(json.toString());
-		wr.flush();
-		wr.close();
-
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			System.out.println("inputLine : " + inputLine);
-
-			response.append(inputLine);
+		URL obj;
+		try {
+			obj = new URL(url);
+			HttpURLConnection con;
+			try {
+				con = (HttpURLConnection) obj.openConnection();
+				con.setRequestProperty("Content-Type", "application/json");
+				con.setRequestProperty("Authen-Token",
+						"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTY3NzU2NzIsIm1lcklkIjoiNTgxNTAwMDAwMDAwMDE3In0.hO4-eWFQHM5STCydXlwr2SjghmFe_4GgmccBq3vJvUY");
+				con.setRequestMethod("POST");
+				con.setDoOutput(true);
+		
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.writeBytes(json.toString());
+				wr.flush();
+				wr.close();
+		
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				while ((inputLine = in.readLine()) != null) {
+					System.out.println("inputLine : " + inputLine);
+					response.append(inputLine);
+				}
+				in.close();
+		
+			} catch (IOException e) {
+				changeSessionStatus(sessionID,-6);
+				e.printStackTrace();
+			}
+		} catch (MalformedURLException e) {
+			changeSessionStatus(sessionID,-6);
+			e.printStackTrace();
 		}
-		in.close();
-
-		Gson g = new Gson();
+		changeSessionStatus(sessionID, 0);
 		return g.fromJson(response.toString(), JSONObject.class);
 	}
 
@@ -258,9 +273,29 @@ public class PaymentController extends AbstractController {
 	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "generateqr", method = RequestMethod.POST)
 	@JsonView(Views.Summary.class)
-	public JSONObject generateqr(@RequestBody JSONObject json) throws IOException {
-		return generateQR(json);
+	public JSONObject generateqr(@RequestBody JSONObject json,@RequestParam String sessionID) throws IOException {
+		JSONObject res = new JSONObject();
+		if (sessionID == null || sessionID.isEmpty()) {
+			res.put("code", "0001");
+			res.put("Description", "SessionId is empty");
+			return res;
+		}
+		res = generateQR(json,sessionID);
+		return res;
 
+	}
+	public void changeSessionStatus(String sessionID,int status) {
+		Session session = sessionService.checkingSession(sessionID);
+		try {
+			if (session != null) {
+				// update session
+				session.setEndDate(dateTimeFormat());
+				session.setPaymentStatus(status);
+				sessionService.save(session);
+			}
+		} catch (ServiceUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@GetMapping("/greeting")

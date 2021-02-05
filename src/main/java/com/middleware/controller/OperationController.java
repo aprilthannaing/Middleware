@@ -80,8 +80,10 @@ public class OperationController extends AbstractController {
 			if (session != null) {
 				if (json.getTransStatus().equals("S")) {
 					session.setPaymentStatus(1);
-					sessionService.save(session);
+				}else if (json.getTransStatus().equals("E")) {
+					session.setPaymentStatus(-2);
 				}
+				sessionService.save(session);
 				json.setSession(session);
 			}
 			result = cbpaymentService.savecbpayment(json);
