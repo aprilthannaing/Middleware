@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,7 @@ import com.middleware.service.MPUPaymentTransactionService;
 import com.middleware.service.SessionService;
 
 @RestController
-@RequestMapping("mpu")
+@RequestMapping("")
 public class MPUResultController {
 
 	@Autowired
@@ -30,29 +31,15 @@ public class MPUResultController {
 	@Autowired
 	private SessionService sessionService;
 
+	@Value("${frondEndURL}")
+	private String frondEndURL;
+
 	private static Logger logger = Logger.getLogger(MPUResultController.class);
 
-//{
-//"merchantID":"206104000003467",
-//"respCode":"00",
-//"pan":"950319xxxxxx6549",
-//"amount":"000000020000",
-//"invoiceNo":"1598606019873622",
-//"tranRef":"4067076",
-//"approvalCode":"9XR32H",
-//"dateTime":"20200828154547",
-//"status":"AP",
-//"failReason":"Approved",
-//"userDefined1":"100","
-//userDefined2":"2","userDefined3":null,
-//"categoryCode":null,
-//"hashValue":"CEF862727401D0A5BC0B1E8ED684A6C72E695F8B"
-//}
-
-	@RequestMapping(value = "/frontEndRedirect", method = RequestMethod.POST)
+	@RequestMapping(value = "", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
-	public void getFrontEndURL(@RequestParam("merchantID") String merchantID, @RequestParam("respCode") String respCode, @RequestParam("pan") String pan, @RequestParam("amount") String amount, @RequestParam("invoiceNo") String invoiceNo, @RequestParam("tranRef") String tranRef, @RequestParam("approvalCode") String approvalCode, @RequestParam("dateTime") String dateTime, @RequestParam("status") String status, @RequestParam("failReason") String failReason, @RequestParam("userDefined1") String userDefined1, @RequestParam("userDefined2") String userDefined2, @RequestParam("userDefined3") String userDefined3, @RequestParam("categoryCode") String categoryCode, @RequestParam("hashValue") String hashValue) throws Exception {
+	public String getFrontEndURL(@RequestParam("merchantID") String merchantID, @RequestParam("respCode") String respCode, @RequestParam("pan") String pan, @RequestParam("amount") String amount, @RequestParam("invoiceNo") String invoiceNo, @RequestParam("tranRef") String tranRef, @RequestParam("approvalCode") String approvalCode, @RequestParam("dateTime") String dateTime, @RequestParam("status") String status, @RequestParam("failReason") String failReason, @RequestParam("userDefined1") String userDefined1, @RequestParam("userDefined2") String userDefined2, @RequestParam("userDefined3") String userDefined3, @RequestParam("categoryCode") String categoryCode, @RequestParam("hashValue") String hashValue) throws Exception {
 		logger.info(" Calling Front End Redirect ...........");
 		logger.info(" merchantID " + merchantID);
 		logger.info(" respCode " + respCode);
@@ -68,6 +55,28 @@ public class MPUResultController {
 		logger.info(" categoryCode " + categoryCode);
 		logger.info(" hashValue " + hashValue);
 		logger.info(" amount " + amount);
+		String redirectUrl = "";
+		Session session = sessionService.findBySessionId(userDefined1.trim());
+
+		switch (status) {
+		case "AP":
+			redirectUrl = frondEndURL + "?id=" + userDefined1.trim() + "&success";
+			session.setPaymentStatus(1);
+			break;
+		case "PR":
+			redirectUrl = frondEndURL + "?id=" + userDefined1.trim();
+			session.setPaymentStatus(-1);
+			break;
+		default:
+			redirectUrl = frondEndURL + "?id=" + userDefined1.trim();
+			session.setPaymentStatus(0);
+			break;
+
+		}
+
+		sessionService.save(session);
+		return "<link rel=\\\"stylesheet\\\" href=\\\"https://fonts.googleapis.com/icon?family=Material+Icons\\\"><link href=\\\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\\\" rel=\\\"stylesheet\\\" crossorigin=\\\"anonymous\\\"><!doctype html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"> <title>WIPO File</title> <base href=\\\"/\\\"> <meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"> <link rel=\\\"icon\\\" type=\\\"image/x-icon\\\" href=\\\"favicon.ico\\\"></head><body> <script>window.location.replace" + "('" + redirectUrl + "')</script></body></html>";
+
 	}
 
 	@RequestMapping(value = "/backEndRedirect", method = RequestMethod.POST)
@@ -93,20 +102,20 @@ public class MPUResultController {
 		paymentdata.setDateTime(dateTime);
 		paymentdata.setStatus(status);
 		paymentdata.setFailReason(failReason);
-		paymentdata.setUserDefined1(userDefined1); /* token Id */
+		paymentdata.setUserDefined1(userDefined1);
 		paymentdata.setUserDefined2(userDefined2);
 		paymentdata.setUserDefined3(userDefined3);
 		paymentdata.setCategoryCode(categoryCode);
 		paymentdata.setCreationDate(dateString[0] + "T" + dateString[1]);
 		Session session = sessionService.findByUserId(userDefined1);
-		session.setPaymentConfirmationDate(dateString[0] + "T" + dateString[1]);		
+		session.setPaymentConfirmationDate(dateString[0] + "T" + dateString[1]);
+		session.setPaymentStatus(1);
 		sessionService.save(session);
 
 		if (session != null)
 			paymentdata.setSession(session);
 		result = paymnentService.saveMPUPayment(paymentdata);
 		logger.info("BackEndURL Save Data :" + result.getDescription());
-
 		return "success";
 	}
 }
