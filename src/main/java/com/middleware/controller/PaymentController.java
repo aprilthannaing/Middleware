@@ -164,11 +164,9 @@ public class PaymentController extends AbstractController {
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 
-		while ((inputLine = in.readLine()) != null) {
-			System.out.println("inputLine : " + inputLine);
-
+		while ((inputLine = in.readLine()) != null) 
 			response.append(inputLine);
-		}
+		
 		in.close();
 
 		Gson g = new Gson();

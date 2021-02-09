@@ -218,39 +218,30 @@ public class WipoEndPonintsController extends AbstractController {
 		transaction.setTokenId(session.getSessionId());
 		transaction.setTransactionDate(session.getStartDate());
 		transaction.setPaymentConfirmationDate(session.getPaymentConfirmationDate());
+		transaction.setPaymentStatus(session.getPaymentStatus());
 
 		String tokenId = session.getSessionId();
 		PaymentType paymentType = session.getPaymentType();
-		if (paymentType == null) {
-			transaction.setPaymentStatus(0);
+		if (paymentType == null)
 			return transaction;
-		}
 
 		switch (paymentType) {
 		case MPU:
 			MPUPaymentTransaction mpu = mpuService.findByTokenId(tokenId);
-			if (mpu == null) {
-				return transaction;
-			}
-			transaction.setPaymentStatus(mpu.isApproved() ? 1 : session.getPaymentStatus());
-			transaction.setReceiptNumber("");
+			transaction.setPaymentStatus(mpu != null && mpu.isApproved() ? 1 : session.getPaymentStatus());
+			transaction.setReceiptNumber(mpu != null && mpu.getPan() != null ? mpu.getPan() : null);
 			break;
 
 		case CBPAY:
 			CBPayTransaction cbPay = cbPayService.findByTokenId(tokenId);
-			if (cbPay == null) {
-				return transaction;
-			}
-			transaction.setPaymentStatus(cbPay.isSuccess() ? 1 : session.getPaymentStatus());
-			transaction.setReceiptNumber("");
+			transaction.setPaymentStatus(cbPay != null && cbPay.isSuccess() ? 1 : session.getPaymentStatus());
+			transaction.setReceiptNumber(cbPay != null && cbPay.getTransRef() != null ? cbPay.getTransRef() : null);
 			break;
+			
 		case VISA:
 			Visa visa = visaService.findByTokenId(tokenId);
-			if (visa == null) {
-				return transaction;
-			}
-			transaction.setPaymentStatus(visa.isSuccess() ? 1 : session.getPaymentStatus());
-			transaction.setReceiptNumber(visa.getVisaTransaction().getReceipt());
+			transaction.setPaymentStatus(visa != null && visa.isSuccess() ? 1 : session.getPaymentStatus());
+			transaction.setReceiptNumber(visa != null && visa.getVisaTransaction() != null && visa.getVisaTransaction().getReceipt() != null ? visa.getVisaTransaction().getReceipt() : null);
 			break;
 
 		}
@@ -398,16 +389,16 @@ public class WipoEndPonintsController extends AbstractController {
 		if (session != null) {
 			// update session
 			session.setEndDate(dateTimeFormat());
-			if(json.get("status") == null || !json.get("status").toString().equals("SAVE")) {
+			if (json.get("status") == null || !json.get("status").toString().equals("SAVE")) {
 				if (!json.get("type").toString().equals("")) {
 					String paymentType = json.get("type").toString();
 					if (paymentType.equals("MPU")) {
 						session.setPaymentType(PaymentType.MPU);
 						session.setPaymentStatus(0);
-					}else if (paymentType.equals("CBPAY")) {
+					} else if (paymentType.equals("CBPAY")) {
 						session.setPaymentType(PaymentType.CBPAY);
 						session.setPaymentStatus(0);
-					}else if (paymentType.equals("VISA")) {
+					} else if (paymentType.equals("VISA")) {
 						session.setPaymentType(PaymentType.VISA);
 						session.setPaymentStatus(0);
 					}
@@ -423,6 +414,7 @@ public class WipoEndPonintsController extends AbstractController {
 		}
 		return res;
 	}
+
 	@RequestMapping(value = "checkUserByStatus", method = RequestMethod.POST)
 	@ResponseBody
 	@JsonView(Views.Summary.class)
@@ -441,16 +433,16 @@ public class WipoEndPonintsController extends AbstractController {
 		if (session != null) {
 			// update session
 			session.setEndDate(dateTimeFormat());
-			if(json.get("status") == null || !json.get("status").toString().equals("")) {
+			if (json.get("status") == null || !json.get("status").toString().equals("")) {
 				if (!json.get("type").toString().equals("")) {
 					String paymentType = json.get("type").toString();
 					if (paymentType.equals("MPU")) {
 						session.setPaymentType(PaymentType.MPU);
 						session.setPaymentStatus(-6);
-					}else if (paymentType.equals("CBPAY")) {
+					} else if (paymentType.equals("CBPAY")) {
 						session.setPaymentType(PaymentType.CBPAY);
 						session.setPaymentStatus(-6);
-					}else if (paymentType.equals("VISA")) {
+					} else if (paymentType.equals("VISA")) {
 						session.setPaymentType(PaymentType.VISA);
 						session.setPaymentStatus(-6);
 					}
